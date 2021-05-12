@@ -16,7 +16,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="spread"
-        app:srcCompat="@mipmap/goouticonwhite_foreground" />
+        app:srcCompat="@mipmap/goouticonwhite_round" />
 
     <EditText
         android:id="@+id/editTextPwd"
@@ -49,7 +49,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:layout_marginBottom="32dp"
-        android:background="@drawable/two_state_button"
         android:text="@string/signin"
         app:layout_constraintBottom_toTopOf="@id/textView"
         app:layout_constraintEnd_toEndOf="parent"
