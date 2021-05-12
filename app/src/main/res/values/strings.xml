@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">GoOutApp</string>
+    <string name="password">password</string>
+    <string name="email_address">email address</string>
+    <string name="signin">SIGNIN</string>
+    <string name="info_username_pwd">The password cannot be blank and must contain at least 4 characters.   The email address must be a valid address</string>
 </resources>
