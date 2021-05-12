@@ -6,7 +6,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/goOut_logo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/goout"
+        android:roundIcon="@mipmap/goOut_logo_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.GoOutApp">
         <activity android:name=".MainActivity">
