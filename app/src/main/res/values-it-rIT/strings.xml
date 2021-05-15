@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">GoOutApp</string>
+    <string name="password">password</string>
+    <string name="email_address">indirizzo email</string>
+    <string name="signin">ENTRA</string>
+    <string name="registrati">Registrati</string>
+    <string name="textRegistrazione">Non sei ancora registrato?</string>
+</resources>
