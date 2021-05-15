@@ -2,7 +2,7 @@
     <string name="app_name">GoOutApp</string>
     <string name="password">password</string>
     <string name="email_address">email address</string>
-    <string name="signin">SIGNIN</string>
-    <string name="registrati">Registrati!</string>
-    <string name="info_username_pwd">Non sei ancora registrato? </string>
+    <string name="signin">LOGIN</string>
+    <string name="registrati">SIGNIN</string>
+    <string name="textRegistrazione">"Not registered yet? "</string>
 </resources>
