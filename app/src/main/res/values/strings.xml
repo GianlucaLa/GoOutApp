@@ -3,5 +3,6 @@
     <string name="password">password</string>
     <string name="email_address">email address</string>
     <string name="signin">SIGNIN</string>
-    <string name="info_username_pwd">The password cannot be blank and must contain at least 4 characters.   The email address must be a valid address</string>
+    <string name="registrati">Registrati!</string>
+    <string name="info_username_pwd">Non sei ancora registrato? </string>
 </resources>

@@ -3,6 +3,7 @@ package it.gooutapp
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -11,6 +12,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun checkLogin(view: View) {
-       // "TODO controllo login"
+
+    }
+
+    fun registrationListener(view: View) {
+
+        //Toast.makeText(this,  "registrazione", Toast.LENGTH_LONG).show()
     }
 }
