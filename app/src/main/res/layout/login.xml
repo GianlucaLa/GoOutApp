@@ -15,7 +15,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/gooutappicon_foreground" />
+        app:srcCompat="@mipmap/gooutappicon_foreground"/>
 
     <EditText
         android:id="@+id/editTextName"
@@ -62,7 +62,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="102dp"
         android:text="@string/info_username_pwd"
-        android:textSize="16dp"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/textView2"
         app:layout_constraintHorizontal_bias="0.5"
@@ -79,7 +79,7 @@
         android:onClick="registrationListener"
         android:text="@string/registrati"
         android:textColor="@color/viewBlue"
-        android:textSize="16dp"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
