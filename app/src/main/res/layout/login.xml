@@ -15,8 +15,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed"
-        app:srcCompat="@mipmap/gooutappicon_foreground" />
+        app:srcCompat="@mipmap/gooutappicon_foreground"/>
 
     <EditText
         android:id="@+id/editTextName"
@@ -61,7 +60,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="102dp"
-        android:text="@string/textRegistrazione"
+        android:text="@string/info_username_pwd"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/textViewRegister"
@@ -76,10 +75,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:onClick="openRegistration"
         android:text="@string/registrati"
         android:textColor="@color/viewBlue"
         android:textSize="16sp"
+        android:onClick="openRegistration"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
