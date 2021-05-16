@@ -27,6 +27,11 @@ class LoginActivity: AppCompatActivity() {
         }
     }
 
+    fun openHome(v: View){
+        val intent = Intent(this@LoginActivity, MainActivity::class.java)
+        startActivity(intent)
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if((requestCode == REGISTRATION_ACTIVITY) and (resultCode == Activity.RESULT_OK)) {
