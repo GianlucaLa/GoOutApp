@@ -5,4 +5,7 @@
     <string name="login">Login</string>
     <string name="registrati">Sign in</string>
     <string name="textRegistrazione">"Not registered yet? "</string>
+    <string name="Nome">Name</string>
+    <string name="Cognome">Surname</string>
+    <string name="Nickname">Nickname</string>
 </resources>

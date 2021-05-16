@@ -6,4 +6,7 @@
     <string name="login">ENTRA</string>
     <string name="registrati">Registrati</string>
     <string name="textRegistrazione">Non sei ancora registrato?</string>
+    <string name="Nome">Nome</string>
+    <string name="Cognome">Cognome</string>
+    <string name="Nickname">Nickname</string>
 </resources>
