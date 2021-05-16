@@ -1,16 +1,13 @@
 package it.gooutapp
 
 
-import android.R.attr.password
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.login.*
 import kotlinx.android.synthetic.main.registration.*
 
 
@@ -34,13 +31,16 @@ class RegistrationActivity: AppCompatActivity()  {
         if(SetValidation()) {
             closeActivity()
         } else {
-            Toast.makeText(applicationContext, "Error", Toast.LENGTH_SHORT).show()
+            Toast.makeText(applicationContext, getString(R.string.registerCheckMassage), Toast.LENGTH_SHORT).show()
         }
     }
 
     fun  SetValidation(): Boolean {
         var isEmailValid = false
         var isPasswordValid = false
+        var isNameValid = false
+        var isSurnameValid = false
+        var isNicknameValid = false
         var ok = false
 
         // Check for a valid email address.
@@ -64,7 +64,14 @@ class RegistrationActivity: AppCompatActivity()  {
         } else {
             isPasswordValid = true
         }
-        if (isEmailValid && isPasswordValid) {
+
+        //check others
+        isNameValid = !editTextName.text.toString().isEmpty()
+        isSurnameValid = !editTextSurname.text.toString().isEmpty()
+        isNicknameValid = !editTextNickname.text.toString().isEmpty()
+
+        //final check
+        if (isEmailValid && isPasswordValid && isNameValid && isSurnameValid && isNicknameValid) {
             ok = true
         }
         return ok

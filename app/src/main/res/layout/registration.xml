@@ -8,19 +8,19 @@
     tools:context=".RegistrationActivity">
 
     <EditText
-        android:id="@+id/editTextNome"
+        android:id="@+id/editTextName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="@string/Nome"
         android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/ediTextCognome"
+        app:layout_constraintBottom_toTopOf="@+id/editTextSurname"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/imageView2" />
 
     <EditText
-        android:id="@+id/ediTextCognome"
+        android:id="@+id/editTextSurname"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -29,7 +29,7 @@
         app:layout_constraintBottom_toTopOf="@+id/editTextNickname"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextNome" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextName" />
 
     <EditText
         android:id="@+id/editTextNickname"
@@ -41,7 +41,7 @@
         app:layout_constraintBottom_toTopOf="@+id/editTextEmail"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ediTextCognome" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextSurname" />
 
     <EditText
         android:id="@+id/editTextEmail"
@@ -62,17 +62,17 @@
         android:ems="10"
         android:hint="@string/password"
         android:inputType="textPassword"
-        app:layout_constraintBottom_toTopOf="@+id/button2"
+        app:layout_constraintBottom_toTopOf="@+id/RSignin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextEmail" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/RSignin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/registrati"
-        android:onClick="closeActivity"
+        android:onClick="checkRegistration"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -83,7 +83,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:scaleType="centerCrop"
-        app:layout_constraintBottom_toTopOf="@+id/editTextNome"
+        app:layout_constraintBottom_toTopOf="@+id/editTextName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
