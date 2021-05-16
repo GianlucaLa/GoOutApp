@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.login.*
+import kotlinx.android.synthetic.main.registration.*
 
 class RegistrationActivity: AppCompatActivity()  {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -16,8 +17,10 @@ class RegistrationActivity: AppCompatActivity()  {
 
     fun closeActivity(v: View) {
         var resultIntent = Intent()
-        resultIntent.putExtra("result", 1)
-        resultIntent.putExtra("result", 2)
+        val nickname = editTextNickname.text.toString()
+        val password = editTextPassword.text.toString()
+        resultIntent.putExtra("nick", nickname)
+        resultIntent.putExtra("pwd", password)
         setResult(Activity.RESULT_OK, resultIntent)
         finish()
     }
