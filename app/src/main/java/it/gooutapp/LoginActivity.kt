@@ -32,7 +32,7 @@ class LoginActivity: AppCompatActivity() {
         if((requestCode == REGISTRATION_ACTIVITY) and (resultCode == Activity.RESULT_OK)) {
             val returnNick = data?.getStringExtra("nick")
             val returnPwd = data?.getStringExtra("pwd")
-            editTextPwd,setText("$returnPassword")
+            editTextPwd.setText("$returnPwd")
             editTextName.setText("$returnNick")
         }
     }

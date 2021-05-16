@@ -1,8 +1,9 @@
 package it.gooutapp
 
-import android.R
+
 import android.R.attr.password
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
@@ -19,7 +20,7 @@ class RegistrationActivity: AppCompatActivity()  {
         setContentView(R.layout.registration)
     }
 
-    fun closeActivity(v: View) {
+    fun closeActivity() {
         var resultIntent = Intent()
         val nickname = editTextNickname.text.toString()
         val password = editTextPassword.text.toString()
@@ -29,12 +30,24 @@ class RegistrationActivity: AppCompatActivity()  {
         finish()
     }
 
-    fun SetValidation() {
+     fun checkRegistration(v: View)  {
+        if(SetValidation()) {
+            closeActivity()
+        } else {
+            Toast.makeText(applicationContext, "Error", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun  SetValidation(): Boolean {
+        var isEmailValid = false
+        var isPasswordValid = false
+        var ok = false
+
         // Check for a valid email address.
-        if (editTextEmail.getText().toString().isEmpty()) {
-            editTextEmail.setError(resources.getString(R.string.email_error))
+        if (editTextEmail.text.toString().isEmpty()) {
+            editTextEmail.setError(getString(R.string.email_error))
             isEmailValid = false
-        } else if (!Patterns.EMAIL_ADDRESS.matcher(editTextEmail.getText().toString()).matches()) {
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(editTextEmail.text.toString()).matches()) {
             editTextEmail.setError(resources.getString(R.string.error_invalid_email))
             isEmailValid = false
         } else {
@@ -42,17 +55,18 @@ class RegistrationActivity: AppCompatActivity()  {
         }
 
         // Check for a valid password.
-        if (editTextPassword.getText().toString().isEmpty()) {
+        if (editTextPassword.text.toString().isEmpty()) {
             editTextPassword.setError(resources.getString(R.string.password_error))
             isPasswordValid = false
-        } else if (editTextPassword.getText().length() < 6) {
+        } else if (editTextPassword.text.length < 6) {
             editTextPassword.setError(resources.getString(R.string.error_invalid_password))
             isPasswordValid = false
         } else {
             isPasswordValid = true
         }
         if (isEmailValid && isPasswordValid) {
-            Toast.makeText(applicationContext, "Successfully", Toast.LENGTH_SHORT).show()
+            ok = true
         }
+        return ok
     }
 }

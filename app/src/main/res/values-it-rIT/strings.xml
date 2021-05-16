@@ -9,4 +9,8 @@
     <string name="Nome">Nome</string>
     <string name="Cognome">Cognome</string>
     <string name="Nickname">Nickname</string>
+    <string name="email_error">L\'indirizzo email non può essere vuoto</string>
+    <string name="error_invalid_email">L\'indriizzo email non è valido</string>
+    <string name="password_error">La password non può essere vuota</string>
+    <string name="error_invalid_password">La password non è valida</string>
 </resources>
