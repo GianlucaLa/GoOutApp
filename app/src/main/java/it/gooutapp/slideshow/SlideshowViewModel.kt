@@ -1,4 +1,4 @@
-package com.example.navigationdrawerprova.ui.slideshow
+package it.gooutapp.slideshow
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

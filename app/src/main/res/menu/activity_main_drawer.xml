@@ -5,16 +5,32 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_home"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="@string/menu_home" />
+            android:id="@+id/nav_showGroup"
+            android:icon="@drawable/ic_menu_group"
+            android:title="@string/menu_show_groups" />
         <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="@string/menu_gallery" />
+            android:id="@+id/nav_newProposal"
+            android:icon="@drawable/ic_menu_add"
+            android:title="@string/menu_new_proposal" />
         <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="@string/menu_slideshow" />
+            android:id="@+id/nav_createGroup"
+            android:icon="@drawable/ic_menu_group_add"
+            android:title="@string/menu_create_group" />
+        <item
+            android:id="@+id/nav_joinGroup"
+            android:icon="@drawable/ic_menu_show_group"
+            android:title="@string/menu_join_group" />
+        <item
+            android:id="@+id/nav_manageGroup"
+            android:icon="@drawable/ic_menu_manage_group"
+            android:title="@string/menu_manage_groups" />
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_menu_settings"
+            android:title="@string/menu_settings" />
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_menu_logout"
+            android:title="@string/menu_logout"/>
     </group>
 </menu>

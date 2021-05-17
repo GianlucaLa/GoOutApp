@@ -1,4 +1,4 @@
-package com.example.navigationdrawerprova.ui.gallery
+package it.gooutapp.gallery
 
 import android.os.Bundle
 import android.view.LayoutInflater

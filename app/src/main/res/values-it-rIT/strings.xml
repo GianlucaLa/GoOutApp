@@ -14,4 +14,11 @@
     <string name="password_error">La password non può essere vuota</string>
     <string name="error_invalid_password">La password non è valida</string>
     <string name="registerCheckMassage">tutti i campi devono essere compilati correttamente</string>
+    <string name="menu_create_group">Crea nuovo gruppo</string>
+    <string name="menu_new_proposal">Nuova proposta</string>
+    <string name="menu_join_group">Partecipa ad un gruppo</string>
+    <string name="menu_show_groups">Visualizza gruppi</string>
+    <string name="menu_manage_groups">Gestione gruppi</string>
+    <string name="menu_settings">Impostazioni</string>
+    <string name="menu_logout">Esci</string>
 </resources>

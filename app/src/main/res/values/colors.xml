@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="defaultBlue">#6699FF</color>
-    <color name="viewBlue">#4B7DE3</color>
-    <color name="barBlue">#4B7DE3</color>
+    <color name="viewBlue">#3971e1</color>
+    <color name="barBlue">#305aae</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="flatGrey">#232527</color>
+    <color name="flatGrey">#302c2c</color>
 
 </resources>

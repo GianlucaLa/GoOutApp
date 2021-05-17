@@ -2,15 +2,23 @@
     <!-- Base application theme. -->
     <style name="Theme.GoOutApp" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/defaultBlue</item>
+        <item name="colorPrimary">@color/viewBlue</item>
         <item name="colorPrimaryVariant">@color/barBlue</item>
-        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
         <item name="colorSecondaryVariant">@color/teal_200</item>
-        <item name="colorOnSecondary">@color/flatGrey</item>
+        <item name="colorOnSecondary">@color/black </item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+    <style name="Theme.GoOutApp.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.NavigationDrawerProva.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.NavigationDrawerProva.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

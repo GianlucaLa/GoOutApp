@@ -1,4 +1,4 @@
-package com.example.navigationdrawerprova.ui.gallery
+package it.gooutapp.gallery
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
