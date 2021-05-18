@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">GoOutApp</string>
-    <string name="password">password</string>
-    <string name="email_address">indirizzo email</string>
-    <string name="login">ENTRA</string>
-    <string name="registrati">Registrati</string>
-    <string name="textRegistrazione">Non sei ancora registrato?</string>
-    <string name="Nome">Nome</string>
-    <string name="Cognome">Cognome</string>
+    <string name="password">Password</string>
+    <string name="email_address">Indirizzo email</string>
+    <string name="login">Entra</string>
+    <string name="sign_in">Registrati</string>
+    <string name="text_sign_hint">Non sei ancora registrato?</string>
+    <string name="name">Nome</string>
+    <string name="surname">Cognome</string>
     <string name="Nickname">Nickname</string>
     <string name="email_error">L\'indirizzo email non può essere vuoto</string>
     <string name="error_invalid_email">L\'indriizzo email non è valido</string>

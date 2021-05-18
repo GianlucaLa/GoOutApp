@@ -1,12 +1,12 @@
 <resources>
     <string name="app_name">GoOutApp</string>
-    <string name="password">password</string>
-    <string name="email_address">email address</string>
+    <string name="password">Password</string>
+    <string name="email_address">Email address</string>
     <string name="login">Login</string>
-    <string name="registrati">Sign in</string>
-    <string name="textRegistrazione">"Not registered yet? "</string>
-    <string name="Nome">Name</string>
-    <string name="Cognome">Surname</string>
+    <string name="sign_in">Sign in</string>
+    <string name="text_sign_hint">"Not registered yet? "</string>
+    <string name="name">Name</string>
+    <string name="surname">Surname</string>
     <string name="Nickname">Nickname</string>
     <string name="email_error">The email can not be empty</string>
     <string name="error_invalid_email">The email is not valid</string>
