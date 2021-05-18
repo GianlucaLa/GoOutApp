@@ -6,6 +6,12 @@
     app:startDestination="@+id/nav_showGroup">
 
     <fragment
+        android:id="@+id/nav_showGroup"
+        android:name="it.gooutapp.showGroup.ShowGroupFragment"
+        android:label="@string/menu_show_groups"
+        tools:layout="@layout/fragment_show_group" />
+
+    <fragment
         android:id="@+id/nav_createGroup"
         android:name="it.gooutapp.home.HomeFragment"
         android:label="@string/menu_create_group"
@@ -16,12 +22,6 @@
         android:name="it.gooutapp.gallery.GalleryFragment"
         android:label="@string/menu_new_proposal"
         tools:layout="@layout/fragment_gallery" />
-
-    <fragment
-        android:id="@+id/nav_showGroup"
-        android:name="it.gooutapp.slideshow.SlideshowFragment"
-        android:label="@string/menu_show_groups"
-        tools:layout="@layout/fragment_slideshow" />
 
     <fragment
         android:id="@+id/nav_settings"

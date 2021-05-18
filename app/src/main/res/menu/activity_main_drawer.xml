@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:showIn="navigation_view">
+    tools:showIn="navigation_view"
+    tools:context=".MainActivity">
 
     <group android:checkableBehavior="single">
         <item
@@ -19,7 +20,7 @@
         <item
             android:id="@+id/nav_joinGroup"
             android:icon="@drawable/ic_menu_show_group"
-            android:title="@string/menu_join_group" />
+            android:title="@string/menu_join_group"/>
         <item
             android:id="@+id/nav_manageGroup"
             android:icon="@drawable/ic_menu_manage_group"
