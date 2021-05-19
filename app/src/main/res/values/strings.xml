@@ -4,7 +4,7 @@
     <string name="email_address">Email address</string>
     <string name="login">Login</string>
     <string name="sign_in">Sign in</string>
-    <string name="text_sign_hint">"Not registered yet? "</string>
+    <string name="text_sign_hint">Not registered yet? </string>
     <string name="name">Name</string>
     <string name="surname">Surname</string>
     <string name="Nickname">Nickname</string>
@@ -30,4 +30,6 @@
     <string name="ok">Ok</string>
     <string name="cancel">Cancel</string>
     <string name="join_group">Join a group</string>
+    <string name="successful_registration">Successful registration!</string>
+    <string name="login_fail">Wrong credentials!</string>
 </resources>

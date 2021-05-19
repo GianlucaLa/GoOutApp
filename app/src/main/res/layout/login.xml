@@ -13,21 +13,21 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:scaleType="centerCrop"
-        app:layout_constraintBottom_toTopOf="@+id/editTextLName"
+        app:layout_constraintBottom_toTopOf="@+id/editTextLEmail"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@mipmap/gooutappicon_foreground" />
 
     <EditText
-        android:id="@+id/editTextLName"
+        android:id="@+id/editTextLEmail"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:backgroundTint="@color/barBlue"
         android:ems="10"
         android:hint="@string/email_address"
-        android:inputType="textPersonName"
+        android:inputType="textEmailAddress"
         app:layout_constraintBottom_toTopOf="@id/editTextLPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -44,15 +44,15 @@
         app:layout_constraintBottom_toTopOf="@id/button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextLName" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextLEmail" />
 
     <Button
         android:id="@+id/button"
         android:layout_width="108dp"
         android:layout_height="56dp"
         android:layout_marginTop="64dp"
-        android:onClick="openHome"
         android:text="@string/login"
+        android:onClick="credentialsCheck"
         app:layout_constraintBottom_toTopOf="@id/textView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

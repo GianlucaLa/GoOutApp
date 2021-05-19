@@ -25,4 +25,6 @@
     <string name="cancel">Annulla</string>
     <string name="ok">Ok</string>
     <string name="join_group">Unisciti ad un gruppo</string>
+    <string name="successful_registration">Registrazione riuscita!</string>
+    <string name="login_fail">Credenziali errate!</string>
 </resources>
