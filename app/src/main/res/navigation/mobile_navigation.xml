@@ -7,25 +7,32 @@
 
     <fragment
         android:id="@+id/nav_showGroup"
-        android:name="it.gooutapp.showGroup.ShowGroupFragment"
+        android:name="it.gooutapp.fragments.showGroup.ShowGroupFragment"
         android:label="@string/menu_show_groups"
         tools:layout="@layout/fragment_show_group" />
 
     <fragment
-        android:id="@+id/nav_createGroup"
-        android:name="it.gooutapp.home.HomeFragment"
-        android:label="@string/menu_create_group"
-        tools:layout="@layout/fragment_home" />
+        android:id="@+id/nav_newProposal"
+        android:name="it.gooutapp.fragments.newProposal.NewProposal"
+        android:label="@string/menu_new_proposal"
+        tools:layout="@layout/fragment_new_proposal" />
 
     <fragment
-        android:id="@+id/nav_newProposal"
-        android:name="it.gooutapp.gallery.GalleryFragment"
-        android:label="@string/menu_new_proposal"
-        tools:layout="@layout/fragment_gallery" />
+        android:id="@+id/nav_createGroup"
+        android:name="it.gooutapp.createGroup.CreateGroup"
+        android:label="@string/menu_create_group"
+        tools:layout="@layout/fragment_create_group" />
+
+    <fragment
+        android:id="@+id/nav_groupManagement"
+        android:name="it.gooutapp.fragments.groupManagement.GroupManagement"
+        android:label="@string/menu_manage_groups"
+        tools:layout="@layout/fragment_group_management" />
 
     <fragment
         android:id="@+id/nav_settings"
-        android:name="it.gooutapp.settings.SettingsFragment"
+        android:name="it.gooutapp.fragments.settings.SettingsFragment"
         android:label="@string/menu_settings"
         tools:layout="@layout/fragment_settings" />
+
 </navigation>
