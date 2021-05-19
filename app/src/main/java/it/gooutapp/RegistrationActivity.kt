@@ -12,12 +12,12 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import it.gooutapp.firebase.firestore.FireStore
+import it.gooutapp.firebase.FireStore
 import kotlinx.android.synthetic.main.registration.*
 
 
 class RegistrationActivity: AppCompatActivity() {
-    val fs :FireStore = FireStore()
+    val fs : FireStore = FireStore()
     private lateinit var auth: FirebaseAuth
     private val TAG = "REGISTRATION_ACTIVITY"
 

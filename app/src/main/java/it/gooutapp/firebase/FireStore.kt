@@ -1,4 +1,4 @@
-package it.gooutapp.firebase.firestore
+package it.gooutapp.firebase
 
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
