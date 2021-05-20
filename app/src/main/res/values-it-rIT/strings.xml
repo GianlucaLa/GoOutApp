@@ -13,7 +13,7 @@
     <string name="error_invalid_email">L\'indriizzo email non è valido</string>
     <string name="password_error">La password non può essere vuota</string>
     <string name="error_invalid_password">La password non è valida</string>
-    <string name="registerCheckMassage">tutti i campi devono essere compilati correttamente</string>
+    <string name="incorrect_fields_registration">tutti i campi devono essere compilati correttamente</string>
     <string name="menu_create_group">Crea nuovo gruppo</string>
     <string name="menu_new_proposal">Nuova proposta</string>
     <string name="menu_join_group">Partecipa ad un gruppo</string>

@@ -18,13 +18,16 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import it.gooutapp.firebase.FireStore
 import kotlinx.android.synthetic.main.nav_header_main.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var testo: String
     private lateinit var auth: FirebaseAuth
+    val fs : FireStore = FireStore()
     val email = Firebase.auth.currentUser?.email.toString()
+    //val Nickname =
     private val TAG = "MAIN_ACTIVITY"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,6 +61,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main, menu)
+        drawerTextViewEmail.text = email
+        val userData = fs.getUserData(email)
+        drawerTextViewUser.text = userData?.getString("name")
         return true
     }
 

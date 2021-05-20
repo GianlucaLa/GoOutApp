@@ -12,7 +12,7 @@
     <string name="error_invalid_email">The email is not valid</string>
     <string name="password_error">The password can not be empty</string>
     <string name="error_invalid_password">The Password is not valid</string>
-    <string name="registerCheckMassage">all field must be compiled correctly</string>
+    <string name="incorrect_fields_registration">all field must be compiled correctly</string>
 
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>

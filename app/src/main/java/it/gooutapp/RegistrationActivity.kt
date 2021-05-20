@@ -29,21 +29,8 @@ class RegistrationActivity: AppCompatActivity() {
 
     fun closeActivity() {
         var resultIntent = Intent()
-        val nickname = editTextNickname.text.toString()
-        val password = editTextPassword.text.toString()
-        resultIntent.putExtra("nick", nickname)
-        resultIntent.putExtra("pwd", password)
         setResult(Activity.RESULT_OK, resultIntent)
         finish()
-    }
-
-     fun checkRegistration(v: View)  {
-        if(fieldsCheck()) {
-            Toast.makeText(applicationContext, getString(R.string.successful_registration), Toast.LENGTH_SHORT).show()
-            closeActivity()
-        } else {
-            Toast.makeText(applicationContext, getString(R.string.registerCheckMassage), Toast.LENGTH_SHORT).show()
-        }
     }
 
     fun createUser(email: String, password: String) {
@@ -52,7 +39,8 @@ class RegistrationActivity: AppCompatActivity() {
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "createUserWithEmail:success")
-                    val user = auth.currentUser
+                    Toast.makeText(applicationContext, getString(R.string.successful_registration), Toast.LENGTH_SHORT).show()
+                    closeActivity()
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "createUserWithEmail:failure", task.exception)
@@ -60,13 +48,12 @@ class RegistrationActivity: AppCompatActivity() {
             }
     }
 
-    fun  fieldsCheck(): Boolean {
+    fun  fieldsCheck(view: View){
         var isEmailValid = false
         var isPasswordValid = false
         var isNameValid = false
         var isSurnameValid = false
         var isNicknameValid = false
-        var ok = false
         val name = editTextName.text.toString()
         val surname = editTextSurname.text.toString()
         val nickanme = editTextNickname.text.toString()
@@ -102,10 +89,10 @@ class RegistrationActivity: AppCompatActivity() {
 
         //final check
         if (isEmailValid && isPasswordValid && isNameValid && isSurnameValid && isNicknameValid) {
-            ok = true
             fs.createUserData(name, surname, nickanme, email, password)
             createUser(email, password)
+        }else{
+            Toast.makeText(applicationContext, getString(R.string.incorrect_fields_registration), Toast.LENGTH_SHORT).show()
         }
-        return ok
     }
 }

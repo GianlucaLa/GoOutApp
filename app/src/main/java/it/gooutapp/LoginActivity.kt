@@ -15,7 +15,6 @@ import kotlinx.android.synthetic.main.login.*
 import kotlinx.android.synthetic.main.registration.*
 
 class LoginActivity: AppCompatActivity() {
-    val REGISTRATION_ACTIVITY = 1
     private lateinit var auth: FirebaseAuth
     private val TAG = "LOGIN_ACTIVITY"
 
@@ -36,23 +35,12 @@ class LoginActivity: AppCompatActivity() {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if((requestCode == REGISTRATION_ACTIVITY) and (resultCode == Activity.RESULT_OK)) {
-            val returnNick = data?.getStringExtra("nick")
-            val returnPwd = data?.getStringExtra("pwd")
-            editTextLPassword.setText("$returnPwd")
-            editTextLEmail.setText("$returnNick")
-        }
-    }
-
     fun openRegistration(v: View) {
         val intent = Intent(this@LoginActivity, RegistrationActivity::class.java)
         try {
-            startActivityForResult(intent, REGISTRATION_ACTIVITY)
+            startActivity(intent)
         } catch(e: Exception) {
             e.printStackTrace()
-            Toast.makeText(applicationContext, "si è verificato un errore", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -72,10 +60,9 @@ class LoginActivity: AppCompatActivity() {
             }
     }
 
-    fun credentialsCheck(view: View): Boolean {
+    fun credentialsCheck(view: View) {
         val email = editTextLEmail.text?.toString()
         val password = editTextLPassword.text?.toString()
-        var ok = false
         var isEmailValid = false
         var isPasswordValid = false
 
@@ -104,9 +91,7 @@ class LoginActivity: AppCompatActivity() {
 
         //final check
         if (isEmailValid && isPasswordValid) {
-            ok = true
             login(email, password)
         }
-        return ok
     }
 }
