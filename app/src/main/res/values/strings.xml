@@ -3,7 +3,7 @@
     <string name="password">Password</string>
     <string name="email_address">Email address</string>
     <string name="login">Login</string>
-    <string name="sign_in">Sign in</string>
+    <string name="sign_up">Sign up</string>
     <string name="text_sign_hint">Not registered yet? </string>
     <string name="name">Name</string>
     <string name="surname">Surname</string>

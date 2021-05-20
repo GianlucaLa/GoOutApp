@@ -4,7 +4,7 @@
     <string name="password">Password</string>
     <string name="email_address">Indirizzo email</string>
     <string name="login">Entra</string>
-    <string name="sign_in">Registrati</string>
+    <string name="sign_up">Registrati</string>
     <string name="text_sign_hint">Non sei ancora registrato?</string>
     <string name="name">Nome</string>
     <string name="surname">Cognome</string>
