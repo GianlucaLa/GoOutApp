@@ -31,4 +31,6 @@
     <string name="join_group">Join a group</string>
     <string name="successful_registration">Successful registration!</string>
     <string name="login_fail">Wrong credentials!</string>
+    <string name="mark_your_date">Mark your date:</string>
+    <string name="confirm">Confirm</string>
 </resources>

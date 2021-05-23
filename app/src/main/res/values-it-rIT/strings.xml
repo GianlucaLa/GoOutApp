@@ -27,4 +27,6 @@
     <string name="join_group">Unisciti ad un gruppo</string>
     <string name="successful_registration">Registrazione riuscita!</string>
     <string name="login_fail">Credenziali errate!</string>
+    <string name="mark_your_date">Seleziona una data:</string>
+    <string name="confirm">Conferma</string>
 </resources>
