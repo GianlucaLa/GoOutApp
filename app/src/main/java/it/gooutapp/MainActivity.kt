@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         auth = Firebase.auth
         Log.v(TAG, email.toString())
+
     }
 
     public override fun onStart() {
