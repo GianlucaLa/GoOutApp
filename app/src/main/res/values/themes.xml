@@ -19,6 +19,5 @@
     </style>
 
     <style name="Theme.NavigationDrawerProva.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
     <style name="Theme.NavigationDrawerProva.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>
