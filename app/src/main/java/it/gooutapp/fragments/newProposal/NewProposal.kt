@@ -1,15 +1,15 @@
 package it.gooutapp.fragments.newProposal
 
 import android.app.DatePickerDialog
+import android.app.TimePickerDialog
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.CalendarView
-import android.widget.DatePicker
-import android.widget.Toast
+import android.widget.*
 import androidx.fragment.app.Fragment
+import com.google.type.TimeOfDay
 import it.gooutapp.R
 import kotlinx.android.synthetic.main.fragment_new_proposal.*
 import kotlinx.android.synthetic.main.fragment_new_proposal.view.*
@@ -18,38 +18,68 @@ import java.time.Month
 import java.time.Year
 import java.util.*
 
-class NewProposal : Fragment() {
+class NewProposal : Fragment(), DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     //lateinit var calendar: CalendarView
-    lateinit var c : Calendar
+    lateinit var c: Calendar
+    lateinit var btn: Button
+    lateinit var root: View
+    var day = 0
+    var month = 0
+    var year = 0
+    var hour = 0
+    var minute = 0
 
-    lateinit var btn : Button
+    var mDay = 0
+    var mMonth = 0
+    var mYear = 0
+    var mHour = 0
+    var mMinute = 0
 
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val root = inflater.inflate(R.layout.fragment_new_proposal, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        root = inflater.inflate(R.layout.fragment_new_proposal, container, false)
+        pickDate()
+        return root
+    }
+
+    private fun getDateTimeCalendar() {
+        c = Calendar.getInstance()
+        day = c.get(Calendar.DAY_OF_MONTH)
+        month = c.get(Calendar.MONTH)
+        year = c.get(Calendar.YEAR)
+        hour = c.get(Calendar.HOUR)
+        minute = c.get(Calendar.MINUTE)
+    }
+
+    private fun pickDate() {
         btn = root.findViewById<Button>(R.id.buttonPickDate)
 
-        c = Calendar.getInstance()
-        var day = c.get(Calendar.DAY_OF_MONTH)
-        var month = c.get(Calendar.MONTH)
-        var year = c.get(Calendar.YEAR)
-
         btn.setOnClickListener {
-            val dpd = DatePickerDialog(btn.context, DatePickerDialog.OnDateSetListener{ datePicker: DatePicker, mDay: Int, mMonth: Int, mYear: Int ->
-                Toast.makeText(btn.context, ""+ mDay + "/" + mMonth + "/" + mYear, Toast.LENGTH_SHORT).show()
-        }, day, month, year )
-            dpd.show()
+            getDateTimeCalendar()
+
+            DatePickerDialog( btn.context, this , year,  month, day).show()
         }
+    }
 
-        /*calendar = root.findViewById(R.id.calendarView)
+    override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
+        mDay = dayOfMonth
+        mMonth = month
+        mYear = year
 
-        calendar.setOnDateChangeListener { view, year, month, dayOfMonth ->
-            // Note that months are indexed from 0. So, 0 means January, 1 means february, 2 means march etc.
-            val msg = "Selected date is " + dayOfMonth + "/" + (month + 1) + "/" + year
-            Toast.makeText(calendar.context, msg, Toast.LENGTH_SHORT).show()
-        }*/
+        getDateTimeCalendar()
 
+        TimePickerDialog(btn.context, this, hour, minute, true).show()
+    }
 
-        return root
+    override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
+        mHour = hourOfDay
+        mMinute = minute
+
+        val msg = "$mDay-$mMonth-$mYear--- Hour: $mHour Minute: $mMinute"
+        Toast.makeText(root.context, "msg", Toast.LENGTH_SHORT).show()
     }
 }
