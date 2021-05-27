@@ -14,6 +14,11 @@
             android:icon="@drawable/ic_menu_add"
             android:title="@string/menu_new_proposal" />
         <item
+            android:id="@+id/nav_joinGroup"
+            android:icon="@drawable/ic_menu_join_group"
+            android:title="@string/join_group"
+            android:onClick="joinGroup"/>
+        <item
             android:id="@+id/nav_createGroup"
             android:icon="@drawable/ic_menu_group_add"
             android:title="@string/menu_create_group" />

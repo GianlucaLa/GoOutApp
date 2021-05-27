@@ -5,7 +5,10 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.EditText
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
@@ -33,12 +36,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         auth = Firebase.auth
-        Log.v(TAG, email.toString())
-
-    }
-
-    public override fun onStart() {
-        super.onStart()
         // Check if user is signed in (non-null) and update UI accordingly.
         val currentUser = auth.currentUser
         if(currentUser == null) {
@@ -52,8 +49,15 @@ class MainActivity : AppCompatActivity() {
             val navView: NavigationView = findViewById(R.id.nav_view)
             val navController = findNavController(R.id.nav_host_fragment)
             //di seguito il contenitore dei nav nel drawer
-            appBarConfiguration = AppBarConfiguration(setOf(
-                R.id.nav_showGroup, R.id.nav_newProposal, R.id.nav_createGroup, R.id.nav_groupManagement, R.id.nav_settings), drawerLayout)
+            appBarConfiguration = AppBarConfiguration(
+                setOf(
+                    R.id.nav_showGroup,
+                    R.id.nav_newProposal,
+                    R.id.nav_createGroup,
+                    R.id.nav_groupManagement,
+                    R.id.nav_settings
+                ), drawerLayout
+            )
             setupActionBarWithNavController(navController, appBarConfiguration)
             navView.setupWithNavController(navController)
         }
@@ -71,6 +75,25 @@ class MainActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
+
+    fun joinGroup(item: MenuItem){
+        val builder = AlertDialog.Builder(this)
+        val inflater = layoutInflater
+        val dialogLayout = inflater.inflate(R.layout.popup_layout, null)
+        val editText = dialogLayout.findViewById<EditText>(R.id.editTextPopup)
+
+        with(builder) {
+            setTitle(R.string.join_group)
+            setPositiveButton(R.string.ok) { dialog, which ->
+                val testo = editText.text.toString()
+            }
+            setNegativeButton(R.string.cancel) { dialog, which ->
+                //null operation
+            }
+            setView(dialogLayout)
+            show()
+        }
     }
 
     fun logout(item: MenuItem) {
