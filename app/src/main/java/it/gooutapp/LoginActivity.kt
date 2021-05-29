@@ -21,7 +21,7 @@ class LoginActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         auth = Firebase.auth
-        // Check if user is signed in (non-null) and update UI accordingly.
+        // controllo se utente non è loggato (nullo) e aggiorno l'interfaccia di conseguenza
         val currentUser = auth.currentUser
         if(currentUser != null) {
             startActivity(Intent(this@LoginActivity, MainActivity::class.java))

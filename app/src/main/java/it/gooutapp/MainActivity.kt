@@ -20,6 +20,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.ktx.Firebase
 import it.gooutapp.firebase.FireStore
 import kotlinx.android.synthetic.main.nav_header_main.*
@@ -30,13 +31,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     val fs : FireStore = FireStore()
     val email = Firebase.auth.currentUser?.email.toString()
-    //val Nickname =
+    lateinit var userData: DocumentSnapshot
     private val TAG = "MAIN_ACTIVITY"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         auth = Firebase.auth
-        // Check if user is signed in (non-null) and update UI accordingly.
+        // controllo se utente è loggato (non nullo) e aggiorno l'interfaccia di conseguenza
         val currentUser = auth.currentUser
         if(currentUser == null) {
             startActivity(Intent(this@MainActivity, LoginActivity::class.java))
@@ -67,8 +68,12 @@ class MainActivity : AppCompatActivity() {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main, menu)
         drawerTextViewEmail.text = email
-        val userData = fs.getUserData(email)
-        drawerTextViewUser.text = userData?.getString("name")
+        //setto nome e cognome nella textview del drawermenu
+        fs.getUserData(email){document -> userData = document
+            var name = userData.get("name")
+            var surname = userData.get("surname")
+            drawerTextViewUser.text = "$name $surname"
+        }
         return true
     }
 

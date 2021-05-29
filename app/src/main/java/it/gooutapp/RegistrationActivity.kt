@@ -89,7 +89,7 @@ class RegistrationActivity: AppCompatActivity() {
 
         //final check
         if (isEmailValid && isPasswordValid && isNameValid && isSurnameValid && isNicknameValid) {
-            fs.createUserData(name, surname, nickanme, email, password)
+            fs.createUserData(name, surname, nickanme, email)
             createUser(email, password)
         }else{
             Toast.makeText(applicationContext, getString(R.string.incorrect_fields_registration), Toast.LENGTH_SHORT).show()
