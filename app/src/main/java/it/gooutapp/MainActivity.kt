@@ -82,14 +82,14 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
-    fun joinGroup(item: MenuItem){
+    fun searchGroup(item: MenuItem){
         val builder = AlertDialog.Builder(this)
         val inflater = layoutInflater
         val dialogLayout = inflater.inflate(R.layout.popup_layout, null)
         val editText = dialogLayout.findViewById<EditText>(R.id.editTextPopup)
 
         with(builder) {
-            setTitle(R.string.join_group)
+            setTitle(R.string.search_group)
             setPositiveButton(R.string.ok) { dialog, which ->
                 val testo = editText.text.toString()
             }
