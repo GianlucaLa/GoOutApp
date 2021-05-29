@@ -33,5 +33,6 @@
     <string name="login_fail">Wrong credentials!</string>
     <string name="mark_your_date">Mark your date:</string>
     <string name="confirm">Confirm</string>
-    <string name="search_group">Search for a group</string>
+    <string name="groupName">Group Name</string>
+    <string name="search_group">Search a group</string>
 </resources>
