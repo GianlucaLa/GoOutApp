@@ -25,6 +25,7 @@ class MyAdapter(private val groupList : ArrayList<Group>) : RecyclerView.Adapter
         holder.groupName.text = group.groupName
         val iniziale = group.groupName?.get(0)
         holder.groupPosition.text = "${position+1}"
+        //icona con iniziale
         holder.icon.text = iniziale.toString().toUpperCase()
     }
 
