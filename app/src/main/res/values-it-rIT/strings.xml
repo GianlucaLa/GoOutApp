@@ -21,7 +21,7 @@
     <string name="menu_manage_groups">Gestione gruppi</string>
     <string name="menu_settings">Impostazioni</string>
     <string name="menu_logout">Esci</string>
-    <string name="popup_message">Inserisci il codice gruppo</string>
+    <string name="enter_group_code">Inserisci il codice gruppo</string>
     <string name="cancel">Annulla</string>
     <string name="ok">Ok</string>
     <string name="join_group">Unisciti ad un gruppo</string>
@@ -31,4 +31,5 @@
     <string name="confirm">Conferma</string>
     <string name="search_group">Cerca un gruppo</string>
     <string name="groupName">Nome Gruppo</string>
+    <string name="enter_group_name">Inserisci il nome del gruppo</string>
 </resources>

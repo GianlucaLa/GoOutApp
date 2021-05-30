@@ -7,15 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.firestore.*
-import com.google.firebase.ktx.Firebase
 import it.gooutapp.R
-import it.gooutapp.firebase.FireStore
 import it.gooutapp.models.Group
 
 class ShowGroupFragment : Fragment() {
@@ -28,7 +25,7 @@ class ShowGroupFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_show_group, container, false)
-        val plusButton: FloatingActionButton = root.findViewById(R.id.fab)
+        val searchButton: FloatingActionButton = root.findViewById(R.id.fab)
 
 
         recyclerView = root.findViewById(R.id.recycleView)
@@ -41,14 +38,15 @@ class ShowGroupFragment : Fragment() {
         recyclerView.adapter = myAdapter
         eventChangeListener()
 
-        plusButton.setOnClickListener { view ->
+        //Search Group Listener
+        searchButton.setOnClickListener { view ->
             val builder = AlertDialog.Builder(view.context)
             val inflater = layoutInflater
-            val dialogLayout = inflater.inflate(R.layout.popup_layout, null)
-            val editText = dialogLayout.findViewById<EditText>(R.id.editTextPopup)
+            val dialogLayout = inflater.inflate(R.layout.edittext_search_group, null)
+            val editText = dialogLayout.findViewById<EditText>(R.id.editTextJoinGroup)
 
             with(builder) {
-                setTitle(R.string.join_group)
+                setTitle(R.string.search_group)
                 setPositiveButton(R.string.ok) { dialog, which ->
                     val testo = editText.text.toString()
                 }

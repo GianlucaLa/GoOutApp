@@ -7,8 +7,8 @@
     android:paddingRight="24dp">
 
     <EditText
-        android:id="@+id/editTextPopup"
+        android:id="@+id/editTextJoinGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/popup_message" />
+        android:hint="@string/enter_group_code" />
 </LinearLayout>
