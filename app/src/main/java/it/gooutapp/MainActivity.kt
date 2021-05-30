@@ -38,6 +38,7 @@ class MainActivity : AppCompatActivity() {
             finish()
         }else {
             //Carico il layout
+            fs.loadFieldProva(user_email)
             setContentView(R.layout.activity_main)
             val toolbar: Toolbar = findViewById(R.id.toolbar)
             setSupportActionBar(toolbar)

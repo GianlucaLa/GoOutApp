@@ -23,6 +23,22 @@ class FireStore {
             .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
     }
 
+/*    fun addUserToGroup(email: String, groupId: String) {
+        db.collection("groups").document(groupId).get().addOnSuccessListener { document ->
+            if (document.data != null) {
+                for(document.)
+            } else {
+                Log.d(TAG, "No such document")
+            }
+        }.addOnFailureListener { exception ->
+            Log.d(TAG, "get failed with ", exception)
+        }
+        db.collection("groups").document()//nome gruppo
+            .update()
+            .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
+            .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
+    }*/
+
     fun getUserData(email: String, callback:(DocumentSnapshot) -> Unit){
         this.email = email
         db.collection("users").document(email).get().addOnSuccessListener { document ->
