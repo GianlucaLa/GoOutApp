@@ -15,14 +15,12 @@ import kotlinx.android.synthetic.main.login.*
 import kotlinx.android.synthetic.main.registration.*
 
 class LoginActivity: AppCompatActivity() {
-    private lateinit var auth: FirebaseAuth
     private val TAG = "LOGIN_ACTIVITY"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        auth = Firebase.auth
         // controllo se utente non è loggato (nullo) e aggiorno l'interfaccia di conseguenza
-        val currentUser = auth.currentUser
+        val currentUser = Firebase.auth.currentUser
         if(currentUser != null) {
             startActivity(Intent(this@LoginActivity, MainActivity::class.java))
             finish()
@@ -42,7 +40,7 @@ class LoginActivity: AppCompatActivity() {
 
     fun login(email: String, password: String) {
         //eseguo autenticazione
-        auth.signInWithEmailAndPassword(email, password)
+        Firebase.auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     Log.d(TAG, "signInWithEmail:success")

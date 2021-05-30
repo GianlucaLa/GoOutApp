@@ -1,11 +1,13 @@
 package it.gooutapp.firebase
 
 import android.util.Log
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.FirebaseFirestore
+import android.widget.Toast
+import com.google.firebase.firestore.*
+import it.gooutapp.models.Group
 
 class FireStore {
     private var db = FirebaseFirestore.getInstance()
+    private var email = ""
     private val TAG = "FIRE_STORE"
 
     fun createUserData(name: String, surname: String, nickname: String, email: String) {
@@ -22,9 +24,9 @@ class FireStore {
     }
 
     fun getUserData(email: String, callback:(DocumentSnapshot) -> Unit){
+        this.email = email
         db.collection("users").document(email).get().addOnSuccessListener { document ->
             if (document.data != null) {
-                Log.d(TAG, "DocumentSnapshot data: ${document.data}")
                 callback(document)
             } else {
                 Log.d(TAG, "No such document")
@@ -32,5 +34,30 @@ class FireStore {
         }.addOnFailureListener { exception ->
                 Log.d(TAG, "get failed with ", exception)
         }
+    }
+
+    fun getGroupData(email: String, callback: (ArrayList<Group>) -> Unit) {
+        lateinit var document: DocumentSnapshot
+        var groupArrayList = ArrayList<Group>()
+        db = FirebaseFirestore.getInstance()
+        db.collection("groups").
+        addSnapshotListener(object : EventListener<QuerySnapshot> {
+            override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
+                if(error != null){
+                    Log.e("Firestore Error", error.message.toString())
+                    return
+                }
+                for(dc: DocumentChange in value?.documentChanges!!){
+                    Log.w(TAG, dc.toString())
+                    document = dc.document
+                    if(document.toString().contains(email)) {
+                        if (dc.type == DocumentChange.Type.ADDED) {
+                            groupArrayList.add(dc.document.toObject(Group::class.java))
+                        }
+                    }
+                }
+                callback(groupArrayList)
+            }
+        })
     }
 }

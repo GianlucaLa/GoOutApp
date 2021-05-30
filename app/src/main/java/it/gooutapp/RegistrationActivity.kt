@@ -18,13 +18,11 @@ import kotlinx.android.synthetic.main.registration.*
 
 class RegistrationActivity: AppCompatActivity() {
     val fs : FireStore = FireStore()
-    private lateinit var auth: FirebaseAuth
     private val TAG = "REGISTRATION_ACTIVITY"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.registration)
-        auth = Firebase.auth
     }
 
     fun closeActivity() {
@@ -34,7 +32,7 @@ class RegistrationActivity: AppCompatActivity() {
     }
 
     fun createUser(email: String, password: String) {
-        auth.createUserWithEmailAndPassword(email, password)
+        Firebase.auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information

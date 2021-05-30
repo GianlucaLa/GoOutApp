@@ -15,7 +15,6 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.*
 import com.google.firebase.ktx.Firebase
@@ -24,22 +23,21 @@ import kotlinx.android.synthetic.main.nav_header_main.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
-    private lateinit var testo: String
-    private lateinit var auth: FirebaseAuth
-    val fs : FireStore = FireStore()
-    val email = Firebase.auth.currentUser?.email.toString()
-    lateinit var userData: DocumentSnapshot
+    private lateinit var userData: DocumentSnapshot
+    private var name = ""                                          //valorizza textview nel drawer menu
+    private var surname = ""                                    //valorizza textview nel drawer menu
+    private val fs = FireStore()
+    private val user_email = Firebase.auth.currentUser?.email.toString()
     private val TAG = "MAIN_ACTIVITY"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        auth = Firebase.auth
-        // controllo se utente è loggato (non nullo) e aggiorno l'interfaccia di conseguenza
-        val currentUser = auth.currentUser
+        val currentUser = Firebase.auth.currentUser                      //controllo se utente è loggato (non nullo) e aggiorno l'interfaccia di conseguenza
         if(currentUser == null) {
             startActivity(Intent(this@MainActivity, LoginActivity::class.java))
             finish()
         }else {
+            //Carico il layout
             setContentView(R.layout.activity_main)
             val toolbar: Toolbar = findViewById(R.id.toolbar)
             setSupportActionBar(toolbar)
@@ -62,14 +60,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main, menu)
-        drawerTextViewEmail.text = email
-        //setto nome e cognome nella textview del drawermenu
-        fs.getUserData(email){document -> userData = document
+        //prendo da FireStore i dati dell'utente
+        fs.getUserData(user_email){ document ->
+            userData = document                                 //setto il documentSnapshot della classe con il valore returnato dal getUserData
+            drawerTextViewEmail.text = user_email                    //setto email nella textview del DrawerMenu
             var name = userData.get("name")
             var surname = userData.get("surname")
-            drawerTextViewUser.text = "$name $surname"
+            drawerTextViewUser.text = "$name $surname"          //setto nome e cognome nella textview del DrawerMenu
         }
         return true
     }
