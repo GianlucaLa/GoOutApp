@@ -20,9 +20,12 @@ class MyAdapter(private val groupList : ArrayList<Group>) : RecyclerView.Adapter
 
     override fun onBindViewHolder(holder: MyAdapter.MyViewHolder, position: Int) {
 
+
         val group : Group = groupList[position]
         holder.groupName.text = group.groupName
+        val iniziale = group.groupName?.get(0)
         holder.groupPosition.text = "${position+1}"
+        holder.icon.text = iniziale.toString().toUpperCase()
     }
 
     override fun getItemCount(): Int {
@@ -35,6 +38,6 @@ class MyAdapter(private val groupList : ArrayList<Group>) : RecyclerView.Adapter
         //nome della textView dove inserire dato
         val groupName : TextView = itemView.findViewById(R.id.textViewNomeGruppo)
         val groupPosition : TextView = itemView.findViewById(R.id.textViewNumGruppo)
-
+        val icon : TextView = itemView.findViewById(R.id.textViewDrawable)
     }
 }
