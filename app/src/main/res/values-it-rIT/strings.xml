@@ -29,7 +29,11 @@
     <string name="login_fail">Credenziali errate!</string>
     <string name="mark_your_date">Seleziona una data:</string>
     <string name="confirm">Conferma</string>
-    <string name="search_group">Cerca un gruppo</string>
+    <string name="create_group">Cerca un nuovo gruppo</string>
     <string name="groupName">Nome Gruppo</string>
     <string name="enter_group_name">Inserisci il nome del gruppo</string>
+    <string name="user_is_already_member">Sei già un membro di questo gruppo</string>
+    <string name="user_successful_added_to_group">Sei stato aggiunto al gruppo correttamente</string>
+    <string name="error_empty_value">Il valore del campo non può essere vuoto</string>
+    <string name="group_not_exists">Il gruppo cercato non esiste</string>
 </resources>

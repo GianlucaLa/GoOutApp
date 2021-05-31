@@ -25,6 +25,7 @@
         android:backgroundTint="@color/defaultBlue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@android:drawable/ic_menu_search" />
-
+        app:srcCompat="@drawable/ic_menu_group_add"
+        tools:ignore="VectorDrawableCompat" />
+    
 </androidx.constraintlayout.widget.ConstraintLayout>

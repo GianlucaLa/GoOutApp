@@ -32,7 +32,11 @@
     <string name="login_fail">Wrong credentials!</string>
     <string name="mark_your_date">Mark your date:</string>
     <string name="confirm">Confirm</string>
+    <string name="create_group">Create a new group</string>
     <string name="groupName">Group Name</string>
-    <string name="search_group">Search for a group</string>
     <string name="enter_group_name">Enter the group name</string>
+    <string name="user_is_already_member">You are already a member of this group</string>
+    <string name="user_successful_added_to_group">You have been successfully added to the group</string>
+    <string name="error_empty_value">The filed value cannot be empty</string>
+    <string name="group_not_exists">The searched group doesn\'t exists</string>
 </resources>

@@ -1,5 +1,6 @@
 package it.gooutapp.firebase
 
+import android.content.ReceiverCallNotAllowedException
 import android.util.Log
 import android.widget.Toast
 import com.google.firebase.firestore.*
@@ -23,21 +24,49 @@ class FireStore {
             .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
     }
 
-/*    fun addUserToGroup(email: String, groupId: String) {
+    fun addUserToGroup(email: String, groupId: String, callback: (String) -> Unit) {
+        checkForNewUserId(email, groupId) { result ->
+            /*inserisco il nuovo utente al gruppo su FireStore assegnando come id
+            il ritorno della calback di checkForNewUserId
+            */
+            if(result.equals("userAlreadyIn") || result.equals("groupNotExists")){
+                callback(result)
+            } else {
+                db.collection("groups").document(groupId)//nome gruppo
+                    .update("user$result", email)
+                    .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
+                    .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
+                callback("successful")
+            }
+        }
+    }
+
+    fun checkForNewUserId(email: String, groupId: String, callback: (String) -> Unit){
+        //cerco il primo nome del campo disponibile da dare al nuovo user su FireStore
+        var i = 0
         db.collection("groups").document(groupId).get().addOnSuccessListener { document ->
             if (document.data != null) {
-                for(document.)
+                //se l'utente non è già presente nel gruppo trovo nuovo id, altrimenti ritorno -1
+                if(!document.toString().contains("$email")){
+                    var bool = true;
+                    while(bool){
+                        i++
+                        if(!document.contains("user$i")){
+                            callback("$i")
+                            bool = false
+                        }
+                    }
+                }else{
+                    callback("userAlreadyIn")
+                }
             } else {
                 Log.d(TAG, "No such document")
+                callback("groupNotExists")
             }
         }.addOnFailureListener { exception ->
             Log.d(TAG, "get failed with ", exception)
         }
-        db.collection("groups").document()//nome gruppo
-            .update()
-            .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
-            .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
-    }*/
+    }
 
     fun getUserData(email: String, callback:(DocumentSnapshot) -> Unit){
         this.email = email

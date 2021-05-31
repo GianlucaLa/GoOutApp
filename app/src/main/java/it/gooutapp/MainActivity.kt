@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -24,7 +25,7 @@ import kotlinx.android.synthetic.main.nav_header_main.*
 class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var userData: DocumentSnapshot
-    private var name = ""                                          //valorizza textview nel drawer menu
+    private var name = ""                                       //valorizza textview nel drawer menu
     private var surname = ""                                    //valorizza textview nel drawer menu
     private val fs = FireStore()
     private val user_email = Firebase.auth.currentUser?.email.toString()
@@ -38,7 +39,6 @@ class MainActivity : AppCompatActivity() {
             finish()
         }else {
             //Carico il layout
-            fs.loadFieldProva(user_email)
             setContentView(R.layout.activity_main)
             val toolbar: Toolbar = findViewById(R.id.toolbar)
             setSupportActionBar(toolbar)
@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
-    fun searchGroup(item: MenuItem){
+    fun joinGroup(item: MenuItem){
         val builder = AlertDialog.Builder(this)
         val inflater = layoutInflater
         val dialogLayout = inflater.inflate(R.layout.edittext_join_group, null)
@@ -87,10 +87,23 @@ class MainActivity : AppCompatActivity() {
         with(builder) {
             setTitle(R.string.join_group)
             setPositiveButton(R.string.ok) { dialog, which ->
-                val testo = editText.text.toString()
+                val groupId = editText.text.toString()
+                if(!groupId.equals("")){
+                    fs.addUserToGroup(user_email, groupId){result ->
+                        if(result.equals("userAlreadyIn")){
+                            Toast.makeText(applicationContext, R.string.user_is_already_member, Toast.LENGTH_SHORT).show()
+                        }else if(result.equals("groupNotExists")){
+                            Toast.makeText(applicationContext, R.string.group_not_exists, Toast.LENGTH_SHORT).show()
+                        }else{
+                            Toast.makeText(applicationContext, R.string.user_successful_added_to_group, Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }else{
+                    Toast.makeText(applicationContext, R.string.error_empty_value, Toast.LENGTH_SHORT).show()
+                }
             }
             setNegativeButton(R.string.cancel) { dialog, which ->
-                //null operation
+                //do nothing
             }
             setView(dialogLayout)
             show()

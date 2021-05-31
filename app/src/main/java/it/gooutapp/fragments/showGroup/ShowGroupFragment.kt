@@ -11,9 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.*
 import com.google.firebase.ktx.Firebase
 import it.gooutapp.R
 import it.gooutapp.firebase.FireStore
@@ -55,9 +53,9 @@ class ShowGroupFragment : Fragment() {
             val editText = dialogLayout.findViewById<EditText>(R.id.editTextJoinGroup)
 
             with(builder) {
-                setTitle(R.string.search_group)
+                setTitle(R.string.create_group)
                 setPositiveButton(R.string.ok) { dialog, which ->
-                    val testo = editText.text.toString()
+                    val testo = editText?.text?.toString()
                 }
                 setNegativeButton(R.string.cancel) { dialog, which ->
                     //null operation
