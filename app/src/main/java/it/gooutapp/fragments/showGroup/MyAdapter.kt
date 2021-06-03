@@ -27,6 +27,7 @@ class MyAdapter(private val groupList : ArrayList<Group>) : RecyclerView.Adapter
         holder.groupPosition.text = "${position+1}"
         //icona con iniziale
         holder.icon.text = iniziale.toString().toUpperCase()
+
     }
 
     override fun getItemCount(): Int {

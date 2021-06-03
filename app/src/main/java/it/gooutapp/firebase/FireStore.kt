@@ -1,15 +1,16 @@
 package it.gooutapp.firebase
 
 import android.util.Log
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.*
+import com.google.firebase.ktx.Firebase
 import it.gooutapp.models.Group
 
 class FireStore {
     private var db = FirebaseFirestore.getInstance()
     private var email = ""
     private val TAG = "FIRE_STORE"
-    private val grpdoc = "grpdoc"
-
+    private lateinit var user_id : String
 
     fun createUserData(name: String, surname: String, nickname: String, email: String) {
         val user = hashMapOf(
@@ -25,70 +26,62 @@ class FireStore {
     }
 
     fun createGroupData(groupName: String, email: String, callback: (String) -> Unit) {
+        user_id = Firebase.auth.currentUser?.uid.toString()
+        val source: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
+        // generazione randomica di character
+        val groupCode: String = List(8) { source.random() }.joinToString("")
+
         val group = hashMapOf(
+            "groupCode" to groupCode,
             "groupName" to groupName,
-            "user1" to email
+            "user_$user_id" to email
         )
-        getNewGroupId(groupName) { result ->
-            db.collection("groups").document(result)
-                .set(group)
-                .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
-                .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
-            callback("successful")
-        }
+        db.collection("groups").document(groupName)
+            .set(group)
+            .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
+            .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
+        callback("successful")
     }
 
-    fun getNewGroupId(groupName: String, callback: (String) -> Unit) {
-        db.collection("groups").get().addOnSuccessListener { documents ->
-            val currLastId = documents.last().id
-            val newId = currLastId.substring(6).toInt() + 1
-            Log.w(TAG, "$newId")
-            callback("grpdoc$newId")
-        }.addOnFailureListener { exception ->
-            Log.d(TAG, "Error getting documents: ", exception)
-        }
-    }
+//    private fun getGroupCode(groupName: String, callback: (String) -> Unit) {
+    //        db.collection("groups").get().addOnSuccessListener { documents ->
+//            val currLastId = documents.last().id
+//            val newId = currLastId.substring(6).toInt() + 1
+//            Log.w(TAG, "$newId")
+//            callback("$groupName$newId")
+//        }.addOnFailureListener { exception ->
+//            Log.d(TAG, "Error getting documents: ", exception)
+//        }
+//    }
 
-    fun checkForNewUserId(email: String, groupId: String, callback: (String) -> Unit){
-        //cerco il primo nome del campo disponibile da dare al nuovo user su FireStore
-        var i = 0
-        db.collection("groups").document(groupId).get().addOnSuccessListener { document ->
-            if (document.data != null) {
-                //se l'utente non è già presente nel gruppo trovo nuovo id, altrimenti ritorno -1
-                if(!document.toString().contains("$email")){
-                    var bool = true;
-                    while(bool){
-                        i++
-                        if(!document.contains("user$i")){
-                            callback("$i")
-                            bool = false
-                        }
-                    }
-                }else{
-                    callback("userAlreadyIn")
-                }
+
+    private fun isAlreadyMemberOf(email: String, groupId: String, callback: (Boolean, String) -> Unit) {
+        user_id = Firebase.auth.currentUser?.uid.toString()
+        db.collection("groups").whereEqualTo("groupCode", "$groupId").get().addOnSuccessListener { document ->
+
+            if (document.last().contains("user_$user_id")) {
+                callback(true, document.last().id)
             } else {
-                Log.d(TAG, "No such document")
-                callback("groupNotExists")
+                callback(false, document.last().id)
             }
         }.addOnFailureListener { exception ->
             Log.d(TAG, "get failed with ", exception)
         }
     }
 
-    fun addUserToGroup(email: String, groupId: String, callback: (String) -> Unit) {
-        checkForNewUserId(email, groupId) { result ->
+    fun addUserToGroup(email: String, groupId: String, callback: (Boolean) -> Unit) {
+        isAlreadyMemberOf(email, groupId) { alreadyMember, groupName ->
             /*inserisco il nuovo utente al gruppo su FireStore assegnando come id
             il ritorno della calback di checkForNewUserId
             */
-            if(result.equals("userAlreadyIn") || result.equals("groupNotExists")){
-                callback(result)
+            if (alreadyMember) {
+                callback(false)
             } else {
-                db.collection("groups").document(groupId)//nome gruppo
-                    .update("user$result", email)
+                db.collection("groups").document(groupName)  //nome gruppo
+                    .update("user_$user_id", email)
                     .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
                     .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
-                callback("successful")
+                callback(true)
             }
         }
     }

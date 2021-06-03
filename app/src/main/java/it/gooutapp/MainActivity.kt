@@ -29,6 +29,8 @@ class MainActivity : AppCompatActivity() {
     private var surname = ""                                    //valorizza textview nel drawer menu
     private val fs = FireStore()
     private val user_email = Firebase.auth.currentUser?.email.toString()
+
+
     private val TAG = "MAIN_ACTIVITY"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -87,15 +89,14 @@ class MainActivity : AppCompatActivity() {
         with(builder) {
             setTitle(R.string.join_group)
             setPositiveButton(R.string.ok) { dialog, which ->
-                val groupId = editText.text.toString()
-                if(!groupId.equals("")){
+                //rimuovo eventuali spazi vuoti inseriti dall'utente
+                var groupId = editText.text.toString().replace("\\s+".toRegex(), "")
+                if(groupId != ""){
                     fs.addUserToGroup(user_email, groupId){result ->
-                        if(result.equals("userAlreadyIn")){
-                            Toast.makeText(applicationContext, R.string.user_is_already_member, Toast.LENGTH_SHORT).show()
-                        }else if(result.equals("groupNotExists")){
-                            Toast.makeText(applicationContext, R.string.group_not_exists, Toast.LENGTH_SHORT).show()
-                        }else{
+                        if(result){
                             Toast.makeText(applicationContext, R.string.user_successful_added_to_group, Toast.LENGTH_SHORT).show()
+                        }else{
+                            Toast.makeText(applicationContext, R.string.user_is_already_member, Toast.LENGTH_SHORT).show()
                         }
                     }
                 }else{

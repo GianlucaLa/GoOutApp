@@ -37,7 +37,7 @@
     <string name="enter_group_name">Enter the group name</string>
     <string name="user_is_already_member">You are already a member of this group</string>
     <string name="user_successful_added_to_group">You have been successfully added to the group</string>
-    <string name="error_empty_value">The filed value cannot be empty</string>
+    <string name="error_empty_value">The filed value cannot be empty or start with a space</string>
     <string name="group_not_exists">The searched group doesn\'t exists</string>
     <string name="group_creation_failed">Group creation failed</string>
     <string name="group_creation">Group created succesfully</string>
