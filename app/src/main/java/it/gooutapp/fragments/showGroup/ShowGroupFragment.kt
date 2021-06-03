@@ -29,7 +29,7 @@ class ShowGroupFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_show_group, container, false)
-        val searchButton: FloatingActionButton = root.findViewById(R.id.fab)
+        val createGroupButton: FloatingActionButton = root.findViewById(R.id.fab)
 
 
         recyclerView = root.findViewById(R.id.recycleView)
@@ -37,7 +37,7 @@ class ShowGroupFragment : Fragment() {
         recyclerView.setHasFixedSize(true)
         groupArrayList = arrayListOf()
 
-        fs.getGroupData(user_email){ groupList ->
+        fs.getUserGroupData(user_email){ groupList ->
             Log.w(TAG, groupList.toString())
             groupArrayList = groupList
             Log.w(TAG, groupArrayList.toString())
@@ -47,11 +47,11 @@ class ShowGroupFragment : Fragment() {
 
         }
 
-        //Search Group Listener
-        searchButton.setOnClickListener { view ->
+        //Create Group Listener
+        createGroupButton.setOnClickListener { view ->
             val builder = AlertDialog.Builder(view.context)
             val inflater = layoutInflater
-            val dialogLayout = inflater.inflate(R.layout.edit_text_create_group, null)
+            val dialogLayout = inflater.inflate(R.layout.edittext_create_group, null)
             val editText = dialogLayout.findViewById<EditText>(R.id.editTextCreateGroup)
 
             with(builder) {
@@ -60,22 +60,19 @@ class ShowGroupFragment : Fragment() {
                     val nomeG = editText.text.toString()
                     if (!nomeG.equals("")) {
                         fs.createGroupData(nomeG, user_email) { result ->
-                            if (result.equals("groupAlreadyIn")) {
-                                Toast.makeText(root.context, R.string.group_creation_failed, Toast.LENGTH_SHORT
-                                ).show()
-                            } else {
-                                Toast.makeText(root.context, R.string.group_creation, Toast.LENGTH_SHORT).show()
-                            }
+                            Toast.makeText(root.context, R.string.group_creation, Toast.LENGTH_SHORT).show()
                         }
+                    }else{
+                        Toast.makeText(root.context, R.string.error_empty_value, Toast.LENGTH_SHORT).show()
                     }
                 }
-                        setNegativeButton(R.string.cancel) { dialog, which ->
-                            //null operation
-                        }
-                        setView(dialogLayout)
-                        show()
-                    }
+                setNegativeButton(R.string.cancel) { dialog, which ->
+                    //null operation
                 }
+                setView(dialogLayout)
+                show()
+            }
+        }
         return root
     }
 }
