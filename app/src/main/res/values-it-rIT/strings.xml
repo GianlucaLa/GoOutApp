@@ -36,4 +36,6 @@
     <string name="user_successful_added_to_group">Sei stato aggiunto al gruppo correttamente</string>
     <string name="error_empty_value">Il valore del campo non può essere vuoto</string>
     <string name="group_not_exists">Il gruppo cercato non esiste</string>
+    <string name="group_creation_failed">Crezione gruppo fallita</string>
+    <string name="group_creation">Gruppo creato con successo</string>
 </resources>

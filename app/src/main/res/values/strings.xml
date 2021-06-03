@@ -39,4 +39,6 @@
     <string name="user_successful_added_to_group">You have been successfully added to the group</string>
     <string name="error_empty_value">The filed value cannot be empty</string>
     <string name="group_not_exists">The searched group doesn\'t exists</string>
+    <string name="group_creation_failed">Group creation failed</string>
+    <string name="group_creation">Group created succesfully</string>
 </resources>
