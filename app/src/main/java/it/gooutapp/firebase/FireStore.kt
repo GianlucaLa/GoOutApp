@@ -7,10 +7,10 @@ import com.google.firebase.ktx.Firebase
 import it.gooutapp.models.Group
 
 class FireStore {
-    private var db = FirebaseFirestore.getInstance()
+    private val db = FirebaseFirestore.getInstance()
+    private lateinit var user_id : String
     private var email = ""
     private val TAG = "FIRE_STORE"
-    private lateinit var user_id : String
 
     fun createUserData(name: String, surname: String, nickname: String, email: String) {
         val user = hashMapOf(
@@ -27,8 +27,8 @@ class FireStore {
 
     fun createGroupData(groupName: String, email: String, callback: (String) -> Unit) {
         user_id = Firebase.auth.currentUser?.uid.toString()
-        val source: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
         // generazione randomica di character
+        val source: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
         val groupCode: String = List(8) { source.random() }.joinToString("")
 
         val group = hashMapOf(
@@ -42,18 +42,6 @@ class FireStore {
             .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
         callback("successful")
     }
-
-//    private fun getGroupCode(groupName: String, callback: (String) -> Unit) {
-    //        db.collection("groups").get().addOnSuccessListener { documents ->
-//            val currLastId = documents.last().id
-//            val newId = currLastId.substring(6).toInt() + 1
-//            Log.w(TAG, "$newId")
-//            callback("$groupName$newId")
-//        }.addOnFailureListener { exception ->
-//            Log.d(TAG, "Error getting documents: ", exception)
-//        }
-//    }
-
 
     private fun isAlreadyMemberOf(email: String, groupId: String, callback: (Boolean, String) -> Unit) {
         user_id = Firebase.auth.currentUser?.uid.toString()
@@ -90,7 +78,6 @@ class FireStore {
         this.email = email
         db.collection("users").document(email).get().addOnSuccessListener { document ->
             if (document.data != null) {
-
                 callback(document)
             } else {
                 Log.d(TAG, "No such document")
@@ -100,10 +87,10 @@ class FireStore {
         }
     }
 
+    //Restituisce i dati dei gruppi, utilizzata da Adapter per popolare la RecycleView
     fun getUserGroupData(email: String, callback: (ArrayList<Group>) -> Unit) {
         lateinit var document: DocumentSnapshot
         var groupArrayList = ArrayList<Group>()
-        db = FirebaseFirestore.getInstance()
         db.collection("groups").addSnapshotListener(object : EventListener<QuerySnapshot> {
             override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
                 if (error != null) {

@@ -29,8 +29,6 @@ class MainActivity : AppCompatActivity() {
     private var surname = ""                                    //valorizza textview nel drawer menu
     private val fs = FireStore()
     private val user_email = Firebase.auth.currentUser?.email.toString()
-
-
     private val TAG = "MAIN_ACTIVITY"
 
     override fun onCreate(savedInstanceState: Bundle?) {
