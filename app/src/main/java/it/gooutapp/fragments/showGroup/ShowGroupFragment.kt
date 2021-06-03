@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -43,27 +44,38 @@ class ShowGroupFragment : Fragment() {
             myAdapter = MyAdapter(groupArrayList)
             recyclerView.adapter = myAdapter
             myAdapter.notifyDataSetChanged()
+
         }
 
         //Search Group Listener
         searchButton.setOnClickListener { view ->
             val builder = AlertDialog.Builder(view.context)
             val inflater = layoutInflater
-            val dialogLayout = inflater.inflate(R.layout.edittext_search_group, null)
-            val editText = dialogLayout.findViewById<EditText>(R.id.editTextJoinGroup)
+            val dialogLayout = inflater.inflate(R.layout.edit_text_create_group, null)
+            val editText = dialogLayout.findViewById<EditText>(R.id.editTextCreateGroup)
 
             with(builder) {
                 setTitle(R.string.create_group)
                 setPositiveButton(R.string.ok) { dialog, which ->
-                    val testo = editText?.text?.toString()
+                    val nomeG = editText.text.toString()
+                    if (!nomeG.equals("")) {
+                        fs.createGroupData(nomeG, user_email) { result ->
+                            if (result.equals("groupAlreadyIn")) {
+                                Toast.makeText(root.context, R.string.group_creation_failed, Toast.LENGTH_SHORT
+                                ).show()
+                            } else {
+                                Toast.makeText(root.context, R.string.group_creation, Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
                 }
-                setNegativeButton(R.string.cancel) { dialog, which ->
-                    //null operation
+                        setNegativeButton(R.string.cancel) { dialog, which ->
+                            //null operation
+                        }
+                        setView(dialogLayout)
+                        show()
+                    }
                 }
-                setView(dialogLayout)
-                show()
-            }
-        }
         return root
     }
 }

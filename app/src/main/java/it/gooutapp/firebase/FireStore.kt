@@ -3,6 +3,7 @@ package it.gooutapp.firebase
 import android.content.ReceiverCallNotAllowedException
 import android.util.Log
 import android.widget.Toast
+import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.*
 import it.gooutapp.models.Group
 
@@ -10,6 +11,8 @@ class FireStore {
     private var db = FirebaseFirestore.getInstance()
     private var email = ""
     private val TAG = "FIRE_STORE"
+    private val grpdoc = "grpdoc"
+
 
     fun createUserData(name: String, surname: String, nickname: String, email: String) {
         val user = hashMapOf(
@@ -22,6 +25,38 @@ class FireStore {
             .set(user)
             .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
             .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
+    }
+
+    fun createGroupData(groupName: String, email: String, callback: (String) -> Unit) {
+        val group = hashMapOf(
+            "groupName" to groupName,
+            "user1" to email,
+            "groupId" to "grpdoc1"
+        )
+
+        checkGroupCreation(groupName, email) { result ->
+            if(result.equals("groupAlreadyIn")) {
+                callback(result)
+            } else {
+                db.collection("groups").document()
+                    .set(group)
+                    .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
+                    .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
+                callback("successful")
+            }
+        }
+    }
+
+    fun checkGroupCreation(groupName: String, email: String, callback: (String) -> Unit) {
+        var i = 0
+        var bool = true
+        while (bool){
+            i++
+            if() {
+                callback("$i")
+                bool = false
+            }
+        }
     }
 
     fun addUserToGroup(email: String, groupId: String, callback: (String) -> Unit) {
@@ -68,16 +103,17 @@ class FireStore {
         }
     }
 
-    fun getUserData(email: String, callback:(DocumentSnapshot) -> Unit){
+    fun getUserData(email: String, callback: (DocumentSnapshot) -> Unit) {
         this.email = email
         db.collection("users").document(email).get().addOnSuccessListener { document ->
             if (document.data != null) {
+
                 callback(document)
             } else {
                 Log.d(TAG, "No such document")
             }
         }.addOnFailureListener { exception ->
-                Log.d(TAG, "get failed with ", exception)
+            Log.d(TAG, "get failed with ", exception)
         }
     }
 
@@ -85,17 +121,16 @@ class FireStore {
         lateinit var document: DocumentSnapshot
         var groupArrayList = ArrayList<Group>()
         db = FirebaseFirestore.getInstance()
-        db.collection("groups").
-        addSnapshotListener(object : EventListener<QuerySnapshot> {
+        db.collection("groups").addSnapshotListener(object : EventListener<QuerySnapshot> {
             override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
-                if(error != null){
+                if (error != null) {
                     Log.e("Firestore Error", error.message.toString())
                     return
                 }
-                for(dc: DocumentChange in value?.documentChanges!!){
+                for (dc: DocumentChange in value?.documentChanges!!) {
                     Log.w(TAG, dc.toString())
                     document = dc.document
-                    if(document.toString().contains(email)) {
+                    if (document.toString().contains(email)) {
                         if (dc.type == DocumentChange.Type.ADDED) {
                             groupArrayList.add(dc.document.toObject(Group::class.java))
                         }
