@@ -38,4 +38,6 @@
     <string name="group_not_exists">Il gruppo cercato non esiste</string>
     <string name="group_creation_failed">Crezione gruppo fallita</string>
     <string name="group_creation">Gruppo creato con successo</string>
+    <string name="delete_row">Elimina gruppo</string>
+    <string name="delete_row_message">Sei sicuro di voler canecellare il gruppo</string>
 </resources>
