@@ -1,17 +1,17 @@
 package it.gooutapp.fragments.showGroup
 
 import android.graphics.Canvas
-import android.os.Build
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,7 +22,7 @@ import com.google.firebase.ktx.Firebase
 import it.gooutapp.R
 import it.gooutapp.firebase.FireStore
 import it.gooutapp.models.Group
-import kotlin.random.Random
+
 
 class ShowGroupFragment : Fragment(), MyAdapter.ClickListener {
 
@@ -36,7 +36,6 @@ class ShowGroupFragment : Fragment(), MyAdapter.ClickListener {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_show_group, container, false)
         val createGroupButton: FloatingActionButton = root.findViewById(R.id.fab)
-
 
         recyclerView = root.findViewById(R.id.recycleView)
         recyclerView.layoutManager = LinearLayoutManager(root.context)
@@ -53,14 +52,25 @@ class ShowGroupFragment : Fragment(), MyAdapter.ClickListener {
 
             //swipe a destra recycle view
             val itemSwipe = object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN,  ItemTouchHelper.LEFT) {
-            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
-               return false
+                override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+                   return false
+                }
+
+                override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
+                    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                    //creo background, che in realtà corrisponde allo spazio libero lasciato dalla draw mentre slida a sinistra
+                    val background = ColorDrawable(Color.RED)
+                    background.setBounds((viewHolder.itemView.right + dX).toInt(), viewHolder.itemView.top, viewHolder.itemView.right, viewHolder.itemView.bottom)
+                    background.draw(c)
+                }
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    showDialog(viewHolder)
+                }
             }
-            //TODO cercare come cambiare background durante swipe
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                showDialog(viewHolder)
-            }
-        }
+            //TODO disabilitare il drag and drop degli elementi della RecyclerView
+            //TODO non permettere di evitare la finestra di conferma cancellazione,
+            // altrimenti la riga rimane rossa senza item, oppure se perde focus la finestra,
+            // rimetto a posto la riga
             val swap = ItemTouchHelper(itemSwipe)
             swap.attachToRecyclerView(recyclerView)
         }
@@ -119,8 +129,9 @@ class ShowGroupFragment : Fragment(), MyAdapter.ClickListener {
         }
     }
 
-    //TODO per creare nuovo layout
-//       override fun onItemClick(group: Group) {
-//        TODO("Not yet implemented")
-//    }
+//TODO per creare nuovo layout
+    override fun onItemClick(group: Group) {
+
+        TODO("Not yet implemented")
+    }
 }

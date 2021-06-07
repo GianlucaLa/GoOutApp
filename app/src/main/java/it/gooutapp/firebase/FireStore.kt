@@ -36,7 +36,7 @@ class FireStore {
             "groupName" to groupName,
             "user_$user_id" to email
         )
-        db.collection("groups").document(groupName)
+        db.collection("groups").document()
             .set(group)
             .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
             .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }

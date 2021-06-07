@@ -23,7 +23,7 @@ class MyAdapter(private val groupList : ArrayList<Group>, val clickListener: Cli
         val group : Group = groupList[position]
         holder.groupName.text = group.groupName
         val iniziale = group.groupName?.get(0)
-        holder.groupPosition.text = "${position+1}"
+        holder.groupPosition.text = "15:46"
         //icona con iniziale
         holder.icon.text = iniziale.toString().toUpperCase()
         holder.itemView.setOnClickListener{
@@ -39,7 +39,7 @@ class MyAdapter(private val groupList : ArrayList<Group>, val clickListener: Cli
      class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         //nome della textView dove inserire dato
         val groupName : TextView = itemView.findViewById(R.id.textViewNomeGruppo)
-        val groupPosition : TextView = itemView.findViewById(R.id.textViewNumGruppo)
+        val groupPosition : TextView = itemView.findViewById(R.id.textViewOrario)
         val icon : TextView = itemView.findViewById(R.id.textViewDrawable)
     }
 
