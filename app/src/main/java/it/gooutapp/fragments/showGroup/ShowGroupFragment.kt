@@ -65,7 +65,7 @@ class ShowGroupFragment : Fragment(), MyAdapter.ClickListener {
                         background.setBounds((viewHolder.itemView.right + dX).toInt(), viewHolder.itemView.top, viewHolder.itemView.right, viewHolder.itemView.bottom)
                         background.draw(c)
                     }else{
-                        var background = ColorDrawable(Color.RED)
+                        var background = ColorDrawable(ContextCompat.getColor(root.context, R.color.lighRed))
                         background.setBounds((viewHolder.itemView.right + dX).toInt(), viewHolder.itemView.top, viewHolder.itemView.right, viewHolder.itemView.bottom)
                         background.draw(c)
                     }
@@ -148,7 +148,7 @@ class ShowGroupFragment : Fragment(), MyAdapter.ClickListener {
 
 //TODO per creare nuovo layout
     override fun onItemClick(group: Group) {
-        TODO("Not yet implemented")
+        //TODO("Not yet implemented")
     }
 
     private fun getStartContainerRectangle(viewItem: View, iconWidth: Int, topMargin: Int, sideOffset: Int, dx: Float): Rect {
