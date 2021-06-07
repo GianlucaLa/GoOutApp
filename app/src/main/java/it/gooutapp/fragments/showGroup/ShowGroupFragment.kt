@@ -1,8 +1,8 @@
 package it.gooutapp.fragments.showGroup
 
-import android.graphics.Canvas
-import android.graphics.Color
+import android.graphics.*
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -32,6 +32,7 @@ class ShowGroupFragment : Fragment(), MyAdapter.ClickListener {
     private var user_email = Firebase.auth.currentUser?.email.toString()
     private val fs = FireStore()
     private val TAG = "SHOW_GROUP_FRAGMENT"
+    private val OFFSET_PX = 20
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_show_group, container, false)
@@ -51,7 +52,7 @@ class ShowGroupFragment : Fragment(), MyAdapter.ClickListener {
             myAdapter.notifyDataSetChanged()
 
             //swipe a destra recycle view
-            val itemSwipe = object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN,  ItemTouchHelper.LEFT) {
+            val itemSwipe = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
                 override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
                    return false
                 }
@@ -59,10 +60,23 @@ class ShowGroupFragment : Fragment(), MyAdapter.ClickListener {
                 override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
                     super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
                     //creo background, che in realtà corrisponde allo spazio libero lasciato dalla draw mentre slida a sinistra
-                    val background = ColorDrawable(Color.RED)
-                    background.setBounds((viewHolder.itemView.right + dX).toInt(), viewHolder.itemView.top, viewHolder.itemView.right, viewHolder.itemView.bottom)
-                    background.draw(c)
+                    if(dX > -270){
+                        var background = ColorDrawable(Color.GRAY)
+                        background.setBounds((viewHolder.itemView.right + dX).toInt(), viewHolder.itemView.top, viewHolder.itemView.right, viewHolder.itemView.bottom)
+                        background.draw(c)
+                    }else{
+                        var background = ColorDrawable(Color.RED)
+                        background.setBounds((viewHolder.itemView.right + dX).toInt(), viewHolder.itemView.top, viewHolder.itemView.right, viewHolder.itemView.bottom)
+                        background.draw(c)
+                    }
+                    val icon = ContextCompat.getDrawable(root.context, R.drawable.ic_menu_trash_sliding)
+                    val topMargin = calculateTopMargin(icon!!, viewHolder.itemView).toInt()
+                    icon.colorFilter = PorterDuffColorFilter(ContextCompat.getColor(root.context, R.color.lightGrey),
+                        PorterDuff.Mode.SRC_IN)
+                    icon?.bounds  = getStartContainerRectangle(viewHolder.itemView, (icon.intrinsicWidth*1.2).toInt(), topMargin, OFFSET_PX, dX)
+                    icon?.draw(c)
                 }
+
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                     showDialog(viewHolder)
                 }
@@ -104,6 +118,7 @@ class ShowGroupFragment : Fragment(), MyAdapter.ClickListener {
                     //null operation
                 }
                 setView(dialogLayout)
+                setCancelable(false)
                 show()
             }
         }
@@ -125,13 +140,27 @@ class ShowGroupFragment : Fragment(), MyAdapter.ClickListener {
                 val position = viewHolder.adapterPosition
                 myAdapter.notifyItemChanged(position)
             }
+            builder.setCancelable(false);
             builder.show()
+
         }
     }
 
 //TODO per creare nuovo layout
     override fun onItemClick(group: Group) {
-
         TODO("Not yet implemented")
+    }
+
+    private fun getStartContainerRectangle(viewItem: View, iconWidth: Int, topMargin: Int, sideOffset: Int, dx: Float): Rect {
+        val leftBound = viewItem.right + dx.toInt() + sideOffset
+        val rightBound = viewItem.right + dx.toInt() + iconWidth + sideOffset
+        val topBound = viewItem.top + topMargin
+        val bottomBound = viewItem.bottom - topMargin
+
+        return Rect(leftBound, topBound, rightBound, bottomBound)
+    }
+
+    private fun calculateTopMargin(icon: Drawable, viewItem: View): Float {
+        return (viewItem.height - icon.intrinsicHeight) / 2.2F
     }
 }

@@ -105,6 +105,7 @@ class MainActivity : AppCompatActivity() {
                 //do nothing
             }
             setView(dialogLayout)
+            setCancelable(false)
             show()
         }
     }
