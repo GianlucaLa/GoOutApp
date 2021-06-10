@@ -43,4 +43,5 @@
     <string name="group_creation">Group created succesfully</string>
     <string name="delete_row">Delete group</string>
     <string name="delete_row_message">Are you sure want to delete group.</string>
+    <string name="invalid_group_code">The group code entered is invalid</string>
 </resources>

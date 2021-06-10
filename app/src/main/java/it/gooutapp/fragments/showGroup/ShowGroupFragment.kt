@@ -23,7 +23,6 @@ import it.gooutapp.R
 import it.gooutapp.firebase.FireStore
 import it.gooutapp.models.Group
 
-
 class ShowGroupFragment : Fragment(), MyAdapter.ClickListener {
 
     private lateinit var recyclerView: RecyclerView
@@ -32,7 +31,7 @@ class ShowGroupFragment : Fragment(), MyAdapter.ClickListener {
     private var user_email = Firebase.auth.currentUser?.email.toString()
     private val fs = FireStore()
     private val TAG = "SHOW_GROUP_FRAGMENT"
-    private val OFFSET_PX = 20
+    private val OFFSET_PX = 30
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_show_group, container, false)
@@ -44,12 +43,9 @@ class ShowGroupFragment : Fragment(), MyAdapter.ClickListener {
         groupArrayList = arrayListOf()
 
         fs.getUserGroupData(user_email) { groupList ->
-            Log.w(TAG, groupList.toString())
             groupArrayList = groupList
-            Log.w(TAG, groupArrayList.toString())
             myAdapter = MyAdapter(groupArrayList, this)
             recyclerView.adapter = myAdapter
-            myAdapter.notifyDataSetChanged()
 
             //swipe a destra recycle view
             val itemSwipe = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
@@ -60,7 +56,7 @@ class ShowGroupFragment : Fragment(), MyAdapter.ClickListener {
                 override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
                     super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
                     //creo background, che in realtà corrisponde allo spazio libero lasciato dalla draw mentre slida a sinistra
-                    if(dX > -270){
+                    if(dX > -viewHolder.itemView.width/3){
                         var background = ColorDrawable(Color.GRAY)
                         background.setBounds((viewHolder.itemView.right + dX).toInt(), viewHolder.itemView.top, viewHolder.itemView.right, viewHolder.itemView.bottom)
                         background.draw(c)
@@ -133,6 +129,7 @@ class ShowGroupFragment : Fragment(), MyAdapter.ClickListener {
             builder.setMessage(R.string.delete_row_message)
             builder.setPositiveButton(R.string.ok) {dialog, wich ->
                 val position = viewHolder.adapterPosition
+                fs.deleteGroupData(groupArrayList.get(position).groupCode.toString())
                 groupArrayList.removeAt(position)
                 myAdapter.notifyItemRemoved(position)
             }

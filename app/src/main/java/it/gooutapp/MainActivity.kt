@@ -2,6 +2,7 @@ package it.gooutapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
@@ -68,6 +69,7 @@ class MainActivity : AppCompatActivity() {
             var name = userData.get("name")
             var surname = userData.get("surname")
             drawerTextViewUser.text = "$name $surname"          //setto nome e cognome nella textview del DrawerMenu
+            Log.e("PROVA DEBUG", "---------------------------------------------------------------")
         }
         return true
     }
@@ -87,17 +89,24 @@ class MainActivity : AppCompatActivity() {
             setTitle(R.string.join_group)
             setPositiveButton(R.string.ok) { dialog, which ->
                 //rimuovo eventuali spazi vuoti inseriti dall'utente
-                var groupId = editText.text.toString().replace("\\s+".toRegex(), "")
-                if(groupId != ""){
-                    fs.addUserToGroup(user_email, groupId){result ->
-                        if(result){
-                            Toast.makeText(applicationContext, R.string.user_successful_added_to_group, Toast.LENGTH_SHORT).show()
-                        }else{
-                            Toast.makeText(applicationContext, R.string.user_is_already_member, Toast.LENGTH_SHORT).show()
+                val groupCode = editText.text.toString().replace("\\s+".toRegex(), "")
+                if(groupCode != ""){
+                    fs.addUserToGroup(user_email, groupCode){result ->
+                        when (result) {
+                            "NM" -> {
+                                Toast.makeText(applicationContext, R.string.user_successful_added_to_group, Toast.LENGTH_SHORT).show()
+                            }
+                            "AM" -> {
+                                Toast.makeText(applicationContext, R.string.user_is_already_member, Toast.LENGTH_SHORT).show()
+                            }
+                            else -> {
+                                Toast.makeText(applicationContext, R.string.invalid_group_code, Toast.LENGTH_SHORT).show()
+                            }
                         }
                     }
                 }else{
                     Toast.makeText(applicationContext, R.string.error_empty_value, Toast.LENGTH_SHORT).show()
+                    onStart()
                 }
             }
             setNegativeButton(R.string.cancel) { dialog, which ->
