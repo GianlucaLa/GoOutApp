@@ -50,7 +50,6 @@ class MainActivity : AppCompatActivity() {
                 setOf(
                     R.id.nav_showGroup,
                     R.id.nav_newProposal,
-                    R.id.nav_createGroup,
                     R.id.nav_groupManagement,
                     R.id.nav_settings
                 ), drawerLayout

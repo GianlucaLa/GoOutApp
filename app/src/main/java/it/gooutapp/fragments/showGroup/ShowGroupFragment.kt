@@ -146,7 +146,7 @@ class ShowGroupFragment : Fragment(), MyAdapter.ClickListener {
         }
     }
 
-//TODO per creare nuovo layout
+    //TODO per creare nuovo layout
     override fun onItemClick(group: Group) {
         //TODO("Not yet implemented")
     }

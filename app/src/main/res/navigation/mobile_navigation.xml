@@ -18,12 +18,6 @@
         tools:layout="@layout/fragment_new_proposal" />
 
     <fragment
-        android:id="@+id/nav_createGroup"
-        android:name="it.gooutapp.createGroup.CreateGroup"
-        android:label="@string/menu_create_group"
-        tools:layout="@layout/fragment_create_group" />
-
-    <fragment
         android:id="@+id/nav_groupManagement"
         android:name="it.gooutapp.fragments.groupManagement.GroupManagement"
         android:label="@string/menu_manage_groups"
