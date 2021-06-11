@@ -15,7 +15,8 @@
         android:id="@+id/nav_newProposal"
         android:name="it.gooutapp.fragments.newProposal.NewProposal"
         android:label="@string/menu_new_proposal"
-        tools:layout="@layout/fragment_new_proposal" />
+        tools:layout="@layout/fragment_new_proposal"
+    />
 
     <fragment
         android:id="@+id/nav_groupManagement"

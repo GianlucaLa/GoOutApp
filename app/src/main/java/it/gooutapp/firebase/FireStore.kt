@@ -8,11 +8,9 @@ import it.gooutapp.models.Group
 
 class FireStore {
     private val db = FirebaseFirestore.getInstance()
-    private lateinit var user_id : String
-    private var email = ""
-    private val TAG = "FIRE_STORE"
     private val groupCollection = "groups"
     private val userCollection = "users"
+    private val TAG = "FIRE_STORE"
 
     fun createUserData(name: String, surname: String, nickname: String, email: String) {
         val user = hashMapOf(
@@ -28,7 +26,6 @@ class FireStore {
     }
 
     fun createGroupData(groupName: String, email: String, callback: (String) -> Unit) {
-        user_id = Firebase.auth.currentUser?.uid.toString()
         // generazione randomica di character
         val source: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
         val groupCode: String = List(8) { source.random() }.joinToString("")
@@ -36,7 +33,7 @@ class FireStore {
         val group = hashMapOf(
             "groupCode" to groupCode,
             "groupName" to groupName,
-            "user_$user_id" to email
+            "Admin_${currentUserId()}" to email
         )
         db.collection(groupCollection).document()
             .set(group)
@@ -45,6 +42,19 @@ class FireStore {
         callback("successful")
     }
 
+    fun leaveGroup(groupCode: String){
+        getGroupDocumentId(groupCode) { groupDoc ->
+            val docRef = db.collection(groupCollection).document(groupDoc)
+
+            // Remove the 'user' field from the document
+            val updates = hashMapOf<String, Any>(
+                "user_${currentUserId()}" to FieldValue.delete()
+            )
+            docRef.update(updates).addOnCompleteListener { }
+        }
+    }
+
+    //solo per ADMINISTRATORS
     fun deleteGroupData(groupCode: String){
         getGroupDocumentId(groupCode) { documentToDelete ->
             db.collection(groupCollection).document(documentToDelete)
@@ -64,11 +74,10 @@ class FireStore {
 
     //RETURN INFO: AM=already member, NM=not member, ER=group code not valid
     private fun isAlreadyMemberOf(groupCode: String, callback: (String, String) -> Unit) {
-        user_id = Firebase.auth.currentUser?.uid.toString()
         db.collection(groupCollection).whereEqualTo("groupCode", "$groupCode").get().addOnSuccessListener { documents ->
             if (documents.size()==0) {
                 callback("ER", "")
-            } else if (documents.last().contains("user_$user_id")) {
+            } else if (documents.last().contains("user_${currentUserId()}")) {
                 callback("AM", "")
             } else {
                 callback("NM", documents.last().id)
@@ -87,7 +96,7 @@ class FireStore {
                 callback(alreadyMember)
             } else {
                 db.collection(groupCollection).document(groupDocId)  //nome gruppo
-                    .update("user_$user_id", email)
+                    .update("user_${currentUserId()}", email)
                     .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
                     .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
                 callback(alreadyMember)
@@ -96,7 +105,6 @@ class FireStore {
     }
 
     fun getUserData(email: String, callback: (DocumentSnapshot) -> Unit) {
-        this.email = email
         db.collection(userCollection).document(email).get().addOnSuccessListener { document ->
             if (document.data != null) {
                 callback(document)
@@ -120,9 +128,9 @@ class FireStore {
                 for (dc: DocumentChange in value?.documentChanges!!) {
                     Log.w(TAG, dc.toString())
                     document = dc.document
+                    //cerco e aggiungo i gruppi che contengono l'email dell'utente
                     if (document.toString().contains(email)) {
                         if (dc.type == DocumentChange.Type.ADDED) {
-                            Log.e("DEBUG", dc.document.toObject(Group::class.java).toString())
                             groupArrayList.add(dc.document.toObject(Group::class.java))
                         }
                     }
@@ -130,5 +138,9 @@ class FireStore {
                 callback(groupArrayList)
             }
         })
+    }
+
+    private fun currentUserId(): String{
+        return Firebase.auth.currentUser?.uid.toString()
     }
 }

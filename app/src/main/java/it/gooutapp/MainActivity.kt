@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -80,6 +81,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun joinGroup(item: MenuItem){
+        closeDrawer()
         val builder = AlertDialog.Builder(this)
         val inflater = layoutInflater
         val dialogLayout = inflater.inflate(R.layout.edittext_join_group, null)
@@ -95,6 +97,7 @@ class MainActivity : AppCompatActivity() {
                         when (result) {
                             "NM" -> {
                                 Toast.makeText(applicationContext, R.string.user_successful_added_to_group, Toast.LENGTH_SHORT).show()
+                                refreshFragment()
                             }
                             "AM" -> {
                                 Toast.makeText(applicationContext, R.string.user_is_already_member, Toast.LENGTH_SHORT).show()
@@ -122,5 +125,14 @@ class MainActivity : AppCompatActivity() {
         Firebase.auth.signOut()
         startActivity(Intent(this@MainActivity, LoginActivity::class.java))
         finish()
+    }
+
+    private fun closeDrawer(){
+        var mDrawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
+        mDrawerLayout.closeDrawers();
+    }
+
+    private fun refreshFragment(){
+        findNavController(R.id.nav_host_fragment).navigate(R.id.nav_showGroup)
     }
 }

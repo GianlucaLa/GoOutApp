@@ -32,9 +32,10 @@ class ShowGroupFragment : Fragment(), MyAdapter.ClickListener {
     private val fs = FireStore()
     private val TAG = "SHOW_GROUP_FRAGMENT"
     private val OFFSET_PX = 30
+    private lateinit var root: View
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val root = inflater.inflate(R.layout.fragment_show_group, container, false)
+        root = inflater.inflate(R.layout.fragment_show_group, container, false)
         val createGroupButton: FloatingActionButton = root.findViewById(R.id.fab)
 
         recyclerView = root.findViewById(R.id.recycleView)
@@ -129,7 +130,7 @@ class ShowGroupFragment : Fragment(), MyAdapter.ClickListener {
             builder.setMessage(R.string.delete_row_message)
             builder.setPositiveButton(R.string.ok) {dialog, wich ->
                 val position = viewHolder.adapterPosition
-                fs.deleteGroupData(groupArrayList.get(position).groupCode.toString())
+                fs.leaveGroup(groupArrayList.get(position).groupCode.toString())
                 groupArrayList.removeAt(position)
                 myAdapter.notifyItemRemoved(position)
             }
