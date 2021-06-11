@@ -137,7 +137,7 @@ class MainActivity : AppCompatActivity() {
         mDrawerLayout.closeDrawers();
     }
 
-    private fun refreshFragment(){
+    fun refreshFragment(){
         findNavController(R.id.nav_host_fragment).navigate(R.id.nav_showGroup)
     }
 }

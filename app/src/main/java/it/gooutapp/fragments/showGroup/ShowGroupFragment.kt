@@ -4,6 +4,7 @@ import android.graphics.*
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import it.gooutapp.MainActivity
 import it.gooutapp.R
 import it.gooutapp.firebase.FireStore
 import it.gooutapp.models.Group
@@ -32,14 +34,18 @@ class ShowGroupFragment : Fragment(), MyAdapter.ClickListener {
     private var user_email = Firebase.auth.currentUser?.email.toString()
     private val fs = FireStore()
     private val TAG = "SHOW_GROUP_FRAGMENT"
-    private val frgManger = fragmentManager?.beginTransaction()
     private val OFFSET_PX = 30
     private lateinit var root: View
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         root = inflater.inflate(R.layout.fragment_show_group, container, false)
-        val createGroupButton: FloatingActionButton = root.findViewById(R.id.fab)
+        return root
+    }
 
+    override fun onResume() {
+        super.onResume()
+        Log.e(TAG, "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
+        var createGroupButton: FloatingActionButton = root.findViewById(R.id.fab)
         recyclerView = root.findViewById(R.id.recycleView)
         recyclerView.layoutManager = LinearLayoutManager(root.context)
         recyclerView.setHasFixedSize(true)
@@ -55,7 +61,8 @@ class ShowGroupFragment : Fragment(), MyAdapter.ClickListener {
             //swipe a destra recycle view
             val itemSwipe = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
                 override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
-                   return false
+                    Log.e(TAG, viewHolder.adapterPosition.toString())
+                    return false
                 }
 
                 override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
@@ -72,20 +79,24 @@ class ShowGroupFragment : Fragment(), MyAdapter.ClickListener {
                     }
                     val icon = ContextCompat.getDrawable(root.context, R.drawable.ic_menu_trash_sliding)
                     val topMargin = calculateTopMargin(icon!!, viewHolder.itemView).toInt()
-                    icon.colorFilter = PorterDuffColorFilter(ContextCompat.getColor(root.context, R.color.lightGrey),
-                        PorterDuff.Mode.SRC_IN)
+                    icon.colorFilter = PorterDuffColorFilter(ContextCompat.getColor(root.context, R.color.lightGrey), PorterDuff.Mode.SRC_IN)
                     icon?.bounds  = getStartContainerRectangle(viewHolder.itemView, (icon.intrinsicWidth*1.2).toInt(), topMargin, OFFSET_PX, dX)
                     icon?.draw(c)
                 }
 
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                    showDialog(viewHolder)
+                    Log.e(TAG, viewHolder.adapterPosition.toString())
+                    if(viewHolder.itemView.textViewAdminFlag.text.toString() == "") {
+                        var title = resources.getString(R.string.leave_group)
+                        var message = resources.getString(R.string.leave_group_message)
+                        showDialog(viewHolder, title, message, false)
+                    } else {
+                        var title = resources.getString(R.string.delete_group)
+                        var message = resources.getString(R.string.delete_group_message)
+                        showDialog(viewHolder, title, message, true)
+                    }
                 }
             }
-            //TODO disabilitare il drag and drop degli elementi della RecyclerView
-            //TODO non permettere di evitare la finestra di conferma cancellazione,
-            // altrimenti la riga rimane rossa senza item, oppure se perde focus la finestra,
-            // rimetto a posto la riga
             val swap = ItemTouchHelper(itemSwipe)
             swap.attachToRecyclerView(recyclerView)
         }
@@ -103,16 +114,10 @@ class ShowGroupFragment : Fragment(), MyAdapter.ClickListener {
                     //rimuovo eventuali spazi vuoti inseriti dall'utente
                     var nomeG = editText.text.toString()
                     if (nomeG != "") {
-                        fs.createGroupData(nomeG, user_email) { result ->
-                            Toast.makeText(
-                                root.context,
-                                R.string.group_creation,
-                                Toast.LENGTH_SHORT
-                            ).show()
+                        fs.createGroupData(nomeG, user_email) { result -> Toast.makeText(root.context, R.string.group_creation, Toast.LENGTH_SHORT).show()
                         }
                     } else {
-                        Toast.makeText(root.context, R.string.error_empty_value, Toast.LENGTH_SHORT)
-                            .show()
+                        Toast.makeText(root.context, R.string.error_empty_value, Toast.LENGTH_SHORT).show()
                     }
                 }
                 setNegativeButton(R.string.cancel) { dialog, which ->
@@ -123,39 +128,44 @@ class ShowGroupFragment : Fragment(), MyAdapter.ClickListener {
                 show()
             }
         }
-
-        return root
     }
 
     //popup per confermare o cancellare row
-    private fun showDialog(viewHolder: RecyclerView.ViewHolder) {
-        var title = ""
-        var message = ""
-        val position = viewHolder.adapterPosition
-        if(viewHolder.itemView.textViewAdminFlag.toString() == "") {
-            title = resources.getString(R.string.leave_group)
-            message =  resources.getString(R.string.leave_group_message)
-            fs.leaveGroup(userGroupList[position].groupCode.toString())
-        } else {
-            title = resources.getString(R.string.delete_group)
-            message =  resources.getString(R.string.delete_group_message)
-            fs.deleteGroupData(userGroupList[position].groupCode.toString())
-        }
+    private fun showDialog(viewHolder: RecyclerView.ViewHolder, title: String, message: String, delete: Boolean) {
         val builder = view?.let { AlertDialog.Builder(it.context) }
         if (builder != null) {
             builder.setTitle(title)
             builder.setMessage(message)
+            Log.e(TAG, viewHolder.adapterPosition.toString())
             builder.setPositiveButton(R.string.ok) {dialog, wich ->
+                Log.e(TAG, viewHolder.adapterPosition.toString())
+                var position = viewHolder.adapterPosition
+                if(delete) {
+                    fs.deleteGroupData(userGroupList[position].groupCode.toString()){ result ->
+                        if (result) {
+                            onResume()
+                        } else {
+                            Log.e(TAG, "error during delete of document")
+                        }
+                    }
+                }else{
+                    fs.leaveGroup(userGroupList[position].groupCode.toString()){ result ->
+                        if (result) {
+                            onResume()
+                        } else {
+                            Log.e(TAG, "error during delete of user's field")
+                        }
+                    }
+                }
                 userGroupList.removeAt(position)
                 myAdapter.notifyItemRemoved(position)
             }
             builder.setNegativeButton(R.string.cancel){dialog, wich ->
-                val position = viewHolder.adapterPosition
-                myAdapter.notifyItemChanged(position)
+                Log.e(TAG, viewHolder.adapterPosition.toString())
+                myAdapter.notifyDataSetChanged()
             }
             builder.setCancelable(false);
             builder.show()
-
         }
     }
 

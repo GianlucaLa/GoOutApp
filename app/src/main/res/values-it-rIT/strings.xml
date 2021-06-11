@@ -39,7 +39,7 @@
     <string name="group_creation_failed">Crezione gruppo fallita</string>
     <string name="group_creation">Gruppo creato con successo</string>
     <string name="delete_group">Elimina il gruppo</string>
-    <string name="delete_group_message">Sei sicuro di voler cancellare il gruppo?</string>
+    <string name="delete_group_message">Sei sicuro di voler eliminare il gruppo?</string>
     <string name="invalid_group_code">il codice gruppo inserito non è valido</string>
     <string name="leave_group">Abbandona il gruppo</string>
     <string name="leave_group_message">Sei sicuro di voler abbandonare il gruppo?</string>

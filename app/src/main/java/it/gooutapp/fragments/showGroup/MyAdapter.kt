@@ -10,12 +10,12 @@ import it.gooutapp.models.Group
 
 class MyAdapter(private val userGroupList : ArrayList<Group>, val adminFlagList : ArrayList<Boolean>, val clickListener: ClickListener) : RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyAdapter.MyViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.recycle_view_row, parent, false)
         return MyViewHolder(itemView)
     }
 
-    override fun onBindViewHolder(holder: MyAdapter.MyViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val user: Group = userGroupList[position]
         if(adminFlagList[position]) {
             holder.adminFlag.text = "Admin"

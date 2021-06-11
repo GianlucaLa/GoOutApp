@@ -42,25 +42,33 @@ class FireStore {
         callback("successful")
     }
 
-    fun leaveGroup(groupCode: String) {
+    fun leaveGroup(groupCode: String, callback: (Boolean) -> Unit) {
         getGroupDocumentId(groupCode) { groupDoc ->
-            val docRef = db.collection(groupCollection).document(groupDoc)
-
             // Remove the 'user' field from the document
             val updates = hashMapOf<String, Any>(
                 "user_${currentUserId()}" to FieldValue.delete()
             )
-            docRef.update(updates).addOnCompleteListener { }
+            db.collection(groupCollection).document(groupDoc).update(updates)
+            .addOnSuccessListener {
+                Log.d(TAG, "DocumentSnapshot successfully deleted!")
+                callback(true)}
+            .addOnFailureListener {
+                e -> Log.w(TAG, "Error deleting document", e)
+                callback(false)}
         }
     }
 
     //solo per ADMINISTRATORS
-    fun deleteGroupData(groupCode: String) {
+    fun deleteGroupData(groupCode: String, callback: (Boolean) -> Unit) {
         getGroupDocumentId(groupCode) { documentToDelete ->
             db.collection(groupCollection).document(documentToDelete)
                 .delete()
-                .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully deleted!") }
-                .addOnFailureListener { e -> Log.w(TAG, "Error deleting document", e) }
+                .addOnSuccessListener {
+                    Log.d(TAG, "DocumentSnapshot successfully deleted!")
+                    callback(true)}
+                .addOnFailureListener {
+                        e -> Log.w(TAG, "Error deleting document", e)
+                    callback(false)}
         }
     }
 
