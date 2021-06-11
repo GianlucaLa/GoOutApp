@@ -4,7 +4,6 @@ import android.graphics.*
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,15 +21,18 @@ import com.google.firebase.ktx.Firebase
 import it.gooutapp.R
 import it.gooutapp.firebase.FireStore
 import it.gooutapp.models.Group
+import kotlinx.android.synthetic.main.recycle_view_row.view.*
 
 class ShowGroupFragment : Fragment(), MyAdapter.ClickListener {
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var groupArrayList: ArrayList<Group>
+    private lateinit var userGroupList: ArrayList<Group>
+    private lateinit var adminFlagList: ArrayList<Boolean>
     private lateinit var myAdapter: MyAdapter
     private var user_email = Firebase.auth.currentUser?.email.toString()
     private val fs = FireStore()
     private val TAG = "SHOW_GROUP_FRAGMENT"
+    private val frgManger = fragmentManager?.beginTransaction()
     private val OFFSET_PX = 30
     private lateinit var root: View
 
@@ -41,11 +43,13 @@ class ShowGroupFragment : Fragment(), MyAdapter.ClickListener {
         recyclerView = root.findViewById(R.id.recycleView)
         recyclerView.layoutManager = LinearLayoutManager(root.context)
         recyclerView.setHasFixedSize(true)
-        groupArrayList = arrayListOf()
+        userGroupList = arrayListOf()
+        adminFlagList = arrayListOf()
 
-        fs.getUserGroupData(user_email) { groupList ->
-            groupArrayList = groupList
-            myAdapter = MyAdapter(groupArrayList, this)
+        fs.getUserGroupData(user_email) { groupList, adminFlag ->
+            userGroupList = groupList
+            adminFlagList = adminFlag
+            myAdapter = MyAdapter(userGroupList, adminFlagList,this)
             recyclerView.adapter = myAdapter
 
             //swipe a destra recycle view
@@ -119,19 +123,30 @@ class ShowGroupFragment : Fragment(), MyAdapter.ClickListener {
                 show()
             }
         }
+
         return root
     }
 
     //popup per confermare o cancellare row
     private fun showDialog(viewHolder: RecyclerView.ViewHolder) {
+        var title = ""
+        var message = ""
+        val position = viewHolder.adapterPosition
+        if(viewHolder.itemView.textViewAdminFlag.toString() == "") {
+            title = resources.getString(R.string.leave_group)
+            message =  resources.getString(R.string.leave_group_message)
+            fs.leaveGroup(userGroupList[position].groupCode.toString())
+        } else {
+            title = resources.getString(R.string.delete_group)
+            message =  resources.getString(R.string.delete_group_message)
+            fs.deleteGroupData(userGroupList[position].groupCode.toString())
+        }
         val builder = view?.let { AlertDialog.Builder(it.context) }
         if (builder != null) {
-            builder.setTitle(R.string.delete_row)
-            builder.setMessage(R.string.delete_row_message)
+            builder.setTitle(title)
+            builder.setMessage(message)
             builder.setPositiveButton(R.string.ok) {dialog, wich ->
-                val position = viewHolder.adapterPosition
-                fs.leaveGroup(groupArrayList.get(position).groupCode.toString())
-                groupArrayList.removeAt(position)
+                userGroupList.removeAt(position)
                 myAdapter.notifyItemRemoved(position)
             }
             builder.setNegativeButton(R.string.cancel){dialog, wich ->
@@ -148,6 +163,7 @@ class ShowGroupFragment : Fragment(), MyAdapter.ClickListener {
     override fun onItemClick(group: Group) {
         //TODO("Not yet implemented")
     }
+
 
     private fun getStartContainerRectangle(viewItem: View, iconWidth: Int, topMargin: Int, sideOffset: Int, dx: Float): Rect {
         val leftBound = viewItem.right + dx.toInt() + sideOffset

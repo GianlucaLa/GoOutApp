@@ -33,7 +33,7 @@ class FireStore {
         val group = hashMapOf(
             "groupCode" to groupCode,
             "groupName" to groupName,
-            "Admin_${currentUserId()}" to email
+            "admin_${currentUserId()}" to email
         )
         db.collection(groupCollection).document()
             .set(group)
@@ -42,7 +42,7 @@ class FireStore {
         callback("successful")
     }
 
-    fun leaveGroup(groupCode: String){
+    fun leaveGroup(groupCode: String) {
         getGroupDocumentId(groupCode) { groupDoc ->
             val docRef = db.collection(groupCollection).document(groupDoc)
 
@@ -55,7 +55,7 @@ class FireStore {
     }
 
     //solo per ADMINISTRATORS
-    fun deleteGroupData(groupCode: String){
+    fun deleteGroupData(groupCode: String) {
         getGroupDocumentId(groupCode) { documentToDelete ->
             db.collection(groupCollection).document(documentToDelete)
                 .delete()
@@ -64,25 +64,27 @@ class FireStore {
         }
     }
 
-    private fun getGroupDocumentId(groupCode: String, callback: (String) -> Unit){
-        db.collection(groupCollection).whereEqualTo("groupCode", "$groupCode").get().addOnSuccessListener { foundGroupCode ->
-           callback(foundGroupCode.last().id)
-        }.addOnFailureListener { exception ->
+    private fun getGroupDocumentId(groupCode: String, callback: (String) -> Unit) {
+        db.collection(groupCollection).whereEqualTo("groupCode", "$groupCode").get()
+            .addOnSuccessListener { foundGroupCode ->
+                callback(foundGroupCode.last().id)
+            }.addOnFailureListener { exception ->
             Log.d(TAG, "get failed with ", exception)
         }
     }
 
     //RETURN INFO: AM=already member, NM=not member, ER=group code not valid
     private fun isAlreadyMemberOf(groupCode: String, callback: (String, String) -> Unit) {
-        db.collection(groupCollection).whereEqualTo("groupCode", "$groupCode").get().addOnSuccessListener { documents ->
-            if (documents.size()==0) {
-                callback("ER", "")
-            } else if (documents.last().contains("user_${currentUserId()}")) {
-                callback("AM", "")
-            } else {
-                callback("NM", documents.last().id)
-            }
-        }.addOnFailureListener { exception ->
+        db.collection(groupCollection).whereEqualTo("groupCode", "$groupCode").get()
+            .addOnSuccessListener { documents ->
+                if (documents.size() == 0) {
+                    callback("ER", "")
+                } else if (documents.last().contains("user_${currentUserId()}")) {
+                    callback("AM", "")
+                } else {
+                    callback("NM", documents.last().id)
+                }
+            }.addOnFailureListener { exception ->
             Log.d(TAG, "get failed with ", exception)
         }
     }
@@ -92,7 +94,7 @@ class FireStore {
             /*inserisco il nuovo utente al gruppo su FireStore assegnando come id
             il ritorno della calback di checkForNewUserId
             */
-            if (alreadyMember=="AM" || alreadyMember=="ER") {
+            if (alreadyMember == "AM" || alreadyMember == "ER") {
                 callback(alreadyMember)
             } else {
                 db.collection(groupCollection).document(groupDocId)  //nome gruppo
@@ -115,10 +117,12 @@ class FireStore {
             Log.d(TAG, "get failed with ", exception)
         }
     }
+
     //Restituisce i dati dei gruppi, utilizzata da Adapter per popolare la RecycleView
-    fun getUserGroupData(email: String, callback: (ArrayList<Group>) -> Unit) {
+    fun getUserGroupData(email: String, callback: (ArrayList<Group>, ArrayList<Boolean>) -> Unit) {
         lateinit var document: DocumentSnapshot
-        var groupArrayList = ArrayList<Group>()
+        var userGroupList = ArrayList<Group>()
+        var adminFlagList = ArrayList<Boolean>()
         db.collection(groupCollection).addSnapshotListener(object : EventListener<QuerySnapshot> {
             override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
                 if (error != null) {
@@ -126,21 +130,25 @@ class FireStore {
                     return
                 }
                 for (dc: DocumentChange in value?.documentChanges!!) {
-                    Log.w(TAG, dc.toString())
                     document = dc.document
                     //cerco e aggiungo i gruppi che contengono l'email dell'utente
-                    if (document.toString().contains(email)) {
-                        if (dc.type == DocumentChange.Type.ADDED) {
-                            groupArrayList.add(dc.document.toObject(Group::class.java))
-                        }
+                    if (document.contains("admin_${currentUserId()}")) {
+                        adminFlagList.add(true)
+                        if (dc.type == DocumentChange.Type.ADDED)
+                            userGroupList.add(dc.document.toObject(Group::class.java))
+
+                    } else if (document.contains("user_${currentUserId()}")) {
+                        adminFlagList.add(false)
+                        if (dc.type == DocumentChange.Type.ADDED)
+                            userGroupList.add(dc.document.toObject(Group::class.java))
                     }
                 }
-                callback(groupArrayList)
+                callback(userGroupList, adminFlagList)
             }
         })
     }
 
-    private fun currentUserId(): String{
+    private fun currentUserId(): String {
         return Firebase.auth.currentUser?.uid.toString()
     }
 }

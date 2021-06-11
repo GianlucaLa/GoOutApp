@@ -12,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -22,6 +24,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.*
 import com.google.firebase.ktx.Firebase
 import it.gooutapp.firebase.FireStore
+import it.gooutapp.fragments.showGroup.ShowGroupFragment
 import kotlinx.android.synthetic.main.nav_header_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -30,7 +33,9 @@ class MainActivity : AppCompatActivity() {
     private var name = ""                                       //valorizza textview nel drawer menu
     private var surname = ""                                    //valorizza textview nel drawer menu
     private val fs = FireStore()
+    private val sw = ShowGroupFragment()
     private val user_email = Firebase.auth.currentUser?.email.toString()
+
     private val TAG = "MAIN_ACTIVITY"
 
     override fun onCreate(savedInstanceState: Bundle?) {
