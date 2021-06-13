@@ -8,7 +8,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
@@ -19,10 +18,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import it.gooutapp.MainActivity
 import it.gooutapp.R
 import it.gooutapp.firebase.FireStore
 import it.gooutapp.models.Group
+import it.gooutapp.models.myDialog
 import kotlinx.android.synthetic.main.recycle_view_row.view.*
 
 class ShowGroupFragment : Fragment(), MyAdapter.ClickListener {
@@ -39,12 +38,6 @@ class ShowGroupFragment : Fragment(), MyAdapter.ClickListener {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         root = inflater.inflate(R.layout.fragment_show_group, container, false)
-        return root
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Log.e(TAG, "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
         var createGroupButton: FloatingActionButton = root.findViewById(R.id.fab)
         recyclerView = root.findViewById(R.id.recycleView)
         recyclerView.layoutManager = LinearLayoutManager(root.context)
@@ -103,31 +96,19 @@ class ShowGroupFragment : Fragment(), MyAdapter.ClickListener {
 
         //Create Group Listener
         createGroupButton.setOnClickListener { view ->
-            val builder = AlertDialog.Builder(view.context)
-            val inflater = layoutInflater
-            val dialogLayout = inflater.inflate(R.layout.edittext_create_group, null)
-            val editText = dialogLayout.findViewById<EditText>(R.id.editTextCreateGroup)
-
-            with(builder) {
-                setTitle(R.string.create_group)
-                setPositiveButton(R.string.ok) { dialog, which ->
-                    //rimuovo eventuali spazi vuoti inseriti dall'utente
-                    var nomeG = editText.text.toString()
-                    if (nomeG != "") {
-                        fs.createGroupData(nomeG, user_email) { result -> Toast.makeText(root.context, R.string.group_creation, Toast.LENGTH_SHORT).show()
-                        }
-                    } else {
-                        Toast.makeText(root.context, R.string.error_empty_value, Toast.LENGTH_SHORT).show()
+            var title = resources.getString(R.string.create_group)
+            var message = resources.getString(R.string.enter_group_name)
+            myDialog(title, message, root.context, layoutInflater) { groupName ->
+                fs.createGroupData(groupName, user_email) { result ->
+                    if(result){
+                        Toast.makeText(root.context, R.string.group_creation_successful, Toast.LENGTH_SHORT).show()
+                    }else{
+                        Toast.makeText(root.context, R.string.group_creation_failed, Toast.LENGTH_SHORT).show()
                     }
                 }
-                setNegativeButton(R.string.cancel) { dialog, which ->
-                    //null operation
-                }
-                setView(dialogLayout)
-                setCancelable(false)
-                show()
             }
         }
+        return root
     }
 
     //popup per confermare o cancellare row
@@ -136,22 +117,34 @@ class ShowGroupFragment : Fragment(), MyAdapter.ClickListener {
         if (builder != null) {
             builder.setTitle(title)
             builder.setMessage(message)
-            Log.e(TAG, viewHolder.adapterPosition.toString())
             builder.setPositiveButton(R.string.ok) {dialog, wich ->
-                Log.e(TAG, viewHolder.adapterPosition.toString())
                 var position = viewHolder.adapterPosition
+                myAdapter.onDeleteItem(position)
+                recyclerView.adapter = myAdapter
+                //se utente amministratore
                 if(delete) {
                     fs.deleteGroupData(userGroupList[position].groupCode.toString()){ result ->
                         if (result) {
-                            onResume()
+                            fs.getUserGroupData(user_email) { groupList, adminFlag ->
+                                userGroupList = groupList
+                                adminFlagList = adminFlag
+                                myAdapter = MyAdapter(userGroupList, adminFlagList, this)
+                                recyclerView.adapter = myAdapter
+                            }
                         } else {
                             Log.e(TAG, "error during delete of document")
                         }
                     }
+                //se utente non amministratore
                 }else{
                     fs.leaveGroup(userGroupList[position].groupCode.toString()){ result ->
                         if (result) {
-                            onResume()
+                            fs.getUserGroupData(user_email) { groupList, adminFlag ->
+                                userGroupList = groupList
+                                adminFlagList = adminFlag
+                                myAdapter = MyAdapter(userGroupList, adminFlagList, this)
+                                recyclerView.adapter = myAdapter
+                            }
                         } else {
                             Log.e(TAG, "error during delete of user's field")
                         }

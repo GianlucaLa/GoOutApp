@@ -25,11 +25,10 @@ class FireStore {
             .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
     }
 
-    fun createGroupData(groupName: String, email: String, callback: (String) -> Unit) {
+    fun createGroupData(groupName: String, email: String, callback: (Boolean) -> Unit) {
         // generazione randomica di character
         val source: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
         val groupCode: String = List(8) { source.random() }.joinToString("")
-
         val group = hashMapOf(
             "groupCode" to groupCode,
             "groupName" to groupName,
@@ -37,9 +36,12 @@ class FireStore {
         )
         db.collection(groupCollection).document()
             .set(group)
-            .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
-            .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
-        callback("successful")
+            .addOnSuccessListener {
+                Log.d(TAG, "DocumentSnapshot successfully written!")
+                callback(true) }
+            .addOnFailureListener {
+                e -> Log.w(TAG, "Error writing document", e)
+                callback(false) }
     }
 
     fun leaveGroup(groupCode: String, callback: (Boolean) -> Unit) {

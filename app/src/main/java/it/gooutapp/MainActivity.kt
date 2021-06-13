@@ -5,15 +5,10 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.EditText
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -25,6 +20,7 @@ import com.google.firebase.firestore.*
 import com.google.firebase.ktx.Firebase
 import it.gooutapp.firebase.FireStore
 import it.gooutapp.fragments.showGroup.ShowGroupFragment
+import it.gooutapp.models.myDialog
 import kotlinx.android.synthetic.main.nav_header_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -35,7 +31,6 @@ class MainActivity : AppCompatActivity() {
     private val fs = FireStore()
     private val sw = ShowGroupFragment()
     private val user_email = Firebase.auth.currentUser?.email.toString()
-
     private val TAG = "MAIN_ACTIVITY"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,44 +80,25 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
-    fun joinGroup(item: MenuItem){
+    fun joinGroup(item: MenuItem) {
         closeDrawer()
-        val builder = AlertDialog.Builder(this)
-        val inflater = layoutInflater
-        val dialogLayout = inflater.inflate(R.layout.edittext_join_group, null)
-        val editText = dialogLayout.findViewById<EditText>(R.id.editTextJoinGroup)
-
-        with(builder) {
-            setTitle(R.string.join_group)
-            setPositiveButton(R.string.ok) { dialog, which ->
-                //rimuovo eventuali spazi vuoti inseriti dall'utente
-                val groupCode = editText.text.toString().replace("\\s+".toRegex(), "")
-                if(groupCode != ""){
-                    fs.addUserToGroup(user_email, groupCode){result ->
-                        when (result) {
-                            "NM" -> {
-                                Toast.makeText(applicationContext, R.string.user_successful_added_to_group, Toast.LENGTH_SHORT).show()
-                                refreshFragment()
-                            }
-                            "AM" -> {
-                                Toast.makeText(applicationContext, R.string.user_is_already_member, Toast.LENGTH_SHORT).show()
-                            }
-                            else -> {
-                                Toast.makeText(applicationContext, R.string.invalid_group_code, Toast.LENGTH_SHORT).show()
-                            }
-                        }
+        var title = resources.getString(R.string.join_group)
+        var message = resources.getString(R.string.enter_group_code)
+        myDialog(title, message, this, layoutInflater) { groupCode ->
+            fs.addUserToGroup(user_email, groupCode) { result ->
+                when (result) {
+                    "NM" -> {
+                        Toast.makeText(applicationContext, R.string.user_successful_added_to_group, Toast.LENGTH_SHORT).show()
+                        refreshFragment()
                     }
-                }else{
-                    Toast.makeText(applicationContext, R.string.error_empty_value, Toast.LENGTH_SHORT).show()
-                    onStart()
+                    "AM" -> {
+                        Toast.makeText(applicationContext, R.string.user_is_already_member, Toast.LENGTH_SHORT).show()
+                    }
+                    else -> {
+                        Toast.makeText(applicationContext, R.string.invalid_group_code, Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
-            setNegativeButton(R.string.cancel) { dialog, which ->
-                //do nothing
-            }
-            setView(dialogLayout)
-            setCancelable(false)
-            show()
         }
     }
 

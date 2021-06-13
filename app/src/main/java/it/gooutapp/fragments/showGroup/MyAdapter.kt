@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import it.gooutapp.R
 import it.gooutapp.models.Group
@@ -17,12 +18,12 @@ class MyAdapter(private val userGroupList : ArrayList<Group>, val adminFlagList 
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val user: Group = userGroupList[position]
-        if(adminFlagList[position]) {
-            holder.adminFlag.text = "Admin"
-        }
         holder.groupName.text = user.groupName
         val iniziale = user.groupName?.get(0)
         holder.groupPosition.text = "15:46"
+        if(adminFlagList[position]) {
+            holder.adminFlag.text = "Admin"
+        }
         //icona con iniziale
         holder.icon.text = iniziale.toString().toUpperCase()
         holder.itemView.setOnClickListener{
@@ -30,10 +31,13 @@ class MyAdapter(private val userGroupList : ArrayList<Group>, val adminFlagList 
         }
     }
 
+    fun onDeleteItem(position: Int){
+        adminFlagList.removeAt(position)
+    }
+
     override fun getItemCount(): Int {
        return userGroupList.size
     }
-
      class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         //nome della textView dove inserire dato
         val groupName : TextView = itemView.findViewById(R.id.textViewNomeGruppo)
