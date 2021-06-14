@@ -111,7 +111,7 @@ class ShowGroupFragment : Fragment(), MyAdapter.ClickListener {
         return root
     }
 
-    //popup per confermare o cancellare row
+    //popup per confermare cancellazione row
     private fun showDialog(viewHolder: RecyclerView.ViewHolder, title: String, message: String, delete: Boolean) {
         val builder = view?.let { AlertDialog.Builder(it.context) }
         if (builder != null) {
@@ -120,7 +120,6 @@ class ShowGroupFragment : Fragment(), MyAdapter.ClickListener {
             builder.setPositiveButton(R.string.ok) {dialog, wich ->
                 var position = viewHolder.adapterPosition
                 myAdapter.onDeleteItem(position)
-                recyclerView.adapter = myAdapter
                 //se utente amministratore
                 if(delete) {
                     fs.deleteGroupData(userGroupList[position].groupCode.toString()){ result ->
@@ -166,7 +165,6 @@ class ShowGroupFragment : Fragment(), MyAdapter.ClickListener {
     override fun onItemClick(group: Group) {
         //TODO("Not yet implemented")
     }
-
 
     private fun getStartContainerRectangle(viewItem: View, iconWidth: Int, topMargin: Int, sideOffset: Int, dx: Float): Rect {
         val leftBound = viewItem.right + dx.toInt() + sideOffset
