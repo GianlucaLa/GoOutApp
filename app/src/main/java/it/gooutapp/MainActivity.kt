@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -14,6 +15,15 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.gms.common.api.Status
+import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.api.model.TypeFilter
+import com.google.android.libraries.places.widget.Autocomplete
+import com.google.android.libraries.places.widget.AutocompleteActivity
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.*
@@ -21,13 +31,16 @@ import com.google.firebase.ktx.Firebase
 import it.gooutapp.firebase.FireStore
 import it.gooutapp.fragments.showGroup.ShowGroupFragment
 import it.gooutapp.models.myDialog
+import kotlinx.android.synthetic.main.fragment_new_proposal.*
 import kotlinx.android.synthetic.main.nav_header_main.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var userData: DocumentSnapshot
     private var name = ""                                       //valorizza textview nel drawer menu
-    private var surname = ""                                    //valorizza textview nel drawer menu
+    private var surname = ""
+    val AUTOCOMPLETE_REQUEST_CODE = 1
+    //valorizza textview nel drawer menu
     private val fs = FireStore()
     private val sw = ShowGroupFragment()
     private val user_email = Firebase.auth.currentUser?.email.toString()
@@ -115,5 +128,28 @@ class MainActivity : AppCompatActivity() {
 
     fun refreshFragment(){
         findNavController(R.id.nav_host_fragment).navigate(R.id.nav_showGroup)
+    }
+
+    fun startAutocompleteActivity(v: View) {
+        Places.initialize(this, "AIzaSyBNPwGd6VZHLf7TToPGuI0ZmecATXvuWGY")
+        val intent = Autocomplete.IntentBuilder(
+            AutocompleteActivityMode.FULLSCREEN,
+            listOf(Place.Field.ID, Place.Field.NAME)
+        ).setTypeFilter(TypeFilter.ESTABLISHMENT)
+            .build(this)
+        startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(resultCode == AUTOCOMPLETE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                var place = data?.let { Autocomplete.getPlaceFromIntent(it) }
+                Log.e("MAPS", "Place: ${place?.name}, ${place?.id}")
+            } else if(resultCode == AutocompleteActivity.RESULT_ERROR) {
+                var status = data?.let { Autocomplete.getStatusFromIntent(it) }
+                Log.i("MAPS", "An error occurred: $status")
+            }
+        }
     }
 }

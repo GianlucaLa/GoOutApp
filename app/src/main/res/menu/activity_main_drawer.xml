@@ -23,6 +23,7 @@
             android:id="@+id/nav_groupManagement"
             android:icon="@drawable/ic_menu_manage_group"
             android:title="@string/menu_manage_groups" />
+
         <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_menu_settings"

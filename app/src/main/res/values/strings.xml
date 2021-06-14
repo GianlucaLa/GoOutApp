@@ -47,4 +47,5 @@
     <string name="leave_group">Leave the group</string>
     <string name="leave_group_message">Are you sure you want to leave the group?</string>
     <string name="error">Error</string>
+    <string name="apiKey" translatable="false">AIzaSyBNPwGd6VZHLf7TToPGuI0ZmecATXvuWGY</string>
 </resources>

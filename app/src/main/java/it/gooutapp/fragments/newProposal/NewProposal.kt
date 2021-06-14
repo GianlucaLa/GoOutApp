@@ -2,12 +2,22 @@ package it.gooutapp.fragments.newProposal
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.api.model.TypeFilter
+import com.google.android.libraries.places.widget.Autocomplete
+import com.google.android.libraries.places.widget.AutocompleteActivity
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import it.gooutapp.R
 import java.util.*
 
@@ -28,11 +38,7 @@ class NewProposal : Fragment(), DatePickerDialog.OnDateSetListener, TimePickerDi
     var mMinute = 0
 
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         root = inflater.inflate(R.layout.fragment_new_proposal, container, false)
         pickDate()
         return root
@@ -74,4 +80,5 @@ class NewProposal : Fragment(), DatePickerDialog.OnDateSetListener, TimePickerDi
         val msg = "$mDay-$mMonth-$mYear--- Hour: $mHour Minute: $mMinute"
         Toast.makeText(root.context, "$msg", Toast.LENGTH_SHORT).show()
     }
+
 }
