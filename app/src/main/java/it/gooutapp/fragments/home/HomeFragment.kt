@@ -40,7 +40,6 @@ class HomeFragment : Fragment(), MyAdapter.ClickListener {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         root = inflater.inflate(R.layout.fragment_show_groups, container, false)
-        Log.e(TAG, root.context.toString())
         var createGroupButton: FloatingActionButton = root.findViewById(R.id.fab)
         recyclerView = root.findViewById(R.id.recycleView)
         recyclerView.layoutManager = LinearLayoutManager(root.context)
@@ -57,7 +56,6 @@ class HomeFragment : Fragment(), MyAdapter.ClickListener {
             //swipe a destra recycle view
             val itemSwipe = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
                 override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
-                    Log.e(TAG, viewHolder.adapterPosition.toString())
                     return false
                 }
 
@@ -81,7 +79,6 @@ class HomeFragment : Fragment(), MyAdapter.ClickListener {
                 }
 
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                    Log.e(TAG, viewHolder.adapterPosition.toString())
                     if(viewHolder.itemView.textViewAdminFlag.text.toString() == "") {
                         var title = resources.getString(R.string.leave_group)
                         var message = resources.getString(R.string.leave_group_message)
@@ -156,7 +153,6 @@ class HomeFragment : Fragment(), MyAdapter.ClickListener {
                 myAdapter.notifyItemRemoved(position)
             }
             builder.setNegativeButton(R.string.cancel){dialog, wich ->
-                Log.e(TAG, viewHolder.adapterPosition.toString())
                 myAdapter.notifyDataSetChanged()
             }
             builder.setCancelable(false);

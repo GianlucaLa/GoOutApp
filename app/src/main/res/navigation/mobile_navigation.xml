@@ -39,7 +39,7 @@
 
     <fragment
         android:id="@+id/nav_group"
-        android:name="it.gooutapp.fragments.groupWindow.GroupFragment"
+        android:name="it.gooutapp.fragments.group.GroupFragment"
         tools:layout="@layout/fragment_group" />
 
 </navigation>

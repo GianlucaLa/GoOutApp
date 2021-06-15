@@ -1,4 +1,4 @@
-package it.gooutapp.fragments.groupWindow
+package it.gooutapp.fragments.group
 
 import android.os.Bundle
 import android.view.LayoutInflater

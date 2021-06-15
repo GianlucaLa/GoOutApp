@@ -90,7 +90,6 @@ class MainActivity : AppCompatActivity() {
             var name = userData.get("name")
             var surname = userData.get("surname")
             drawerTextViewUser.text = "$name $surname"          //setto nome e cognome nella textview del DrawerMenu
-            Log.e("PROVA DEBUG", "---------------------------------------------------------------")
         }
         return true
     }
