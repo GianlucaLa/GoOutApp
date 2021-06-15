@@ -10,6 +10,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
+import androidx.navigation.NavArgument
+import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -29,7 +32,9 @@ import it.gooutapp.firebase.FireStore
 import it.gooutapp.fragments.showGroup.ShowGroupFragment
 import it.gooutapp.models.myDialog
 import kotlinx.android.synthetic.main.fragment_new_proposal.*
+import kotlinx.android.synthetic.main.fragment_show_groups.*
 import kotlinx.android.synthetic.main.nav_header_main.*
+import kotlinx.android.synthetic.main.recycle_view_row.view.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -37,10 +42,9 @@ class MainActivity : AppCompatActivity() {
     private var name = ""                                       //valorizza textview nel drawer menu
     private var surname = ""
     val AUTOCOMPLETE_REQUEST_CODE = 1
-    //valorizza textview nel drawer menu
     private val fs = FireStore()
-    private val sw = ShowGroupFragment()
     private val user_email = Firebase.auth.currentUser?.email.toString()
+    private var selectedGroup = ""
     private val TAG = "MAIN_ACTIVITY"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,6 +61,15 @@ class MainActivity : AppCompatActivity() {
             val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
             val navView: NavigationView = findViewById(R.id.nav_view)
             val navController = findNavController(R.id.nav_host_fragment)
+            navController.addOnDestinationChangedListener {
+                    controller, destination, arguments ->
+                when(destination.id) {
+                    R.id.nav_group -> {
+                        //toolbar.title = navController.currentDestination?.label
+                        toolbar.title = arguments?.getString("groupName")
+                    }
+                }
+            }
             //di seguito il contenitore dei nav nel drawer
             appBarConfiguration = AppBarConfiguration(
                 setOf(
@@ -76,7 +89,7 @@ class MainActivity : AppCompatActivity() {
         //prendo da FireStore i dati dell'utente
         fs.getUserData(user_email){ document ->
             userData = document                                 //setto il documentSnapshot della classe con il valore returnato dal getUserData
-            drawerTextViewEmail.text = user_email                    //setto email nella textview del DrawerMenu
+            drawerTextViewEmail.text = user_email               //setto email nella textview del DrawerMenu
             var name = userData.get("name")
             var surname = userData.get("surname")
             drawerTextViewUser.text = "$name $surname"          //setto nome e cognome nella textview del DrawerMenu

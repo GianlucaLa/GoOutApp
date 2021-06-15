@@ -11,7 +11,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -32,12 +35,13 @@ class ShowGroupFragment : Fragment(), MyAdapter.ClickListener {
     private lateinit var myAdapter: MyAdapter
     private var user_email = Firebase.auth.currentUser?.email.toString()
     private val fs = FireStore()
-    private val TAG = "SHOW_GROUP_FRAGMENT"
     private val OFFSET_PX = 30
     private lateinit var root: View
+    private val TAG = "SHOW_GROUP_FRAGMENT"
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        root = inflater.inflate(R.layout.fragment_show_group, container, false)
+        root = inflater.inflate(R.layout.fragment_show_groups, container, false)
+        Log.e(TAG, root.context.toString())
         var createGroupButton: FloatingActionButton = root.findViewById(R.id.fab)
         recyclerView = root.findViewById(R.id.recycleView)
         recyclerView.layoutManager = LinearLayoutManager(root.context)
@@ -163,7 +167,8 @@ class ShowGroupFragment : Fragment(), MyAdapter.ClickListener {
 
     //TODO per creare nuovo layout
     override fun onItemClick(group: Group) {
-        //TODO("Not yet implemented")
+        val bundle = bundleOf("groupName" to group.groupName)
+        activity?.findNavController(R.id.nav_host_fragment)?.navigate(R.id.nav_group, bundle)
     }
 
     private fun getStartContainerRectangle(viewItem: View, iconWidth: Int, topMargin: Int, sideOffset: Int, dx: Float): Rect {
@@ -171,7 +176,6 @@ class ShowGroupFragment : Fragment(), MyAdapter.ClickListener {
         val rightBound = viewItem.right + dx.toInt() + iconWidth + sideOffset
         val topBound = viewItem.top + topMargin
         val bottomBound = viewItem.bottom - topMargin
-
         return Rect(leftBound, topBound, rightBound, bottomBound)
     }
 

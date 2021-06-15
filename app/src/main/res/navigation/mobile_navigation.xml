@@ -9,14 +9,17 @@
         android:id="@+id/nav_showGroup"
         android:name="it.gooutapp.fragments.showGroup.ShowGroupFragment"
         android:label="@string/menu_show_groups"
-        tools:layout="@layout/fragment_show_group" />
+        tools:layout="@layout/fragment_show_groups" >
+        <action
+            android:id="@+id/action_nav_showGroup_to_nav_group"
+            app:destination="@id/nav_group" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_newProposal"
         android:name="it.gooutapp.fragments.newProposal.NewProposal"
         android:label="@string/menu_new_proposal"
-        tools:layout="@layout/fragment_new_proposal"
-    />
+        tools:layout="@layout/fragment_new_proposal" />
 
     <fragment
         android:id="@+id/nav_groupManagement"
@@ -29,5 +32,10 @@
         android:name="it.gooutapp.fragments.settings.SettingsFragment"
         android:label="@string/menu_settings"
         tools:layout="@layout/fragment_settings" />
+
+    <fragment
+        android:id="@+id/nav_group"
+        android:name="it.gooutapp.fragments.group.GroupFragment"
+        tools:layout="@layout/fragment_group" />
 
 </navigation>
