@@ -20,7 +20,7 @@
     <string name="menu_create_group">Create new group</string>
     <string name="menu_new_proposal">New proposal</string>
     <string name="menu_join_group">Join a group</string>
-    <string name="menu_show_groups">Show Groups</string>
+    <string name="menu_home">Groups</string>
     <string name="menu_manage_groups">Groups management</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_logout">Logout</string>
@@ -48,4 +48,6 @@
     <string name="leave_group_message">Are you sure you want to leave the group?</string>
     <string name="error">Error</string>
     <string name="apiKey" translatable="false">AIzaSyBNPwGd6VZHLf7TToPGuI0ZmecATXvuWGY</string>
+    <string name="home">Home</string>
+    <string name="profile">Profile</string>
 </resources>

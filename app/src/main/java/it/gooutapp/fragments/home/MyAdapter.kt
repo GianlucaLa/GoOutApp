@@ -1,10 +1,9 @@
-package it.gooutapp.fragments.showGroup
+package it.gooutapp.fragments.home
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import it.gooutapp.R
 import it.gooutapp.models.Group

@@ -1,13 +1,11 @@
-package it.gooutapp.fragments.group
+package it.gooutapp.fragments.groupWindow
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import it.gooutapp.R
-import kotlinx.android.synthetic.main.registration.*
 
 class GroupFragment : Fragment() {
     private val TAG = "GROUP_FRAGMENT"

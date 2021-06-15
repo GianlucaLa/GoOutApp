@@ -17,7 +17,7 @@
     <string name="menu_create_group">Crea nuovo gruppo</string>
     <string name="menu_new_proposal">Nuova proposta</string>
     <string name="menu_join_group">Partecipa ad un gruppo</string>
-    <string name="menu_show_groups">Visualizza gruppi</string>
+    <string name="menu_home">Gruppi</string>
     <string name="menu_manage_groups">Gestione gruppi</string>
     <string name="menu_settings">Impostazioni</string>
     <string name="menu_logout">Esci</string>
@@ -44,4 +44,6 @@
     <string name="leave_group">Abbandona il gruppo</string>
     <string name="leave_group_message">Sei sicuro di voler abbandonare il gruppo?</string>
     <string name="error">Errore</string>
+    <string name="home">Home</string>
+    <string name="profile">Profilo</string>
 </resources>

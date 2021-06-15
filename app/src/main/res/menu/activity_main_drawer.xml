@@ -6,9 +6,9 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_showGroup"
-            android:icon="@drawable/ic_menu_group"
-            android:title="@string/menu_show_groups" />
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_menu_home"
+            android:title="@string/home" />
         <item
             android:id="@+id/nav_newProposal"
             android:icon="@drawable/ic_menu_add"
@@ -18,12 +18,10 @@
             android:icon="@drawable/ic_menu_join_group"
             android:title="@string/join_group"
             android:onClick="joinGroup"/>
-
         <item
-            android:id="@+id/nav_groupManagement"
-            android:icon="@drawable/ic_menu_manage_group"
-            android:title="@string/menu_manage_groups" />
-
+            android:id="@+id/nav_userProfile"
+            android:icon="@drawable/ic_menu_user_profile"
+            android:title="@string/profile" />
         <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_menu_settings"

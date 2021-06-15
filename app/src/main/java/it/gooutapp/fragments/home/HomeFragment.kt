@@ -1,4 +1,4 @@
-package it.gooutapp.fragments.showGroup
+package it.gooutapp.fragments.home
 
 import android.graphics.*
 import android.graphics.drawable.ColorDrawable
@@ -14,7 +14,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -27,7 +26,7 @@ import it.gooutapp.models.Group
 import it.gooutapp.models.myDialog
 import kotlinx.android.synthetic.main.recycle_view_row.view.*
 
-class ShowGroupFragment : Fragment(), MyAdapter.ClickListener {
+class HomeFragment : Fragment(), MyAdapter.ClickListener {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var userGroupList: ArrayList<Group>
@@ -37,7 +36,7 @@ class ShowGroupFragment : Fragment(), MyAdapter.ClickListener {
     private val fs = FireStore()
     private val OFFSET_PX = 30
     private lateinit var root: View
-    private val TAG = "SHOW_GROUP_FRAGMENT"
+    private val TAG = "HOME_FRAGMENT"
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         root = inflater.inflate(R.layout.fragment_show_groups, container, false)
@@ -167,7 +166,10 @@ class ShowGroupFragment : Fragment(), MyAdapter.ClickListener {
 
     //TODO per creare nuovo layout
     override fun onItemClick(group: Group) {
-        val bundle = bundleOf("groupName" to group.groupName)
+        val bundle = bundleOf(
+            "groupName" to group.groupName
+            //"altro" to valore
+        )
         activity?.findNavController(R.id.nav_host_fragment)?.navigate(R.id.nav_group, bundle)
     }
 

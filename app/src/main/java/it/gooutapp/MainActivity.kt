@@ -10,9 +10,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.fragment.app.Fragment
-import androidx.navigation.NavArgument
-import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -29,7 +26,6 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.*
 import com.google.firebase.ktx.Firebase
 import it.gooutapp.firebase.FireStore
-import it.gooutapp.fragments.showGroup.ShowGroupFragment
 import it.gooutapp.models.myDialog
 import kotlinx.android.synthetic.main.fragment_new_proposal.*
 import kotlinx.android.synthetic.main.fragment_show_groups.*
@@ -65,7 +61,6 @@ class MainActivity : AppCompatActivity() {
                     controller, destination, arguments ->
                 when(destination.id) {
                     R.id.nav_group -> {
-                        //toolbar.title = navController.currentDestination?.label
                         toolbar.title = arguments?.getString("groupName")
                     }
                 }
@@ -73,9 +68,9 @@ class MainActivity : AppCompatActivity() {
             //di seguito il contenitore dei nav nel drawer
             appBarConfiguration = AppBarConfiguration(
                 setOf(
-                    R.id.nav_showGroup,
+                    R.id.nav_home,
                     R.id.nav_newProposal,
-                    R.id.nav_groupManagement,
+                    R.id.nav_userProfile,
                     R.id.nav_settings
                 ), drawerLayout
             )
@@ -84,7 +79,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    //crea le opzioni del menu con i tre pallini
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        //assegno il layout del menu con i tre pallini usando main.xml
         menuInflater.inflate(R.menu.main, menu)
         //prendo da FireStore i dati dell'utente
         fs.getUserData(user_email){ document ->
@@ -137,7 +134,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun refreshFragment(){
-        findNavController(R.id.nav_host_fragment).navigate(R.id.nav_showGroup)
+        findNavController(R.id.nav_host_fragment).navigate(R.id.nav_home)
     }
 
     fun startAutocompleteActivity(v: View) {

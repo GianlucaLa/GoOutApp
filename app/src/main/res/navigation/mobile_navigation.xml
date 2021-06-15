@@ -3,16 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_showGroup">
+    app:startDestination="@+id/nav_home">
 
     <fragment
-        android:id="@+id/nav_showGroup"
-        android:name="it.gooutapp.fragments.showGroup.ShowGroupFragment"
-        android:label="@string/menu_show_groups"
+        android:id="@+id/nav_home"
+        android:name="it.gooutapp.fragments.home.HomeFragment"
+        android:label="@string/menu_home"
         tools:layout="@layout/fragment_show_groups" >
         <action
             android:id="@+id/action_nav_showGroup_to_nav_group"
-            app:destination="@id/nav_group" />
+            app:destination="@id/nav_group"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
     </fragment>
 
     <fragment
@@ -22,10 +26,10 @@
         tools:layout="@layout/fragment_new_proposal" />
 
     <fragment
-        android:id="@+id/nav_groupManagement"
-        android:name="it.gooutapp.fragments.groupManagement.GroupManagement"
-        android:label="@string/menu_manage_groups"
-        tools:layout="@layout/fragment_group_management" />
+        android:id="@+id/nav_userProfile"
+        android:name="it.gooutapp.fragments.userProfile.UserProfile"
+        android:label="@string/profile"
+        tools:layout="@layout/fragment_user_profile" />
 
     <fragment
         android:id="@+id/nav_settings"
@@ -35,7 +39,7 @@
 
     <fragment
         android:id="@+id/nav_group"
-        android:name="it.gooutapp.fragments.group.GroupFragment"
+        android:name="it.gooutapp.fragments.groupWindow.GroupFragment"
         tools:layout="@layout/fragment_group" />
 
 </navigation>
