@@ -5,9 +5,7 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
@@ -26,6 +24,7 @@ import it.gooutapp.models.Group
 import it.gooutapp.models.myDialog
 import kotlinx.android.synthetic.main.recycle_view_row.view.*
 
+
 class HomeFragment : Fragment(), MyAdapter.ClickListener {
 
     private lateinit var recyclerView: RecyclerView
@@ -39,7 +38,7 @@ class HomeFragment : Fragment(), MyAdapter.ClickListener {
     private val TAG = "HOME_FRAGMENT"
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        root = inflater.inflate(R.layout.fragment_show_groups, container, false)
+        root = inflater.inflate(R.layout.fragment_home, container, false)
         var createGroupButton: FloatingActionButton = root.findViewById(R.id.fab)
         recyclerView = root.findViewById(R.id.recycleView)
         recyclerView.layoutManager = LinearLayoutManager(root.context)
@@ -108,6 +107,7 @@ class HomeFragment : Fragment(), MyAdapter.ClickListener {
                 }
             }
         }
+        setHasOptionsMenu(true)
         return root
     }
 
@@ -160,13 +160,18 @@ class HomeFragment : Fragment(), MyAdapter.ClickListener {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.home_fragment_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
     //TODO per creare nuovo layout
     override fun onItemClick(group: Group) {
         val bundle = bundleOf(
             "groupName" to group.groupName
             //"altro" to valore
         )
-        activity?.findNavController(R.id.nav_host_fragment)?.navigate(R.id.nav_group, bundle)
+        activity?.findNavController(R.id.nav_host_fragment)?.navigate(R.id.action_nav_home_to_nav_group, bundle)
     }
 
     private fun getStartContainerRectangle(viewItem: View, iconWidth: Int, topMargin: Int, sideOffset: Int, dx: Float): Rect {

@@ -10,15 +10,6 @@
             android:icon="@drawable/ic_menu_home"
             android:title="@string/home" />
         <item
-            android:id="@+id/nav_newProposal"
-            android:icon="@drawable/ic_menu_add"
-            android:title="@string/menu_new_proposal" />
-        <item
-            android:id="@+id/nav_joinGroup"
-            android:icon="@drawable/ic_menu_join_group"
-            android:title="@string/join_group"
-            android:onClick="joinGroup"/>
-        <item
             android:id="@+id/nav_userProfile"
             android:icon="@drawable/ic_menu_user_profile"
             android:title="@string/profile" />
@@ -30,6 +21,6 @@
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_menu_logout"
             android:title="@string/menu_logout"
-            android:onClick="logout"/>
+            android:onClick="logout" />
     </group>
 </menu>

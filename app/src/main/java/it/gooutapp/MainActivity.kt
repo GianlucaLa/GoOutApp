@@ -28,7 +28,7 @@ import com.google.firebase.ktx.Firebase
 import it.gooutapp.firebase.FireStore
 import it.gooutapp.models.myDialog
 import kotlinx.android.synthetic.main.fragment_new_proposal.*
-import kotlinx.android.synthetic.main.fragment_show_groups.*
+import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.nav_header_main.*
 import kotlinx.android.synthetic.main.recycle_view_row.view.*
 
@@ -79,11 +79,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    //crea le opzioni del menu con i tre pallini
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        //assegno il layout del menu con i tre pallini usando main.xml
-        menuInflater.inflate(R.menu.main, menu)
-        //prendo da FireStore i dati dell'utente
+        //setto dati utente in drawer laterale
         fs.getUserData(user_email){ document ->
             userData = document                                 //setto il documentSnapshot della classe con il valore returnato dal getUserData
             drawerTextViewEmail.text = user_email               //setto email nella textview del DrawerMenu
@@ -100,7 +98,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun joinGroup(item: MenuItem) {
-        closeDrawer()
         var title = resources.getString(R.string.join_group)
         var message = resources.getString(R.string.enter_group_code)
         myDialog(title, message, this, layoutInflater) { groupCode ->
@@ -134,6 +131,10 @@ class MainActivity : AppCompatActivity() {
 
     fun refreshFragment(){
         findNavController(R.id.nav_host_fragment).navigate(R.id.nav_home)
+    }
+
+    fun openNewProposal(item: MenuItem){
+        findNavController(R.id.nav_host_fragment).navigate(R.id.action_nav_group_to_nav_newProposal)
     }
 
     fun startAutocompleteActivity(v: View) {
