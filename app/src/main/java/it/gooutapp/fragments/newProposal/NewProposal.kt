@@ -2,28 +2,19 @@ package it.gooutapp.fragments.newProposal
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import com.google.android.libraries.places.api.Places
-import com.google.android.libraries.places.api.model.Place
-import com.google.android.libraries.places.api.model.TypeFilter
-import com.google.android.libraries.places.widget.Autocomplete
-import com.google.android.libraries.places.widget.AutocompleteActivity
-import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import it.gooutapp.R
+import kotlinx.android.synthetic.main.fragment_new_proposal.*
 import java.util.*
 
 class NewProposal : Fragment(), DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     lateinit var c: Calendar
-    lateinit var btn: Button
+    lateinit var btn: TextView
     lateinit var root: View
     var day = 0
     var month = 0
@@ -54,7 +45,7 @@ class NewProposal : Fragment(), DatePickerDialog.OnDateSetListener, TimePickerDi
     }
 
     private fun pickDate() {
-        btn = root.findViewById<Button>(R.id.buttonPickDate)
+        btn = root.findViewById(R.id.textViewPickDate)
 
         btn.setOnClickListener {
             getDateTimeCalendar()
@@ -77,7 +68,8 @@ class NewProposal : Fragment(), DatePickerDialog.OnDateSetListener, TimePickerDi
         mHour = hourOfDay
         mMinute = minute
 
-        val msg = "$mDay-$mMonth-$mYear--- Hour: $mHour Minute: $mMinute"
+        var msg  = "$mDay-$mMonth-$mYear--- Hour: $mHour Minute: $mMinute"
+        textViewPickDate.text = msg
         Toast.makeText(root.context, "$msg", Toast.LENGTH_SHORT).show()
     }
 
