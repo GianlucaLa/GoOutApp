@@ -45,7 +45,7 @@ class NewProposal : Fragment(), DatePickerDialog.OnDateSetListener, TimePickerDi
     }
 
     private fun pickDate() {
-        btn = root.findViewById(R.id.textViewPickDate)
+        //btn = root.findViewById(R.id.textViewPickDate)
 
         btn.setOnClickListener {
             getDateTimeCalendar()
@@ -69,7 +69,7 @@ class NewProposal : Fragment(), DatePickerDialog.OnDateSetListener, TimePickerDi
         mMinute = minute
 
         var msg  = "$mDay-$mMonth-$mYear--- Hour: $mHour Minute: $mMinute"
-        textViewPickDate.text = msg
+        //textViewPickDate.text = msg
         Toast.makeText(root.context, "$msg", Toast.LENGTH_SHORT).show()
     }
 

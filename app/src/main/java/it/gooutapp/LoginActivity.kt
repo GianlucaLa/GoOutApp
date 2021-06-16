@@ -3,11 +3,15 @@ package it.gooutapp
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.os.PersistableBundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.util.Patterns
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -26,6 +30,13 @@ class LoginActivity: AppCompatActivity() {
             finish()
         }else {
             setContentView(R.layout.login)
+            editTextLPassword.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                    editTextLPasswordView.endIconMode = TextInputLayout.END_ICON_PASSWORD_TOGGLE
+                }
+                override fun afterTextChanged(s: Editable?) {}
+            })
         }
     }
 
@@ -60,27 +71,38 @@ class LoginActivity: AppCompatActivity() {
         var isEmailValid = false
         var isPasswordValid = false
 
-
         // Check for a valid email address.
-        if (email!!.isEmpty()) {
-            editTextLEmail.setError(getString(R.string.email_error))
-            isEmailValid = false
-        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            editTextLEmail.setError(resources.getString(R.string.error_invalid_email))
-            isEmailValid = false
-        } else {
-            isEmailValid = true
+        when {
+            email!!.isEmpty() -> {
+                editTextLEmailView.endIconMode = TextInputLayout.END_ICON_CLEAR_TEXT
+                editTextLEmail.error = resources.getString(R.string.email_error)
+                isEmailValid = false
+            }
+            email.length < 6 -> {
+                editTextLEmail.error = resources.getString(R.string.error_invalid_email)
+                isEmailValid = false
+            }
+            else -> {
+                isEmailValid = true
+            }
         }
 
+
         // Check for a valid password.
-        if (password!!.isEmpty()) {
-            editTextLPassword.setError(resources.getString(R.string.password_error))
-            isPasswordValid = false
-        } else if (password.length < 6) {
-            editTextLPassword.setError(resources.getString(R.string.error_invalid_password))
-            isPasswordValid = false
-        } else {
-            isPasswordValid = true
+        when {
+            password!!.isEmpty() -> {
+                editTextLPasswordView.endIconMode = TextInputLayout.END_ICON_NONE
+                editTextLPassword.error = resources.getString(R.string.password_error)
+                isPasswordValid = false
+            }
+            password.length < 6 -> {
+                editTextLPasswordView.endIconMode = TextInputLayout.END_ICON_NONE
+                editTextLPassword.error = resources.getString(R.string.error_invalid_password)
+                isPasswordValid = false
+            }
+            else -> {
+                isPasswordValid = true
+            }
         }
 
         //final check

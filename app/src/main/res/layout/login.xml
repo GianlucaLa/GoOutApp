@@ -19,31 +19,48 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            android:scaleType="fitCenter"
+            android:scaleType="centerCrop"
             app:srcCompat="@mipmap/gooutappicon_foreground" />
 
-        <EditText
-            android:id="@+id/editTextLEmail"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/editTextLEmailView"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginBottom="10dp"
-            android:background="@drawable/edit_text_custom_background"
             android:ems="10"
             android:gravity="center"
             android:hint="@string/email_address"
-            android:inputType="textEmailAddress" />
+            android:inputType="textEmailAddress"
+            app:endIconMode="clear_text"
+            app:startIconContentDescription="Prova"
+            app:startIconDrawable="@drawable/ic_edittext_email"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextLEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <EditText
-            android:id="@+id/editTextLPassword"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/editTextLPasswordView"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@drawable/edit_text_custom_background"
             android:ems="10"
             android:gravity="center"
             android:hint="@string/password"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            app:endIconMode="password_toggle"
+            app:startIconContentDescription="Prova"
+            app:startIconDrawable="@drawable/ic_edittext_password"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextLPassword"
+                android:inputType="textPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <TextureView
             android:id="@+id/textureView"

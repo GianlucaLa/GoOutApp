@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="36dp"
+    android:padding="24dp"
     tools:context=".RegistrationActivity">
 
     <TextView
@@ -13,109 +13,149 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginBottom="24dp"
         android:fontFamily="@font/lilita_one"
         android:text="@string/sign_up"
         android:textColor="@color/defaultBlue"
         android:textSize="40sp"
-        app:layout_constraintBottom_toTopOf="@+id/editTextName"
-        app:layout_constraintEnd_toStartOf="@+id/imageViewRegDoodle"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/editTextNameView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageViewRegDoodle"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/imageViewRegDoodle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
+        android:layout_width="70dp"
+        android:layout_height="95dp"
         android:scaleType="centerCrop"
-        app:layout_constraintBottom_toTopOf="@+id/editTextName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textViewTitle"
+        android:layout_marginRight="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/editTextNameView"
+        app:layout_constraintEnd_toStartOf="@+id/textViewTitle"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@mipmap/registration_doodle_foreground" />
 
-    <EditText
-        android:id="@+id/editTextName"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/editTextNameView"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
-        android:layout_height="45dp"
-        android:background="@drawable/edit_text_custom_background"
-        android:ems="10"
+        android:layout_height="52dp"
         android:gravity="center"
         android:hint="@string/name"
         android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/editTextSurname"
+        app:endIconMode="clear_text"
+        app:layout_constraintBottom_toTopOf="@+id/editTextSurnameView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textViewTitle" />
+        app:layout_constraintTop_toBottomOf="@id/imageViewRegDoodle"
+        app:startIconContentDescription="Prova"
+        app:startIconDrawable="@drawable/ic_menu_user_profile">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <EditText
-        android:id="@+id/editTextSurname"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/editTextSurnameView"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
-        android:layout_height="45dp"
-        android:background="@drawable/edit_text_custom_background"
-        android:ems="10"
+        android:layout_height="52dp"
         android:gravity="center"
         android:hint="@string/surname"
         android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/editTextNickname"
+        app:endIconMode="clear_text"
+        app:layout_constraintBottom_toTopOf="@+id/editTextNicknameView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextName" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextNameView"
+        app:startIconContentDescription="Prova"
+        app:startIconDrawable="@drawable/ic_menu_user_profile">>
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextSurname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <EditText
-        android:id="@+id/editTextNickname"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/editTextNicknameView"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
-        android:layout_height="45dp"
-        android:background="@drawable/edit_text_custom_background"
-        android:ems="10"
+        android:layout_height="52dp"
         android:gravity="center"
         android:hint="@string/Nickname"
         android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/editTextEmail"
+        app:endIconMode="clear_text"
+        app:layout_constraintBottom_toTopOf="@+id/editTextEmailView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextSurname" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextSurnameView"
+        app:startIconContentDescription="Prova"
+        app:startIconDrawable="@drawable/ic_menu_user_profile">>
 
-    <EditText
-        android:id="@+id/editTextEmail"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextNickname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/editTextEmailView"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
-        android:layout_height="45dp"
-        android:background="@drawable/edit_text_custom_background"
-        android:ems="10"
+        android:layout_height="52dp"
         android:gravity="center"
         android:hint="@string/email_address"
         android:inputType="textEmailAddress"
-        app:layout_constraintBottom_toTopOf="@+id/editTextPassword"
+        app:endIconMode="clear_text"
+        app:layout_constraintBottom_toTopOf="@+id/editTextPasswordView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextNickname" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextNicknameView"
+        app:startIconContentDescription="Prova"
+        app:startIconDrawable="@drawable/ic_edittext_email">>
 
-    <EditText
-        android:id="@+id/editTextPassword"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/editTextPasswordView"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
-        android:layout_height="45dp"
-        android:background="@drawable/edit_text_custom_background"
-        android:ems="10"
+        android:layout_height="52dp"
         android:gravity="center"
         android:hint="@string/password"
         android:inputType="textPassword"
+        app:endIconMode="password_toggle"
         app:layout_constraintBottom_toTopOf="@+id/RSignin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextEmail" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextEmailView"
+        app:startIconContentDescription="Prova"
+        app:startIconDrawable="@drawable/ic_edittext_password">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/RSignin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:minHeight="52dp"
+        android:minWidth="100dp"
         android:onClick="fieldsCheck"
         android:text="@string/sign_up"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextPassword" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextPasswordView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

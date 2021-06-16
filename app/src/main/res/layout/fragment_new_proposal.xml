@@ -28,13 +28,13 @@
         android:hint=""
         app:endIconMode="clear_text"
         app:startIconContentDescription="Prova"
-        app:startIconDrawable="@drawable/ic_edit_text_calendar">
+        app:startIconDrawable="@drawable/ic_edittext_calendar">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/Prova1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:drawableLeft="@drawable/ic_edit_text_calendar" />
+            android:drawableLeft="@drawable/ic_edittext_calendar" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
