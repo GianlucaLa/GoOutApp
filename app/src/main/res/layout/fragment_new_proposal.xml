@@ -36,16 +36,18 @@
         android:gravity="center"
         android:hint="@string/proposal_place"
         android:inputType="textPersonName"
+        android:onClick="startAutocompleteActivity"
         app:endIconMode="clear_text"
         app:layout_constraintBottom_toTopOf="@+id/editTextDateView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextNameProposalView"
         app:startIconContentDescription="Prova"
-        app:startIconDrawable="@drawable/ic_map_marker_outline">
+        app:startIconDrawable="@drawable/ic_edittext_pin_map">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextPlacePicker"
             android:onClick="startAutocompleteActivity"
+            android:focusableInTouchMode="false"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -65,9 +67,9 @@
         app:layout_constraintTop_toBottomOf="@+id/editTextPlaceView"
         app:startIconContentDescription="Prova"
         app:startIconDrawable="@drawable/ic_edittext_calendar">
-
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextDatePicker"
+            android:focusableInTouchMode="false"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -87,9 +89,9 @@
         app:layout_constraintTop_toBottomOf="@+id/editTextDateView"
         app:startIconContentDescription="Prova"
         app:startIconDrawable="@drawable/ic_edittext_clock">
-
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextHourPicker"
+            android:focusableInTouchMode="false"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -98,7 +100,7 @@
         android:id="@+id/buttonProposal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button"
+        android:text="@string/confirm"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

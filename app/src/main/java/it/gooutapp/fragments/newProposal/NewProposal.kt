@@ -47,10 +47,8 @@ class NewProposal : Fragment(), DatePickerDialog.OnDateSetListener, TimePickerDi
 
     private fun pickDate() {
         dateView = root.findViewById(R.id.editTextDatePicker)
-
         dateView.setOnClickListener {
             getDateCalendar()
-
             DatePickerDialog( dateView.context, this , year,  month, day).show()
         }
     }
@@ -63,7 +61,6 @@ class NewProposal : Fragment(), DatePickerDialog.OnDateSetListener, TimePickerDi
 
     private fun pickTime() {
         timeView = root.findViewById(R.id.editTextHourPicker)
-
         timeView.setOnClickListener {
             getTimeCalendar()
         }
@@ -73,9 +70,7 @@ class NewProposal : Fragment(), DatePickerDialog.OnDateSetListener, TimePickerDi
         mDay = dayOfMonth
         mMonth = month
         mYear = year
-
         getDateCalendar()
-
         var date  = "$mDay-$mMonth-$mYear"
         editTextDatePicker.setText(date)
         TimePickerDialog(dateView.context, this, hour, minute, true).show()
@@ -84,9 +79,7 @@ class NewProposal : Fragment(), DatePickerDialog.OnDateSetListener, TimePickerDi
     override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
         mHour = hourOfDay
         mMinute = minute
-
         getTimeCalendar()
-
         var time  = "Hour: $mHour Minute: $mMinute"
         editTextHourPicker.setText(time)
         Toast.makeText(root.context, "$time", Toast.LENGTH_SHORT).show()
