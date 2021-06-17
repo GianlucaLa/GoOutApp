@@ -50,4 +50,7 @@
     <string name="apiKey" translatable="false">AIzaSyBNPwGd6VZHLf7TToPGuI0ZmecATXvuWGY</string>
     <string name="home">Home</string>
     <string name="profile">Profile</string>
+    <string name="proposal_place">Click to choose the place</string>
+    <string name="proposal_date">Click to choose the date</string>
+    <string name="proposal_hour">Click to choose the time</string>
 </resources>

@@ -17,7 +17,7 @@
         android:text="@string/sign_up"
         android:textColor="@color/defaultBlue"
         android:textSize="40sp"
-        app:layout_constraintBottom_toTopOf="@+id/editTextNameView"
+        app:layout_constraintBottom_toTopOf="@+id/editTextNameProposalView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageViewRegDoodle"
         app:layout_constraintTop_toTopOf="parent" />
@@ -28,7 +28,7 @@
         android:layout_height="95dp"
         android:scaleType="centerCrop"
         android:layout_marginRight="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/editTextNameView"
+        app:layout_constraintBottom_toTopOf="@+id/editTextNameProposalView"
         app:layout_constraintEnd_toStartOf="@+id/textViewTitle"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintHorizontal_chainStyle="packed"
@@ -37,7 +37,7 @@
         app:srcCompat="@mipmap/registration_doodle_foreground" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/editTextNameView"
+        android:id="@+id/editTextNameProposalView"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -45,20 +45,20 @@
         android:hint="@string/name"
         android:inputType="textPersonName"
         app:endIconMode="clear_text"
-        app:layout_constraintBottom_toTopOf="@+id/editTextSurnameView"
+        app:layout_constraintBottom_toTopOf="@+id/editTextPlaceView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/imageViewRegDoodle"
         app:startIconContentDescription="Prova"
         app:startIconDrawable="@drawable/ic_menu_user_profile">
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editTextName"
+            android:id="@+id/editTextNameP"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/editTextSurnameView"
+        android:id="@+id/editTextPlaceView"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -66,20 +66,20 @@
         android:hint="@string/surname"
         android:inputType="textPersonName"
         app:endIconMode="clear_text"
-        app:layout_constraintBottom_toTopOf="@+id/editTextNicknameView"
+        app:layout_constraintBottom_toTopOf="@+id/editTextDateView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextNameView"
+        app:layout_constraintTop_toBottomOf="@+id/editTextNameProposalView"
         app:startIconContentDescription="Prova"
         app:startIconDrawable="@drawable/ic_menu_user_profile">>
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editTextSurname"
+            android:id="@+id/editTextPlacePicker"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/editTextNicknameView"
+        android:id="@+id/editTextDateView"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -87,21 +87,21 @@
         android:hint="@string/Nickname"
         android:inputType="textPersonName"
         app:endIconMode="clear_text"
-        app:layout_constraintBottom_toTopOf="@+id/editTextEmailView"
+        app:layout_constraintBottom_toTopOf="@+id/editTextHourView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextSurnameView"
+        app:layout_constraintTop_toBottomOf="@+id/editTextPlaceView"
         app:startIconContentDescription="Prova"
         app:startIconDrawable="@drawable/ic_menu_user_profile">>
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editTextNickname"
+            android:id="@+id/editTextDatePicker"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/editTextEmailView"
+        android:id="@+id/editTextHourView"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -112,12 +112,12 @@
         app:layout_constraintBottom_toTopOf="@+id/editTextPasswordView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextNicknameView"
+        app:layout_constraintTop_toBottomOf="@+id/editTextDateView"
         app:startIconContentDescription="Prova"
         app:startIconDrawable="@drawable/ic_edittext_email">>
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editTextEmail"
+            android:id="@+id/editTextHourPicker"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -134,7 +134,7 @@
         app:layout_constraintBottom_toTopOf="@+id/RSignin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextEmailView"
+        app:layout_constraintTop_toBottomOf="@+id/editTextHourView"
         app:startIconContentDescription="Prova"
         app:startIconDrawable="@drawable/ic_edittext_password">
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,34 +8,100 @@
     android:padding="24dp">
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/filledTextField"
-        android:layout_width="match_parent"
+        android:id="@+id/editTextNameProposalView"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="572dp"
-        android:hint="Ciao">
-
+        android:gravity="center"
+        android:hint="@string/name"
+        android:inputType="textPersonName"
+        app:endIconMode="clear_text"
+        app:layout_constraintBottom_toTopOf="@+id/editTextPlaceView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:startIconContentDescription="Label"
+        app:startIconDrawable="@drawable/ic_menu_user_profile">
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/Prova2"
+            android:id="@+id/editTextNameP"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textField"
-        android:layout_width="match_parent"
+        android:id="@+id/editTextPlaceView"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint=""
+        android:gravity="center"
+        android:hint="@string/proposal_place"
+        android:inputType="textPersonName"
         app:endIconMode="clear_text"
+        app:layout_constraintBottom_toTopOf="@+id/editTextDateView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextNameProposalView"
+        app:startIconContentDescription="Prova"
+        app:startIconDrawable="@drawable/ic_map_marker_outline">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextPlacePicker"
+            android:onClick="startAutocompleteActivity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/editTextDateView"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:hint="@string/proposal_date"
+        android:inputType="textPersonName"
+        app:endIconMode="clear_text"
+        app:layout_constraintBottom_toTopOf="@+id/editTextHourView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextPlaceView"
         app:startIconContentDescription="Prova"
         app:startIconDrawable="@drawable/ic_edittext_calendar">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/Prova1"
+            android:id="@+id/editTextDatePicker"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:drawableLeft="@drawable/ic_edittext_calendar" />
-
+            android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
 
-</RelativeLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/editTextHourView"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:hint="@string/proposal_hour"
+        android:inputType="textEmailAddress"
+        app:endIconMode="clear_text"
+        app:layout_constraintBottom_toTopOf="@+id/buttonProposal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextDateView"
+        app:startIconContentDescription="Prova"
+        app:startIconDrawable="@drawable/ic_edittext_clock">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextHourPicker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/buttonProposal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextHourView" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

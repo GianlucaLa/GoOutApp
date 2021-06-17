@@ -14,7 +14,6 @@ import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import it.gooutapp.firebase.FireStore
-import kotlinx.android.synthetic.main.login.*
 import kotlinx.android.synthetic.main.registration.*
 
 
@@ -61,21 +60,21 @@ class RegistrationActivity: AppCompatActivity() {
         var isNameValid = false
         var isSurnameValid = false
         var isNicknameValid = false
-        val name = editTextName.text.toString()
-        val surname = editTextSurname.text.toString()
-        val nickname = editTextNickname.text.toString()
-        val email = editTextEmail.text.toString()
+        val name = editTextNameP.text.toString()
+        val surname = editTextPlacePicker.text.toString()
+        val nickname = editTextDatePicker.text.toString()
+        val email = editTextHourPicker.text.toString()
         val password = editTextPassword.text.toString()
 
         // Check for a valid email address.
         when {
             email!!.isEmpty() -> {
-                editTextEmailView.endIconMode = TextInputLayout.END_ICON_CLEAR_TEXT
-                editTextEmail.error = resources.getString(R.string.email_error)
+                editTextHourView.endIconMode = TextInputLayout.END_ICON_CLEAR_TEXT
+                editTextHourPicker.error = resources.getString(R.string.email_error)
                 isEmailValid = false
             }
             email.length < 6 -> {
-                editTextEmail.error = resources.getString(R.string.error_invalid_email)
+                editTextHourPicker.error = resources.getString(R.string.error_invalid_email)
                 isEmailValid = false
             }
             else -> {

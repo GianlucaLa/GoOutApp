@@ -14,7 +14,9 @@ import java.util.*
 
 class NewProposal : Fragment(), DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     lateinit var c: Calendar
-    lateinit var btn: TextView
+    lateinit var d: Calendar
+    lateinit var dateView: TextView
+    lateinit var timeView: TextView
     lateinit var root: View
     var day = 0
     var month = 0
@@ -32,25 +34,38 @@ class NewProposal : Fragment(), DatePickerDialog.OnDateSetListener, TimePickerDi
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         root = inflater.inflate(R.layout.fragment_new_proposal, container, false)
         pickDate()
+        pickTime()
         return root
     }
 
-    private fun getDateTimeCalendar() {
+    private fun getDateCalendar() {
         c = Calendar.getInstance()
         day = c.get(Calendar.DAY_OF_MONTH)
         month = c.get(Calendar.MONTH)
         year = c.get(Calendar.YEAR)
-        hour = c.get(Calendar.HOUR)
-        minute = c.get(Calendar.MINUTE)
     }
 
     private fun pickDate() {
-        //btn = root.findViewById(R.id.textViewPickDate)
+        dateView = root.findViewById(R.id.editTextDatePicker)
 
-        btn.setOnClickListener {
-            getDateTimeCalendar()
+        dateView.setOnClickListener {
+            getDateCalendar()
 
-            DatePickerDialog( btn.context, this , year,  month, day).show()
+            DatePickerDialog( dateView.context, this , year,  month, day).show()
+        }
+    }
+
+    private fun getTimeCalendar() {
+        d = Calendar.getInstance()
+        hour = d.get(Calendar.HOUR)
+        minute = d.get(Calendar.MINUTE)
+    }
+
+    private fun pickTime() {
+        timeView = root.findViewById(R.id.editTextHourPicker)
+
+        timeView.setOnClickListener {
+            getTimeCalendar()
         }
     }
 
@@ -59,18 +74,22 @@ class NewProposal : Fragment(), DatePickerDialog.OnDateSetListener, TimePickerDi
         mMonth = month
         mYear = year
 
-        getDateTimeCalendar()
+        getDateCalendar()
 
-        TimePickerDialog(btn.context, this, hour, minute, true).show()
+        var date  = "$mDay-$mMonth-$mYear"
+        editTextDatePicker.setText(date)
+        TimePickerDialog(dateView.context, this, hour, minute, true).show()
     }
 
     override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
         mHour = hourOfDay
         mMinute = minute
 
-        var msg  = "$mDay-$mMonth-$mYear--- Hour: $mHour Minute: $mMinute"
-        //textViewPickDate.text = msg
-        Toast.makeText(root.context, "$msg", Toast.LENGTH_SHORT).show()
+        getTimeCalendar()
+
+        var time  = "Hour: $mHour Minute: $mMinute"
+        editTextHourPicker.setText(time)
+        Toast.makeText(root.context, "$time", Toast.LENGTH_SHORT).show()
     }
 
 }
