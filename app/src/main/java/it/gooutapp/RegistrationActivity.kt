@@ -10,12 +10,10 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import it.gooutapp.firebase.FireStore
 import kotlinx.android.synthetic.main.registration.*
-
 
 class RegistrationActivity: AppCompatActivity() {
     val fs : FireStore = FireStore()
@@ -27,7 +25,14 @@ class RegistrationActivity: AppCompatActivity() {
         editTextPassword.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                editTextPasswordView.endIconMode = TextInputLayout.END_ICON_PASSWORD_TOGGLE
+                editTextPasswordView.isErrorEnabled = false
+            }
+            override fun afterTextChanged(s: Editable?) {}
+        })
+        editTextEmail.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                editTextEmailView.isErrorEnabled = false
             }
             override fun afterTextChanged(s: Editable?) {}
         })
@@ -60,21 +65,20 @@ class RegistrationActivity: AppCompatActivity() {
         var isNameValid = false
         var isSurnameValid = false
         var isNicknameValid = false
-        val name = editTextNameP.text.toString()
-        val surname = editTextPlacePicker.text.toString()
-        val nickname = editTextDatePicker.text.toString()
-        val email = editTextHourPicker.text.toString()
+        val name = editTextName.text.toString()
+        val surname = editTextSurname.text.toString()
+        val nickname = editTextNickname.text.toString()
+        val email = editTextEmail.text.toString()
         val password = editTextPassword.text.toString()
 
         // Check for a valid email address.
         when {
             email!!.isEmpty() -> {
-                editTextHourView.endIconMode = TextInputLayout.END_ICON_CLEAR_TEXT
-                editTextHourPicker.error = resources.getString(R.string.email_error)
+                editTextEmailView.error = resources.getString(R.string.email_error)
                 isEmailValid = false
             }
             email.length < 6 -> {
-                editTextHourPicker.error = resources.getString(R.string.error_invalid_email)
+                editTextEmailView.error = resources.getString(R.string.error_invalid_email)
                 isEmailValid = false
             }
             else -> {
@@ -82,17 +86,14 @@ class RegistrationActivity: AppCompatActivity() {
             }
         }
 
-
         // Check for a valid password.
         when {
             password!!.isEmpty() -> {
-                editTextPasswordView.endIconMode = TextInputLayout.END_ICON_NONE
-                editTextPassword.error = resources.getString(R.string.password_error)
+                editTextPasswordView.error = resources.getString(R.string.password_error)
                 isPasswordValid = false
             }
             password.length < 6 -> {
-                editTextPasswordView.endIconMode = TextInputLayout.END_ICON_NONE
-                editTextPassword.error = resources.getString(R.string.error_invalid_password)
+                editTextPasswordView.error = resources.getString(R.string.error_invalid_password)
                 isPasswordValid = false
             }
             else -> {
