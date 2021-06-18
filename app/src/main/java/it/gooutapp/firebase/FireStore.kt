@@ -3,13 +3,17 @@ package it.gooutapp.firebase
 import android.util.Log
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.*
+import com.google.firebase.firestore.EventListener
 import com.google.firebase.ktx.Firebase
 import it.gooutapp.models.Group
+import java.util.*
+import kotlin.collections.ArrayList
 
 class FireStore {
     private val db = FirebaseFirestore.getInstance()
     private val groupCollection = "groups"
     private val userCollection = "users"
+    private val proposalCollection = "proposals"
     private val TAG = "FIRE_STORE"
 
     fun createUserData(name: String, surname: String, nickname: String, email: String) {
@@ -41,6 +45,23 @@ class FireStore {
                 callback(true) }
             .addOnFailureListener {
                 e -> Log.w(TAG, "Error writing document", e)
+                callback(false) }
+    }
+
+    fun createProposalData(groupCode: String, proposalName: String, date: Date, place: String, callback: (Boolean) -> Unit){
+        val proposal = hashMapOf(
+            "groupName" to groupCode,
+            "proposalName" to proposalName,
+            "date" to date,
+            "place" to place,
+        )
+        db.collection(proposalCollection).document()
+            .set(proposal)
+            .addOnSuccessListener {
+                Log.d(TAG, "DocumentSnapshot successfully written!")
+                callback(true) }
+            .addOnFailureListener {
+                    e -> Log.w(TAG, "Error writing document", e)
                 callback(false) }
     }
 

@@ -26,6 +26,8 @@
         android:layout_toEndOf="@+id/textViewDrawable"
         android:layout_toRightOf="@+id/textViewDrawable"
         android:text="TextView"
+        android:maxWidth="160dp"
+        android:lines="1"
         android:textSize="21sp"
         android:textStyle="bold" />
 

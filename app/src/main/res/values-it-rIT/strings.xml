@@ -49,4 +49,6 @@
     <string name="proposal_place">Clicca per scegliere il luogo</string>
     <string name="proposal_date">Clicca per scegliere la data</string>
     <string name="proposal_hour">Clicca per scegliere l\'orario</string>
+    <string name="successfulProposal">la proposta è stata creata con successo</string>
+    <string name="failProposal">si è verificato un errore durante la creazione della proposta</string>
 </resources>

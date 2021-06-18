@@ -165,11 +165,10 @@ class HomeFragment : Fragment(), MyAdapter.ClickListener {
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    //TODO per creare nuovo layout
     override fun onItemClick(group: Group) {
         val bundle = bundleOf(
-            "groupName" to group.groupName
-            //"altro" to valore
+            "groupName" to group.groupName,
+            "groupCode" to group.groupCode
         )
         activity?.findNavController(R.id.nav_host_fragment)?.navigate(R.id.action_nav_home_to_nav_group, bundle)
     }

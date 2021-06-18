@@ -6,9 +6,11 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.os.bundleOf
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -26,6 +28,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.*
 import com.google.firebase.ktx.Firebase
 import it.gooutapp.firebase.FireStore
+import it.gooutapp.models.Group
 import it.gooutapp.models.myDialog
 import kotlinx.android.synthetic.main.fragment_new_proposal.*
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -35,12 +38,10 @@ import kotlinx.android.synthetic.main.recycle_view_row.view.*
 class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var userData: DocumentSnapshot
-    private var name = ""                                       //valorizza textview nel drawer menu
-    private var surname = ""
-    val AUTOCOMPLETE_REQUEST_CODE = 1
     private val fs = FireStore()
     private val user_email = Firebase.auth.currentUser?.email.toString()
-    private var selectedGroup = ""
+    private lateinit var editTextPlacePicker: EditText
+    private lateinit var codeCurrentGroup: String
     private val TAG = "MAIN_ACTIVITY"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,6 +63,7 @@ class MainActivity : AppCompatActivity() {
                 when(destination.id) {
                     R.id.nav_group -> {
                         toolbar.title = arguments?.getString("groupName")
+                        codeCurrentGroup = arguments?.getString("groupCode").toString()
                     }
                 }
             }
@@ -129,34 +131,12 @@ class MainActivity : AppCompatActivity() {
         mDrawerLayout.closeDrawers();
     }
 
-    fun refreshFragment(){
+    private fun refreshFragment(){
         findNavController(R.id.nav_host_fragment).navigate(R.id.nav_home)
     }
 
     fun openNewProposal(item: MenuItem){
-        findNavController(R.id.nav_host_fragment).navigate(R.id.action_nav_group_to_nav_newProposal)
-    }
-
-    fun startAutocompleteActivity(v: View) {
-        Places.initialize(this, resources.getString(R.string.places_api_key))
-        val intent = Autocomplete.IntentBuilder(
-            AutocompleteActivityMode.FULLSCREEN,
-            listOf(Place.Field.ID, Place.Field.NAME)
-        ).setTypeFilter(TypeFilter.ESTABLISHMENT)
-            .build(this)
-        startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if(resultCode == AUTOCOMPLETE_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                var place = data?.let { Autocomplete.getPlaceFromIntent(it) }
-                Log.e("MAPS", "Place: ${place?.name}, ${place?.id}")
-            } else if(resultCode == AutocompleteActivity.RESULT_ERROR) {
-                var status = data?.let { Autocomplete.getStatusFromIntent(it) }
-                Log.i("MAPS", "An error occurred: $status")
-            }
-        }
+        val bundle = bundleOf("groupCode" to codeCurrentGroup)
+        findNavController(R.id.nav_host_fragment)?.navigate(R.id.action_nav_group_to_nav_newProposal, bundle)
     }
 }
