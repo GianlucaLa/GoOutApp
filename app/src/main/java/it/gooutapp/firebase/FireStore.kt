@@ -54,6 +54,7 @@ class FireStore {
             "proposalName" to proposalName,
             "date" to date,
             "place" to place,
+            "organizator" to currentUserId()
         )
         db.collection(proposalCollection).document()
             .set(proposal)
