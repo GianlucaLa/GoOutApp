@@ -45,6 +45,12 @@ class NewProposal : Fragment(), DatePickerDialog.OnDateSetListener, TimePickerDi
         year = c.get(Calendar.YEAR)
     }
 
+    private fun getTimeCalendar() {
+        d = Calendar.getInstance()
+        hour = d.get(Calendar.HOUR_OF_DAY)
+        minute = d.get(Calendar.MINUTE)
+    }
+
     private fun pickDate() {
         dateView = root.findViewById(R.id.editTextDatePicker)
         dateView.setOnClickListener {
@@ -53,16 +59,11 @@ class NewProposal : Fragment(), DatePickerDialog.OnDateSetListener, TimePickerDi
         }
     }
 
-    private fun getTimeCalendar() {
-        d = Calendar.getInstance()
-        hour = d.get(Calendar.HOUR)
-        minute = d.get(Calendar.MINUTE)
-    }
-
     private fun pickTime() {
         timeView = root.findViewById(R.id.editTextHourPicker)
         timeView.setOnClickListener {
             getTimeCalendar()
+            TimePickerDialog(dateView.context, this, hour, minute, true).show()
         }
     }
 
@@ -73,14 +74,13 @@ class NewProposal : Fragment(), DatePickerDialog.OnDateSetListener, TimePickerDi
         getDateCalendar()
         var date  = "$mDay-$mMonth-$mYear"
         editTextDatePicker.setText(date)
-        TimePickerDialog(dateView.context, this, hour, minute, true).show()
     }
 
     override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
         mHour = hourOfDay
         mMinute = minute
         getTimeCalendar()
-        var time  = "Hour: $mHour Minute: $mMinute"
+        var time  = "$mHour:$mMinute"
         editTextHourPicker.setText(time)
         Toast.makeText(root.context, "$time", Toast.LENGTH_SHORT).show()
     }

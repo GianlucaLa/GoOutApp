@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.AutoCompleteTextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -21,8 +20,6 @@ import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.model.TypeFilter
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.AutocompleteActivity
-import com.google.android.libraries.places.widget.AutocompleteFragment
-import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.ktx.auth
@@ -144,8 +141,6 @@ class MainActivity : AppCompatActivity() {
         Places.initialize(this, resources.getString(R.string.places_api_key))
         val intent = Autocomplete.IntentBuilder(
             AutocompleteActivityMode.FULLSCREEN,
-            AutoCompleteTextView.
-            placeAutoComplete.getView().setBackgroundColor(Color.WHITE),
             listOf(Place.Field.ID, Place.Field.NAME)
         ).setTypeFilter(TypeFilter.ESTABLISHMENT)
             .build(this)
