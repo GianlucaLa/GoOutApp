@@ -56,4 +56,8 @@
     <string name="places_api_key" translatable="false">AIzaSyBNPwGd6VZHLf7TToPGuI0ZmecATXvuWGY</string>
     <string name="successfulProposal">the proposal was successfully created</string>
     <string name="failProposal">An error occurred while creating the proposal</string>
+    <string name="place">Place</string>
+    <string name="organizator">Organizator</string>
+    <string name="time">Time</string>
+    <string name="date">Date</string>
 </resources>

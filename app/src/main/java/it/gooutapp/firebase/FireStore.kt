@@ -49,11 +49,12 @@ class FireStore {
                 callback(false) }
     }
 
-    fun createProposalData(groupCode: String, proposalName: String, date: Date, place: String, callback: (Boolean) -> Unit){
+    fun createProposalData(groupCode: String, proposalName: String, date: String, time: String, place: String, callback: (Boolean) -> Unit){
         val proposal = hashMapOf(
             "groupName" to groupCode,
             "proposalName" to proposalName,
             "date" to date,
+            "time" to time,
             "place" to place,
             "organizator" to currentUserEmail()
         )
@@ -181,7 +182,7 @@ class FireStore {
         })
     }
 
-    fun getProposalData(callback: (ArrayList<Proposal>) -> Unit) {
+    fun getProposalData(groupCode: String, callback: (ArrayList<Proposal>) -> Unit) {
         var proposalArrayList = ArrayList<Proposal>()
         db.collection(proposalCollection).addSnapshotListener(object : EventListener<QuerySnapshot> {
             override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
@@ -191,8 +192,9 @@ class FireStore {
                 }
                 for (dc: DocumentChange in value?.documentChanges!!) {
                     //cerco e aggiungo i gruppi che contengono l'email dell'utente
-                        if (dc.type == DocumentChange.Type.ADDED)
-                            proposalArrayList.add(dc.document.toObject(Proposal::class.java))
+                        if (dc.type == DocumentChange.Type.ADDED && dc.document.toString().contains(groupCode))
+                            //Log.e(TAG, dc.document.toString())
+                            proposalArrayList?.add(dc?.document?.toObject(Proposal::class.java))
                     }
                 callback(proposalArrayList)
                 }

@@ -1,5 +1,6 @@
 package it.gooutapp.fragments.group
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,13 +17,13 @@ class ProposalAdapter (private val proposalList : ArrayList<Proposal>) : Recycle
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        var activityContext = holder.itemView.context
         val proposal: Proposal = proposalList[position]
         holder.nomeProposta.text = proposal.proposalName
-        holder.luogoProposta.text = proposal.place
-        val data = proposal.date.toString().substring(0, 13)
-        holder.dataProposta.text = data
-        val ora = proposal.date?.toString()?.substring(15)
-        holder.oraProposta.text = ora
+        holder.luogoProposta.text = "${activityContext.resources.getString(R.string.place)}: ${proposal.place.toString()}"
+        holder.dataProposta.text = "${activityContext.resources.getString(R.string.date)}: ${proposal.date.toString()}"
+        holder.oraProposta.text = "${activityContext.resources.getString(R.string.time)}: ${proposal.time.toString()}"
+        holder.organizzatoreProposta.text = "${activityContext.resources.getString(R.string.organizator)}: aggiungere organizzatore"
     }
 
     override fun getItemCount(): Int {
@@ -34,5 +35,6 @@ class ProposalAdapter (private val proposalList : ArrayList<Proposal>) : Recycle
         val luogoProposta : TextView = itemView.findViewById(R.id.textViewRLuogo)
         val dataProposta : TextView = itemView.findViewById(R.id.textViewRData)
         val oraProposta : TextView = itemView.findViewById(R.id.textViewROra)
+        val organizzatoreProposta : TextView = itemView.findViewById(R.id.textViewOrganizator)
     }
 }

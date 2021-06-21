@@ -51,4 +51,8 @@
     <string name="proposal_hour">Clicca per scegliere l\'orario</string>
     <string name="successfulProposal">la proposta è stata creata con successo</string>
     <string name="failProposal">si è verificato un errore durante la creazione della proposta</string>
+    <string name="place">Luogo</string>
+    <string name="organizator">Organizzatore</string>
+    <string name="time">Orario</string>
+    <string name="date">Data</string>
 </resources>

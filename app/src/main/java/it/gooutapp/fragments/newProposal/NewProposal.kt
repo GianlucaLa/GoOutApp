@@ -12,8 +12,6 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.model.TypeFilter
@@ -22,9 +20,6 @@ import com.google.android.libraries.places.widget.AutocompleteActivity
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import it.gooutapp.R
 import it.gooutapp.firebase.FireStore
-import it.gooutapp.fragments.home.GroupAdapter
-import it.gooutapp.models.Group
-import it.gooutapp.models.Proposal
 import kotlinx.android.synthetic.main.fragment_new_proposal.*
 import java.util.*
 
@@ -40,18 +35,14 @@ class NewProposal : Fragment(), DatePickerDialog.OnDateSetListener, TimePickerDi
     private lateinit var timeView: EditText
     private lateinit var confirmProposalButton: Button
     private lateinit var root: View
-    var day = 0
-    var month = 0
-    var year = 0
-    var hour = 0
-    var minute = 0
+    private var day = 0
+    private var month = 0
+    private var year = 0
+    private var hour = 0
+    private var minute = 0
 
-    var mDay = 0
-    var mMonth = 0
-    var mYear = 0
-    var mHour = 0
-    var mMinute = 0
-
+    private var time = ""
+    private var date = ""
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         root = inflater.inflate(R.layout.fragment_new_proposal, container, false)
@@ -109,20 +100,17 @@ class NewProposal : Fragment(), DatePickerDialog.OnDateSetListener, TimePickerDi
     }
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-        mDay = dayOfMonth
-        mMonth = month
-        mYear = year
+        date = if(month<10) "$year/0$month" else "$month"
+        date += if(dayOfMonth<10) "/0$dayOfMonth" else "/$dayOfMonth"
         getDateCalendar()
-        var date  = "$mDay-$mMonth-$mYear"
         editTextDate.setText(date)
         editTextDate.isEnabled = true;
     }
 
     override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
-        mHour = hourOfDay
-        mMinute = minute
+        time = if(hourOfDay<10) "0$hourOfDay" else "$hourOfDay"
+        time += if(minute<10) ":0$minute" else ":$minute"
         getTimeCalendar()
-        var time  = "$mHour:$mMinute"
         editTextHour.setText(time)
         editTextHour.isEnabled = true;
     }
@@ -155,8 +143,8 @@ class NewProposal : Fragment(), DatePickerDialog.OnDateSetListener, TimePickerDi
     //TODO mettere controllo sugli input
     fun proposalConfirm(){
         var proposalName = proposalNameEditText.text.toString()
-        var date = Date(mYear, mMonth, mDay, mHour, mMinute)
-        fs.createProposalData(groupCode, proposalName, date, placeString){ result ->
+        //var date = Date(mDay, mMonth, mYear, mHour, mMinute)
+        fs.createProposalData(groupCode, proposalName, date, time, placeString){ result ->
             if(result){
                 activity?.findNavController(R.id.nav_host_fragment)?.navigateUp()
                 Toast.makeText(root.context, R.string.successfulProposal, Toast.LENGTH_SHORT).show()

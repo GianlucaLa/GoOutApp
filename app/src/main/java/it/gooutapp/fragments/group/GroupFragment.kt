@@ -26,7 +26,7 @@ class GroupFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(root.context)
         proposalList = arrayListOf()
 
-        fs.getProposalData() { proposalListData ->
+        fs.getProposalData(arguments?.get("groupCode").toString()) { proposalListData ->
             proposalList = proposalListData
             proposalAdapter = ProposalAdapter(proposalList)
             recyclerView.adapter = proposalAdapter

@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="16dp">
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardElevation="8dp"
-        app:cardCornerRadius="16dp"
-        android:id="@+id/cv">
+        app:cardCornerRadius="16dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -26,9 +25,10 @@
                 android:layout_marginBottom="16dp"
                 android:text="Nome Proposta"
                 android:textAllCaps="true"
-                android:textColor="@color/viewBlue"
+                android:textColor="@color/defaultBlue"
                 android:textSize="30sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:maxLines="1" />
 
             <TextView
                 android:id="@+id/textViewRLuogo"
@@ -36,8 +36,9 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textViewRProposta"
                 android:layout_marginBottom="16dp"
-                android:text="Luogo"
-                android:textSize="15sp" />
+                android:text="Luogo: "
+                android:textSize="17sp"
+                android:maxLines="1" />
 
             <TextView
                 android:id="@+id/textViewRData"
@@ -45,8 +46,9 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textViewRLuogo"
                 android:layout_marginBottom="16dp"
-                android:text="Data"
-                android:textSize="15sp" />
+                android:text="Data: "
+                android:textSize="17sp"
+                android:maxLines="1" />
 
             <TextView
                 android:id="@+id/textViewROra"
@@ -54,24 +56,25 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textViewRData"
                 android:layout_marginBottom="16dp"
-                android:text="Ora"
-                android:textSize="15sp" />
+                android:text="Orario: "
+                android:textSize="17sp"
+                android:maxLines="1" />
 
-            <Button
-                android:id="@+id/accettaProposta"
+            <TextView
+                android:id="@+id/textViewOrganizator"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textViewROra"
                 android:layout_marginBottom="16dp"
-                android:drawableRight="@drawable/ic_check"
-                android:drawableTint="@color/green"
-                android:text="Accetta" />
+                android:text="Organizzatore: "
+                android:textSize="17sp"
+                android:maxLines="1" />
 
             <Button
                 android:id="@+id/rifiutaProposta"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/textViewROra"
+                android:layout_below="@+id/textViewOrganizator"
                 android:layout_marginStart="28dp"
                 android:layout_marginLeft="28dp"
                 android:layout_marginBottom="16dp"
@@ -79,7 +82,18 @@
                 android:layout_toRightOf="@+id/accettaProposta"
                 android:drawableRight="@drawable/ic_deny"
                 android:drawableTint="@color/lighRed"
-                android:text="Rifiuta" />
+                android:text="Rifiuta"/>
+
+            <Button
+                android:id="@+id/accettaProposta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textViewOrganizator"
+                android:layout_marginBottom="16dp"
+                android:drawableRight="@drawable/ic_check"
+                android:drawableTint="@color/green"
+                android:text="Accetta" />
+
 
         </RelativeLayout>
 
