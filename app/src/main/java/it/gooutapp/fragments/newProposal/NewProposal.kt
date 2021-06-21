@@ -31,8 +31,8 @@ class NewProposal : Fragment(), DatePickerDialog.OnDateSetListener, TimePickerDi
     private lateinit var d: Calendar
     private lateinit var proposalNameEditText: EditText
     private lateinit var placePickerEditText: EditText
-    private lateinit var dateView: EditText
-    private lateinit var timeView: EditText
+    private lateinit var dateEditText: EditText
+    private lateinit var timeEditText: EditText
     private lateinit var confirmProposalButton: Button
     private lateinit var root: View
     private var day = 0
@@ -74,11 +74,11 @@ class NewProposal : Fragment(), DatePickerDialog.OnDateSetListener, TimePickerDi
     }
 
     private fun pickDate() {
-        dateView = root.findViewById(R.id.editTextDate)
-        dateView.setOnClickListener {
+        dateEditText = root.findViewById(R.id.editTextDate)
+        dateEditText.setOnClickListener {
             editTextDate.isEnabled = false;
             getDateCalendar()
-            var dateDialog = DatePickerDialog( dateView.context, this , year,  month, day)
+            var dateDialog = DatePickerDialog( dateEditText.context, this , year,  month, day)
             dateDialog.setOnCancelListener(){
                 editTextDate.isEnabled = true;
             }
@@ -87,11 +87,11 @@ class NewProposal : Fragment(), DatePickerDialog.OnDateSetListener, TimePickerDi
     }
 
     private fun pickTime() {
-        timeView = root.findViewById(R.id.editTextHour)
-        timeView.setOnClickListener {
+        timeEditText = root.findViewById(R.id.editTextHour)
+        timeEditText.setOnClickListener {
             editTextHour.isEnabled = false;
             getTimeCalendar()
-            var timeDialog = TimePickerDialog(dateView.context, this, hour, minute, true)
+            var timeDialog = TimePickerDialog(dateEditText.context, this, hour, minute, true)
             timeDialog.setOnCancelListener(){
                 editTextHour.isEnabled = true;
             }
@@ -142,15 +142,22 @@ class NewProposal : Fragment(), DatePickerDialog.OnDateSetListener, TimePickerDi
 
     //TODO mettere controllo sugli input
     fun proposalConfirm(){
+        var emptyField = false
         var proposalName = proposalNameEditText.text.toString()
-        //var date = Date(mDay, mMonth, mYear, mHour, mMinute)
-        fs.createProposalData(groupCode, proposalName, date, time, placeString){ result ->
-            if(result){
-                activity?.findNavController(R.id.nav_host_fragment)?.navigateUp()
-                Toast.makeText(root.context, R.string.successfulProposal, Toast.LENGTH_SHORT).show()
-            }else{
-                Toast.makeText(root.context, R.string.failProposal, Toast.LENGTH_SHORT).show()
+        if(proposalNameEditText.text.isEmpty() || placePickerEditText.text.isEmpty() || dateEditText.text.isEmpty() || timeEditText.text.isEmpty())
+            emptyField = true
+        if(!emptyField) {
+            fs.createProposalData(groupCode, proposalName, date, time, placeString) { result ->
+                if (result) {
+                    activity?.findNavController(R.id.nav_host_fragment)?.navigateUp()
+                    Toast.makeText(root.context, R.string.successfulProposal, Toast.LENGTH_SHORT)
+                        .show()
+                } else {
+                    Toast.makeText(root.context, R.string.failProposal, Toast.LENGTH_SHORT).show()
+                }
             }
+        }else{
+            Toast.makeText(context, getString(R.string.incorrect_fields_registration), Toast.LENGTH_SHORT).show()
         }
     }
 

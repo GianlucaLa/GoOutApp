@@ -21,7 +21,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
                 android:text="Nome Proposta"
                 android:textAllCaps="true"
@@ -31,24 +30,25 @@
                 android:maxLines="1" />
 
             <TextView
-                android:id="@+id/textViewRLuogo"
+                android:id="@+id/textViewRData"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textViewRProposta"
                 android:layout_marginBottom="16dp"
-                android:text="Luogo: "
+                android:text="Data: "
                 android:textSize="17sp"
+                android:textColor="@color/defaultBlue"
                 android:maxLines="1" />
 
             <TextView
-                android:id="@+id/textViewRData"
+                android:id="@+id/textViewRDataValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/textViewRLuogo"
-                android:layout_marginBottom="16dp"
-                android:text="Data: "
+                android:layout_toRightOf="@id/textViewRData"
+                android:layout_toEndOf="@id/textViewRData"
+                android:layout_below="@id/textViewRProposta"
                 android:textSize="17sp"
-                android:maxLines="1" />
+                android:text="TextView" />
 
             <TextView
                 android:id="@+id/textViewROra"
@@ -58,7 +58,18 @@
                 android:layout_marginBottom="16dp"
                 android:text="Orario: "
                 android:textSize="17sp"
+                android:textColor="@color/defaultBlue"
                 android:maxLines="1" />
+
+            <TextView
+                android:id="@+id/textViewROraValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/textViewROra"
+                android:layout_toEndOf="@id/textViewROra"
+                android:layout_below="@id/textViewRData"
+                android:textSize="17sp"
+                android:text="TextView" />
 
             <TextView
                 android:id="@+id/textViewOrganizator"
@@ -68,16 +79,47 @@
                 android:layout_marginBottom="16dp"
                 android:text="Organizzatore: "
                 android:textSize="17sp"
+                android:textColor="@color/defaultBlue"
                 android:maxLines="1" />
+
+            <TextView
+                android:id="@+id/textViewROrganizatorValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/textViewOrganizator"
+                android:layout_toEndOf="@id/textViewOrganizator"
+                android:layout_below="@id/textViewROra"
+                android:textSize="17sp"
+                android:text="TextView" />
+
+            <TextView
+                android:id="@+id/textViewRLuogo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textViewOrganizator"
+                android:layout_marginBottom="16dp"
+                android:text="Luogo: "
+                android:textColor="@color/defaultBlue"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/textViewRLuogoValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/textViewRLuogo"
+                android:layout_toEndOf="@id/textViewRLuogo"
+                android:layout_below="@id/textViewOrganizator"
+                android:layout_marginBottom="16dp"
+                android:textSize="17sp"
+                android:text="TextView" />
 
             <Button
                 android:id="@+id/rifiutaProposta"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/textViewOrganizator"
+                android:layout_below="@+id/textViewRLuogoValue"
                 android:layout_marginStart="28dp"
                 android:layout_marginLeft="28dp"
-                android:layout_marginBottom="16dp"
                 android:layout_toEndOf="@+id/accettaProposta"
                 android:layout_toRightOf="@+id/accettaProposta"
                 android:drawableRight="@drawable/ic_deny"
@@ -88,12 +130,10 @@
                 android:id="@+id/accettaProposta"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/textViewOrganizator"
-                android:layout_marginBottom="16dp"
+                android:layout_below="@id/textViewRLuogoValue"
                 android:drawableRight="@drawable/ic_check"
                 android:drawableTint="@color/green"
                 android:text="Accetta" />
-
 
         </RelativeLayout>
 

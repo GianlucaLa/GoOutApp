@@ -1,6 +1,5 @@
 package it.gooutapp.fragments.group
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,10 +19,14 @@ class ProposalAdapter (private val proposalList : ArrayList<Proposal>) : Recycle
         var activityContext = holder.itemView.context
         val proposal: Proposal = proposalList[position]
         holder.nomeProposta.text = proposal.proposalName
-        holder.luogoProposta.text = "${activityContext.resources.getString(R.string.place)}: ${proposal.place.toString()}"
-        holder.dataProposta.text = "${activityContext.resources.getString(R.string.date)}: ${proposal.date.toString()}"
-        holder.oraProposta.text = "${activityContext.resources.getString(R.string.time)}: ${proposal.time.toString()}"
-        holder.organizzatoreProposta.text = "${activityContext.resources.getString(R.string.organizator)}: aggiungere organizzatore"
+        holder.labelPlace.text = "${activityContext.resources.getString(R.string.place)}: "
+        holder.labelDate.text = "${activityContext.resources.getString(R.string.date)}: "
+        holder.labelTime.text = "${activityContext.resources.getString(R.string.time)}: "
+        holder.labelOrganizator.text = "${activityContext.resources.getString(R.string.organizator)}: "
+        holder.luogoProposta.text = "${proposal.place.toString()}"
+        holder.dataProposta.text = "${proposal.date.toString()}"
+        holder.oraProposta.text = "${proposal.time.toString()}"
+        holder.organizzatoreProposta.text = "aggiungere organizzatore"
     }
 
     override fun getItemCount(): Int {
@@ -31,10 +34,14 @@ class ProposalAdapter (private val proposalList : ArrayList<Proposal>) : Recycle
     }
 
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val nomeProposta : TextView = itemView.findViewById(R.id.textViewRProposta)
-        val luogoProposta : TextView = itemView.findViewById(R.id.textViewRLuogo)
-        val dataProposta : TextView = itemView.findViewById(R.id.textViewRData)
-        val oraProposta : TextView = itemView.findViewById(R.id.textViewROra)
-        val organizzatoreProposta : TextView = itemView.findViewById(R.id.textViewOrganizator)
+        val nomeProposta: TextView = itemView.findViewById(R.id.textViewRProposta)
+        val luogoProposta: TextView = itemView.findViewById(R.id.textViewRLuogoValue)
+        val dataProposta: TextView = itemView.findViewById(R.id.textViewRDataValue)
+        val oraProposta: TextView = itemView.findViewById(R.id.textViewROraValue)
+        val organizzatoreProposta: TextView = itemView.findViewById(R.id.textViewROrganizatorValue)
+        val labelPlace: TextView = itemView.findViewById(R.id.textViewRLuogo)
+        val labelDate: TextView = itemView.findViewById(R.id.textViewRData)
+        val labelTime: TextView = itemView.findViewById(R.id.textViewROra)
+        val labelOrganizator: TextView = itemView.findViewById(R.id.textViewOrganizator)
     }
 }

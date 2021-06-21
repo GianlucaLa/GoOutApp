@@ -24,7 +24,6 @@ import it.gooutapp.models.Group
 import it.gooutapp.models.myDialog
 import kotlinx.android.synthetic.main.recycle_view_row.view.*
 
-
 class HomeFragment : Fragment(), GroupAdapter.ClickListener {
 
     private lateinit var recyclerView: RecyclerView
