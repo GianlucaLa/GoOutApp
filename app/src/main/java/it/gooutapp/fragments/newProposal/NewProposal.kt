@@ -12,6 +12,8 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.model.TypeFilter
@@ -20,6 +22,9 @@ import com.google.android.libraries.places.widget.AutocompleteActivity
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import it.gooutapp.R
 import it.gooutapp.firebase.FireStore
+import it.gooutapp.fragments.home.GroupAdapter
+import it.gooutapp.models.Group
+import it.gooutapp.models.Proposal
 import kotlinx.android.synthetic.main.fragment_new_proposal.*
 import java.util.*
 
@@ -60,6 +65,7 @@ class NewProposal : Fragment(), DatePickerDialog.OnDateSetListener, TimePickerDi
         groupCode = arguments?.getString("groupCode") as String
         pickDate()
         pickTime()
+
         return root
     }
 

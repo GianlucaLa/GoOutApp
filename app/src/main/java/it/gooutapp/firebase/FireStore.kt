@@ -6,6 +6,7 @@ import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.ktx.Firebase
 import it.gooutapp.models.Group
+import it.gooutapp.models.Proposal
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -153,8 +154,8 @@ class FireStore {
     //Restituisce i dati dei gruppi, utilizzata da Adapter per popolare la RecycleView
     fun getUserGroupData(email: String, callback: (ArrayList<Group>, ArrayList<Boolean>) -> Unit) {
         lateinit var document: DocumentSnapshot
-        var userGroupList = ArrayList<Group>()
-        var adminFlagList = ArrayList<Boolean>()
+        val userGroupList = ArrayList<Group>()
+        val adminFlagList = ArrayList<Boolean>()
         db.collection(groupCollection).addSnapshotListener(object : EventListener<QuerySnapshot> {
             override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
                 if (error != null) {
@@ -178,6 +179,24 @@ class FireStore {
                 callback(userGroupList, adminFlagList)
             }
         })
+    }
+
+    fun getProposalData(callback: (ArrayList<Proposal>) -> Unit) {
+        var proposalArrayList = ArrayList<Proposal>()
+        db.collection(proposalCollection).addSnapshotListener(object : EventListener<QuerySnapshot> {
+            override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
+                if (error != null) {
+                    Log.e("Firestore Error", error.message.toString())
+                    return
+                }
+                for (dc: DocumentChange in value?.documentChanges!!) {
+                    //cerco e aggiungo i gruppi che contengono l'email dell'utente
+                        if (dc.type == DocumentChange.Type.ADDED)
+                            proposalArrayList.add(dc.document.toObject(Proposal::class.java))
+                    }
+                callback(proposalArrayList)
+                }
+            })
     }
 
     private fun currentUserId(): String {

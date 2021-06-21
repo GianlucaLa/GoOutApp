@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import it.gooutapp.R
 import it.gooutapp.models.Group
 
-class MyAdapter(private val userGroupList : ArrayList<Group>, val adminFlagList : ArrayList<Boolean>, val clickListener: ClickListener) : RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
+class GroupAdapter(private val userGroupList : ArrayList<Group>, val adminFlagList : ArrayList<Boolean>, val clickListener: ClickListener) : RecyclerView.Adapter<GroupAdapter.MyViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.recycle_view_row, parent, false)
@@ -37,6 +37,7 @@ class MyAdapter(private val userGroupList : ArrayList<Group>, val adminFlagList 
     override fun getItemCount(): Int {
        return userGroupList.size
     }
+
      class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         //nome della textView dove inserire dato
         val groupName : TextView = itemView.findViewById(R.id.textViewNomeGruppo)

@@ -37,6 +37,7 @@
         android:inputType="textPersonName"
         android:onClick="startAutocompleteActivity"
         app:endIconMode="clear_text"
+        android:longClickable="true"
         app:layout_constraintBottom_toTopOf="@+id/editTextDateView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

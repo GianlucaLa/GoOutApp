@@ -25,12 +25,12 @@ import it.gooutapp.models.myDialog
 import kotlinx.android.synthetic.main.recycle_view_row.view.*
 
 
-class HomeFragment : Fragment(), MyAdapter.ClickListener {
+class HomeFragment : Fragment(), GroupAdapter.ClickListener {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var userGroupList: ArrayList<Group>
     private lateinit var adminFlagList: ArrayList<Boolean>
-    private lateinit var myAdapter: MyAdapter
+    private lateinit var groupAdapter: GroupAdapter
     private var user_email = Firebase.auth.currentUser?.email.toString()
     private val fs = FireStore()
     private val OFFSET_PX = 30
@@ -49,8 +49,8 @@ class HomeFragment : Fragment(), MyAdapter.ClickListener {
         fs.getUserGroupData(user_email) { groupList, adminFlag ->
             userGroupList = groupList
             adminFlagList = adminFlag
-            myAdapter = MyAdapter(userGroupList, adminFlagList,this)
-            recyclerView.adapter = myAdapter
+            groupAdapter = GroupAdapter(userGroupList, adminFlagList,this)
+            recyclerView.adapter = groupAdapter
 
             //swipe a destra recycle view
             val itemSwipe = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
@@ -119,7 +119,7 @@ class HomeFragment : Fragment(), MyAdapter.ClickListener {
             builder.setMessage(message)
             builder.setPositiveButton(R.string.ok) {dialog, wich ->
                 var position = viewHolder.adapterPosition
-                myAdapter.onDeleteItem(position)
+                groupAdapter.onDeleteItem(position)
                 //se utente amministratore
                 if(delete) {
                     fs.deleteGroupData(userGroupList[position].groupCode.toString()){ result ->
@@ -127,8 +127,8 @@ class HomeFragment : Fragment(), MyAdapter.ClickListener {
                             fs.getUserGroupData(user_email) { groupList, adminFlag ->
                                 userGroupList = groupList
                                 adminFlagList = adminFlag
-                                myAdapter = MyAdapter(userGroupList, adminFlagList, this)
-                                recyclerView.adapter = myAdapter
+                                groupAdapter = GroupAdapter(userGroupList, adminFlagList, this)
+                                recyclerView.adapter = groupAdapter
                             }
                         } else {
                             Log.e(TAG, "error during delete of document")
@@ -141,8 +141,8 @@ class HomeFragment : Fragment(), MyAdapter.ClickListener {
                             fs.getUserGroupData(user_email) { groupList, adminFlag ->
                                 userGroupList = groupList
                                 adminFlagList = adminFlag
-                                myAdapter = MyAdapter(userGroupList, adminFlagList, this)
-                                recyclerView.adapter = myAdapter
+                                groupAdapter = GroupAdapter(userGroupList, adminFlagList, this)
+                                recyclerView.adapter = groupAdapter
                             }
                         } else {
                             Log.e(TAG, "error during delete of user's field")
@@ -150,10 +150,10 @@ class HomeFragment : Fragment(), MyAdapter.ClickListener {
                     }
                 }
                 userGroupList.removeAt(position)
-                myAdapter.notifyItemRemoved(position)
+                groupAdapter.notifyItemRemoved(position)
             }
             builder.setNegativeButton(R.string.cancel){dialog, wich ->
-                myAdapter.notifyDataSetChanged()
+                groupAdapter.notifyDataSetChanged()
             }
             builder.setCancelable(false);
             builder.show()
