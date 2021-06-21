@@ -55,7 +55,7 @@ class FireStore {
             "proposalName" to proposalName,
             "date" to date,
             "place" to place,
-            "organizator" to currentUserId()
+            "organizator" to currentUserEmail()
         )
         db.collection(proposalCollection).document()
             .set(proposal)
@@ -201,5 +201,9 @@ class FireStore {
 
     private fun currentUserId(): String {
         return Firebase.auth.currentUser?.uid.toString()
+    }
+
+    private fun currentUserEmail() : String {
+        return Firebase.auth.currentUser?.email.toString()
     }
 }

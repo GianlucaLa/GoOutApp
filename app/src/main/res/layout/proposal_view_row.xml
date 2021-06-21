@@ -3,10 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="5dp">
+    android:padding="16dp">
 
     <androidx.cardview.widget.CardView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardElevation="8dp"
         app:cardCornerRadius="16dp"
@@ -14,48 +14,48 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:padding="16dp">
 
             <TextView
                 android:id="@+id/textViewRProposta"
-                android:layout_width="346dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"
                 android:layout_alignParentTop="true"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
-                android:textColor="@color/viewBlue"
                 android:text="Nome Proposta"
                 android:textAllCaps="true"
-                android:textSize="30sp" />
+                android:textColor="@color/viewBlue"
+                android:textSize="30sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/textViewRLuogo"
-                android:layout_width="167dp"
-                android:layout_height="35dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/textViewRProposta"
                 android:layout_marginBottom="16dp"
-                android:textSize="15sp"
-                android:text="Luogo" />
+                android:text="Luogo"
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/textViewRData"
-                android:layout_width="167dp"
-                android:layout_height="35dp"
-                android:textSize="15sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/textViewRLuogo"
                 android:layout_marginBottom="16dp"
-                android:text="Data" />
+                android:text="Data"
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/textViewROra"
-                android:layout_width="167dp"
-                android:layout_height="35dp"
-                android:textSize="15sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/textViewRData"
                 android:layout_marginBottom="16dp"
-                android:text="Ora" />
+                android:text="Ora"
+                android:textSize="15sp" />
 
             <Button
                 android:id="@+id/accettaProposta"
@@ -72,14 +72,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textViewROra"
+                android:layout_marginStart="28dp"
                 android:layout_marginLeft="28dp"
                 android:layout_marginBottom="16dp"
+                android:layout_toEndOf="@+id/accettaProposta"
                 android:layout_toRightOf="@+id/accettaProposta"
-                android:text="Rifiuta"
                 android:drawableRight="@drawable/ic_deny"
                 android:drawableTint="@color/lighRed"
-                android:layout_marginStart="28dp"
-                android:layout_toEndOf="@+id/accettaProposta" />
+                android:text="Rifiuta" />
 
         </RelativeLayout>
 

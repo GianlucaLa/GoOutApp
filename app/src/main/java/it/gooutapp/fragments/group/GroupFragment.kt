@@ -1,6 +1,7 @@
 package it.gooutapp.fragments.group
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,14 +24,12 @@ class GroupFragment : Fragment() {
 
         recyclerView = root.findViewById(R.id.proposalRecycleView)
         recyclerView.layoutManager = LinearLayoutManager(root.context)
-        recyclerView.setHasFixedSize(true)
         proposalList = arrayListOf()
 
         fs.getProposalData() { proposalListData ->
             proposalList = proposalListData
             proposalAdapter = ProposalAdapter(proposalList)
             recyclerView.adapter = proposalAdapter
-
         }
 
         return root
