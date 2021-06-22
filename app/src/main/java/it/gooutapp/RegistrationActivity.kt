@@ -4,12 +4,11 @@ package it.gooutapp
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import it.gooutapp.firebase.FireStore
@@ -22,20 +21,26 @@ class RegistrationActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.registration)
-        editTextPassword.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                editTextPasswordView.isErrorEnabled = false
-            }
-            override fun afterTextChanged(s: Editable?) {}
-        })
-        editTextEmail.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                editTextEmailView.isErrorEnabled = false
-            }
-            override fun afterTextChanged(s: Editable?) {}
-        })
+        editTextName.addTextChangedListener {
+            if (editTextName.text?.length == 15) { Toast.makeText(this, R.string.max15chars, Toast.LENGTH_SHORT).show() }
+            editTextNameView.isErrorEnabled = false
+        }
+        editTextSurname.addTextChangedListener {
+            if (editTextSurname.text?.length == 15) { Toast.makeText(this, R.string.max15chars, Toast.LENGTH_SHORT).show() }
+            editTextSurnameView.isErrorEnabled = false
+        }
+        editTextNickname.addTextChangedListener {
+            if (editTextNickname.text?.length == 15) { Toast.makeText(this, R.string.max15chars, Toast.LENGTH_SHORT).show() }
+            editTextNicknameView.isErrorEnabled = false
+        }
+        editTextPassword.addTextChangedListener{
+            if (editTextPassword.text?.length == 15) { Toast.makeText(this, R.string.max15chars, Toast.LENGTH_SHORT).show() }
+            editTextPasswordView.isErrorEnabled = false
+        }
+        editTextEmail.addTextChangedListener{
+            if (editTextEmail.text?.length == 15) { Toast.makeText(this, R.string.max15chars, Toast.LENGTH_SHORT).show() }
+            editTextEmailView.isErrorEnabled = false
+        }
     }
 
     fun closeActivity() {
@@ -59,12 +64,7 @@ class RegistrationActivity: AppCompatActivity() {
             }
     }
 
-    fun  fieldsCheck(view: View){
-        var isEmailValid = false
-        var isPasswordValid = false
-        var isNameValid = false
-        var isSurnameValid = false
-        var isNicknameValid = false
+    fun fieldsCheck(view: View){
         val name = editTextName.text.toString()
         val surname = editTextSurname.text.toString()
         val nickname = editTextNickname.text.toString()
@@ -73,45 +73,25 @@ class RegistrationActivity: AppCompatActivity() {
 
         // Check for a valid email address.
         when {
-            email!!.isEmpty() -> {
-                editTextEmailView.error = resources.getString(R.string.email_error)
-                isEmailValid = false
-            }
-            email.length < 6 -> {
-                editTextEmailView.error = resources.getString(R.string.error_invalid_email)
-                isEmailValid = false
-            }
-            else -> {
-                isEmailValid = true
-            }
+            email.isEmpty() -> { editTextEmailView.error = resources.getString(R.string.email_empty_error) }
+            email.length < 6 -> { editTextEmailView.error = resources.getString(R.string.error_invalid_email) }
         }
 
         // Check for a valid password.
         when {
-            password!!.isEmpty() -> {
-                editTextPasswordView.error = resources.getString(R.string.password_error)
-                isPasswordValid = false
-            }
-            password.length < 6 -> {
-                editTextPasswordView.error = resources.getString(R.string.error_invalid_password)
-                isPasswordValid = false
-            }
-            else -> {
-                isPasswordValid = true
-            }
+            password!!.isEmpty() -> { editTextPasswordView.error = resources.getString(R.string.password_empty_error) }
+            password.length < 6 -> { editTextPasswordView.error = resources.getString(R.string.error_invalid_password) }
         }
 
         //check others
-        isNameValid = !name.isEmpty()
-        isSurnameValid = !surname.isEmpty()
-        isNicknameValid = !nickname.isEmpty()
+        if(name.isEmpty()) editTextNameView.error = resources.getString(R.string.name_empty_error)
+        if(surname.isEmpty()) editTextSurnameView.error = resources.getString(R.string.surname_empty_error)
+        if(nickname.isEmpty())editTextNicknameView.error = resources.getString(R.string.nickname_empty_error)
 
         //final check
-        if (isEmailValid && isPasswordValid && isNameValid && isSurnameValid && isNicknameValid) {
+        if (!(editTextNameView.isErrorEnabled || editTextSurnameView.isErrorEnabled || editTextNicknameView.isErrorEnabled || editTextEmailView.isErrorEnabled || editTextPasswordView.isErrorEnabled)) {
             fs.createUserData(name, surname, nickname, email)
             createUser(email, password)
-        }else{
-            Toast.makeText(applicationContext, getString(R.string.incorrect_fields_registration), Toast.LENGTH_SHORT).show()
         }
     }
 }

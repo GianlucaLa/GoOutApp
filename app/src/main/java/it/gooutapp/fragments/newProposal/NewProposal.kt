@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.google.android.libraries.places.api.Places
@@ -21,6 +22,7 @@ import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import it.gooutapp.R
 import it.gooutapp.firebase.FireStore
 import kotlinx.android.synthetic.main.fragment_new_proposal.*
+import kotlinx.android.synthetic.main.registration.*
 import java.util.*
 
 class NewProposal : Fragment(), DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
@@ -48,6 +50,11 @@ class NewProposal : Fragment(), DatePickerDialog.OnDateSetListener, TimePickerDi
         root = inflater.inflate(R.layout.fragment_new_proposal, container, false)
         confirmProposalButton = root.findViewById(R.id.confirmProposal)
         proposalNameEditText = root.findViewById(R.id.editTextNameProposal)
+        proposalNameEditText.addTextChangedListener {
+            if(proposalNameEditText.text.length == 15){
+                Toast.makeText(root.context, R.string.max15chars, Toast.LENGTH_SHORT).show()
+            }
+        }
         confirmProposalButton.setOnClickListener{proposalConfirm()}
         placePickerEditText = root.findViewById(R.id.editTextPlace)
         placePickerEditText.setOnClickListener(){
@@ -142,11 +149,14 @@ class NewProposal : Fragment(), DatePickerDialog.OnDateSetListener, TimePickerDi
 
     //TODO mettere controllo sugli input
     fun proposalConfirm(){
-        var emptyField = false
         var proposalName = proposalNameEditText.text.toString()
-        if(proposalNameEditText.text.isEmpty() || placePickerEditText.text.isEmpty() || dateEditText.text.isEmpty() || timeEditText.text.isEmpty())
-            emptyField = true
-        if(!emptyField) {
+
+        if(proposalName.isEmpty()) editTextNameProposalView.error = resources.getString(R.string.name_empty_error)
+        if(placeString.isEmpty()) editTextPlaceView.error = resources.getString(R.string.place_empty_error)
+        if(date.isEmpty()) editTextDateView.error = resources.getString(R.string.date_empty_error)
+        if(time.isEmpty()) editTextHourView.error = resources.getString(R.string.time_empty_error)
+
+        if(!(editTextNameProposalView.isErrorEnabled || editTextPlaceView.isErrorEnabled || editTextDateView.isErrorEnabled || editTextHourView.isErrorEnabled)) {
             fs.createProposalData(groupCode, proposalName, date, time, placeString) { result ->
                 if (result) {
                     activity?.findNavController(R.id.nav_host_fragment)?.navigateUp()
@@ -156,9 +166,6 @@ class NewProposal : Fragment(), DatePickerDialog.OnDateSetListener, TimePickerDi
                     Toast.makeText(root.context, R.string.failProposal, Toast.LENGTH_SHORT).show()
                 }
             }
-        }else{
-            Toast.makeText(context, getString(R.string.incorrect_fields_registration), Toast.LENGTH_SHORT).show()
         }
     }
-
 }

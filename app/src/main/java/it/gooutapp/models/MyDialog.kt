@@ -3,7 +3,9 @@ package it.gooutapp.models
 import android.content.Context
 import android.view.LayoutInflater
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.widget.addTextChangedListener
 import it.gooutapp.R
 
 class myDialog {
@@ -13,6 +15,11 @@ class myDialog {
         val editText = dialogLayout.findViewById<EditText>(R.id.editTextMyDialog)
         with(builder) {
             setTitle(title)
+            editText.addTextChangedListener {
+                if(editText.text.length == 15){
+                    Toast.makeText(context, R.string.max15chars, Toast.LENGTH_SHORT).show()
+                }
+            }
             editText.hint = message
             setPositiveButton(R.string.ok) { dialog, which ->
                 //rimuovo eventuali spazi vuoti inseriti dall'utente

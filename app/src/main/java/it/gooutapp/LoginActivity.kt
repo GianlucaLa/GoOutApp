@@ -76,7 +76,7 @@ class LoginActivity: AppCompatActivity() {
         // Check for a valid email address.
         when {
             email!!.isEmpty() -> {
-                editTextLEmailView.error = resources.getString(R.string.email_error)
+                editTextLEmailView.error = resources.getString(R.string.email_empty_error)
                 isEmailValid = false
             }
             email.length < 6 -> {
@@ -91,7 +91,7 @@ class LoginActivity: AppCompatActivity() {
         // Check for a valid password.
         when {
             password!!.isEmpty() -> {
-                editTextLPasswordView.error = resources.getString(R.string.password_error)
+                editTextLPasswordView.error = resources.getString(R.string.password_empty_error)
                 isPasswordValid = false
             }
             password.length < 6 -> {

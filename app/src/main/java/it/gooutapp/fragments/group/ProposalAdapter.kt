@@ -26,7 +26,7 @@ class ProposalAdapter (private val proposalList : ArrayList<Proposal>) : Recycle
         holder.luogoProposta.text = "${proposal.place.toString()}"
         holder.dataProposta.text = "${proposal.date.toString()}"
         holder.oraProposta.text = "${proposal.time.toString()}"
-        holder.organizzatoreProposta.text = "aggiungere organizzatore"
+        holder.organizzatoreProposta.text = "${proposal.organizator.toString()}"
     }
 
     override fun getItemCount(): Int {

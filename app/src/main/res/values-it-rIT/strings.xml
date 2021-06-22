@@ -9,11 +9,10 @@
     <string name="name">Nome</string>
     <string name="surname">Cognome</string>
     <string name="Nickname">Nickname</string>
-    <string name="email_error">L\'indirizzo email non può essere vuoto</string>
+    <string name="email_empty_error">L\'indirizzo email non può essere vuoto</string>
     <string name="error_invalid_email">L\'indirizzo email non è valido</string>
-    <string name="password_error">La password non può essere vuota</string>
-    <string name="error_invalid_password">La password non è valida</string>
-    <string name="incorrect_fields_registration">Tutti i campi devono essere compilati correttamente</string>
+    <string name="password_empty_error">La password non può essere vuota</string>
+    <string name="error_invalid_password">La password deve contenere almeno 6 caratteri</string>
     <string name="menu_create_group">Crea nuovo gruppo</string>
     <string name="menu_new_proposal">Nuova proposta</string>
     <string name="menu_join_group">Partecipa ad un gruppo</string>
@@ -55,4 +54,11 @@
     <string name="organizator">Organizzatore</string>
     <string name="time">Orario</string>
     <string name="date">Data</string>
+    <string name="max15chars">Inserire massimo 15 caratteri</string>
+    <string name="name_empty_error">Il nome non può essere vuoto</string>
+    <string name="surname_empty_error">Il cognome non può essere vuoto</string>
+    <string name="nickname_empty_error">Il nickname non può essere vuoto</string>
+    <string name="place_empty_error">Il posto non può essere vuoto</string>
+    <string name="date_empty_error">La data non può essere vuota</string>
+    <string name="time_empty_error">L\'orario non può essere vuoto</string>
 </resources>

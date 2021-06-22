@@ -33,7 +33,7 @@ class FireStore {
     fun createGroupData(groupName: String, email: String, callback: (Boolean) -> Unit) {
         // generazione randomica di character
         val source: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
-        val groupCode: String = List(8) { source.random() }.joinToString("")
+        val groupCode: String = List(15) { source.random() }.joinToString("")
         val group = hashMapOf(
             "groupCode" to groupCode,
             "groupName" to groupName,
@@ -50,22 +50,26 @@ class FireStore {
     }
 
     fun createProposalData(groupCode: String, proposalName: String, date: String, time: String, place: String, callback: (Boolean) -> Unit){
-        val proposal = hashMapOf(
-            "groupName" to groupCode,
-            "proposalName" to proposalName,
-            "date" to date,
-            "time" to time,
-            "place" to place,
-            "organizator" to currentUserEmail()
-        )
-        db.collection(proposalCollection).document()
-            .set(proposal)
-            .addOnSuccessListener {
-                Log.d(TAG, "DocumentSnapshot successfully written!")
-                callback(true) }
-            .addOnFailureListener {
-                    e -> Log.w(TAG, "Error writing document", e)
-                callback(false) }
+        currentUserNickname { currNickname ->
+            val proposal = hashMapOf(
+                "groupCode" to groupCode,
+                "proposalName" to proposalName,
+                "date" to date,
+                "time" to time,
+                "place" to place,
+                "organizator" to currNickname,
+            )
+            db.collection(proposalCollection).document()
+                .set(proposal)
+                .addOnSuccessListener {
+                    Log.d(TAG, "DocumentSnapshot successfully written!")
+                    callback(true)
+                }
+                .addOnFailureListener { e ->
+                    Log.w(TAG, "Error writing document", e)
+                    callback(false)
+                }
+        }
     }
 
     fun leaveGroup(groupCode: String, callback: (Boolean) -> Unit) {
@@ -95,6 +99,13 @@ class FireStore {
                 .addOnFailureListener {
                         e -> Log.w(TAG, "Error deleting document", e)
                     callback(false)}
+            db.collection(proposalCollection).document(documentToDelete).delete()
+            db.collection(proposalCollection).whereEqualTo("groupCode", "$groupCode").get()
+                .addOnSuccessListener { proposalDocs ->
+                    for(dc in proposalDocs){
+                        db.collection(proposalCollection).document(dc.id).delete()
+                    }
+                }
         }
     }
 
@@ -205,7 +216,19 @@ class FireStore {
         return Firebase.auth.currentUser?.uid.toString()
     }
 
-    private fun currentUserEmail() : String {
+    private fun currentUserEmail(): String {
         return Firebase.auth.currentUser?.email.toString()
+    }
+
+    private fun currentUserNickname(callback: (String) -> Unit) {
+        db.collection(userCollection).document(Firebase.auth.currentUser?.email.toString()).get().addOnSuccessListener { document ->
+            if (document.data != null) {
+                callback(document.get("nickname") as String)
+            } else {
+                Log.d(TAG, "No such document")
+            }
+        }.addOnFailureListener { exception ->
+            Log.d(TAG, "get failed with ", exception)
+        }
     }
 }
