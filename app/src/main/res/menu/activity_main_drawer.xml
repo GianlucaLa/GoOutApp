@@ -10,6 +10,10 @@
             android:icon="@drawable/ic_menu_home"
             android:title="@string/home" />
         <item
+            android:id="@+id/nav_history"
+            android:icon="@drawable/ic_menu_history"
+            android:title="@string/menu_history" />
+        <item
             android:id="@+id/nav_userProfile"
             android:icon="@drawable/ic_menu_user_profile"
             android:title="@string/profile" />

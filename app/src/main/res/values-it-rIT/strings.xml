@@ -61,4 +61,5 @@
     <string name="place_empty_error">Il posto non può essere vuoto</string>
     <string name="date_empty_error">La data non può essere vuota</string>
     <string name="time_empty_error">L\'orario non può essere vuoto</string>
+    <string name="menu_history">Cronologia</string>
 </resources>

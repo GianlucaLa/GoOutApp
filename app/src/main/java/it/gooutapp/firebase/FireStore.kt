@@ -109,6 +109,7 @@ class FireStore {
         }
     }
 
+
     private fun getGroupDocumentId(groupCode: String, callback: (String) -> Unit) {
         db.collection(groupCollection).whereEqualTo("groupCode", "$groupCode").get()
             .addOnSuccessListener { foundGroupCode ->

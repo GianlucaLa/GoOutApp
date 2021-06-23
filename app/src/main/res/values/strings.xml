@@ -65,5 +65,6 @@
     <string name="nickname_empty_error">The nickname cannot be empty</string>
     <string name="place_empty_error">The place cannot be empty</string>
     <string name="date_empty_error">The date cannon be empty</string>
-    <string name="time_empty_error">The timetable  cannot be null</string>
+    <string name="time_empty_error">The timetable cannot be null</string>
+    <string name="menu_history">History</string>
 </resources>
