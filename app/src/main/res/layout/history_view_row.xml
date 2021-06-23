@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cv"
+        android:id="@+id/historyCV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardCornerRadius="16dp"
@@ -121,8 +121,14 @@
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
                android:layout_below="@+id/textViewHLuogo"
-               android:text="METTERE ACCETTATA O RIFIUTATA"
-               android:textSize="17sp" />
+               android:text=""
+               android:textAllCaps="true"
+               android:layout_alignParentEnd="true"
+               android:layout_alignParentRight="true"
+               android:layout_alignParentStart="true"
+               android:layout_alignParentLeft="true"
+               android:gravity="center"
+               android:textSize="30sp" />
 
         </RelativeLayout>
 

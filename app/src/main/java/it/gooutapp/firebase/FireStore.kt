@@ -50,14 +50,17 @@ class FireStore {
     }
 
     fun createProposalData(groupCode: String, proposalName: String, date: String, time: String, place: String, callback: (Boolean) -> Unit){
+        val source: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
+        val proposalCode: String = List(15) { source.random() }.joinToString("")
         currentUserNickname { currNickname ->
             val proposal = hashMapOf(
                 "groupCode" to groupCode,
-                "proposalName" to proposalName,
                 "date" to date,
-                "time" to time,
-                "place" to place,
                 "organizator" to currNickname,
+                "place" to place,
+                "proposalCode" to proposalCode,
+                "proposalName" to proposalName,
+                "time" to time
             )
             db.collection(proposalCollection).document()
                 .set(proposal)
@@ -109,7 +112,6 @@ class FireStore {
         }
     }
 
-
     private fun getGroupDocumentId(groupCode: String, callback: (String) -> Unit) {
         db.collection(groupCollection).whereEqualTo("groupCode", "$groupCode").get()
             .addOnSuccessListener { foundGroupCode ->
@@ -117,6 +119,15 @@ class FireStore {
             }.addOnFailureListener { exception ->
             Log.d(TAG, "get failed with ", exception)
         }
+    }
+
+    private fun getProposalDocumentId(proposalCode: String, callback: (String) -> Unit) {
+        db.collection(proposalCollection).whereEqualTo("proposalCode", "$proposalCode").get()
+            .addOnSuccessListener { foundProposalCode ->
+                callback(foundProposalCode.last().id)
+            }.addOnFailureListener { exception ->
+                Log.d(TAG, "get failed with ", exception)
+            }
     }
 
     //RETURN INFO: AM=already member, NM=not member, ER=group code not valid
@@ -204,13 +215,59 @@ class FireStore {
                 }
                 for (dc: DocumentChange in value?.documentChanges!!) {
                     //cerco e aggiungo i gruppi che contengono l'email dell'utente
-                        if (dc.type == DocumentChange.Type.ADDED && dc.document.toString().contains(groupCode))
+                        var stringDoc = dc.document.toString()
+                        if (dc.type == DocumentChange.Type.ADDED && stringDoc.contains(groupCode))
+                            if(!(stringDoc.contains("accepted") || stringDoc.contains("refused")))
                             //Log.e(TAG, dc.document.toString())
                             proposalArrayList?.add(dc?.document?.toObject(Proposal::class.java))
                     }
                 callback(proposalArrayList)
                 }
             })
+    }
+
+    fun getUserProposalData(callback: (ArrayList<Proposal>) -> Unit){
+        currentUserNickname { currNickname ->
+            var proposalArrayList = ArrayList<Proposal>()
+            db.collection(proposalCollection).addSnapshotListener(object : EventListener<QuerySnapshot> {
+                override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
+                    if (error != null) {
+                        Log.e("Firestore Error", error.message.toString())
+                        return
+                    }
+                    for (dc: DocumentChange in value?.documentChanges!!) {
+                        //cerco e aggiungo i gruppi che contengono l'email dell'utente
+                        if (dc.type == DocumentChange.Type.ADDED && (dc.document.toString().contains("user_${currentUserId()}") || dc.document.contains("$currNickname")))
+                            proposalArrayList?.add(dc?.document?.toObject(Proposal::class.java))
+                    }
+                    callback(proposalArrayList)
+                }
+            })
+        }
+    }
+
+    fun getUserProposalState(proposalCode: String, callback: (String) -> Unit){
+        db.collection(proposalCollection).whereEqualTo("proposalCode", "$proposalCode").get()
+            .addOnSuccessListener { proposalDocs ->
+                var state = proposalDocs.documents.last().get("user_${currentUserId()}") as String
+                callback(state)
+            }
+    }
+
+    fun setProposalState(proposalCode: String, state: String, callback: (Boolean) -> Unit){
+        getProposalDocumentId(proposalCode) { proposalDoc ->
+            // Remove the 'user' field from the document
+            val updates = hashMapOf<String, Any>(
+                "user_${currentUserId()}" to "$state"
+            )
+            db.collection(proposalCollection).document(proposalDoc).update(updates)
+                .addOnSuccessListener {
+                    Log.d(TAG, "Proposal state of user ${currentUserId()} setted")
+                    callback(true)}
+                .addOnFailureListener {
+                    e -> Log.w(TAG, "Error setting proposal state", e)
+                    callback(false)}
+        }
     }
 
     private fun currentUserId(): String {

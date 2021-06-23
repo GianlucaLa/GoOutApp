@@ -30,7 +30,7 @@ class GroupAdapter(private val userGroupList : ArrayList<Group>, val adminFlagLi
         }
     }
 
-    fun onDeleteItem(position: Int){
+    fun deleteItemRow(position: Int){
         adminFlagList.removeAt(position)
     }
 

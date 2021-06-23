@@ -118,7 +118,7 @@ class HomeFragment : Fragment(), GroupAdapter.ClickListener {
             builder.setMessage(message)
             builder.setPositiveButton(R.string.ok) {dialog, wich ->
                 var position = viewHolder.adapterPosition
-                groupAdapter.onDeleteItem(position)
+                groupAdapter.deleteItemRow(position)
                 //se utente amministratore
                 if(delete) {
                     fs.deleteGroupData(userGroupList[position].groupCode.toString()){ result ->

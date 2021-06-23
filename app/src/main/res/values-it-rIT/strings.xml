@@ -48,8 +48,8 @@
     <string name="proposal_place">Clicca per scegliere il luogo</string>
     <string name="proposal_date">Clicca per scegliere la data</string>
     <string name="proposal_hour">Clicca per scegliere l\'orario</string>
-    <string name="successfulProposal">la proposta è stata creata con successo</string>
-    <string name="failProposal">si è verificato un errore durante la creazione della proposta</string>
+    <string name="successfulProposal">La proposta è stata creata con successo</string>
+    <string name="failProposal">Si è verificato un errore durante la creazione della proposta</string>
     <string name="place">Luogo</string>
     <string name="organizator">Organizzatore</string>
     <string name="time">Orario</string>
@@ -62,4 +62,6 @@
     <string name="date_empty_error">La data non può essere vuota</string>
     <string name="time_empty_error">L\'orario non può essere vuoto</string>
     <string name="menu_history">Cronologia</string>
+    <string name="proposal_state_successful">Lo stato della proposta è stato caricato con successo</string>
+    <string name="proposal_state_fail">Si è verificato un errore durante l\'aggiornamento della proposta</string>
 </resources>

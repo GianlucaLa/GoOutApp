@@ -14,4 +14,6 @@
     <color name="lighRed">#ffff4444</color>
     <color name="gold">#f1c40f</color>
     <color name="green">#32CD32</color>
+    <color name="greenProposal">#bbe8b0</color>
+    <color name="redProposal">#e6b3b3</color>
 </resources>

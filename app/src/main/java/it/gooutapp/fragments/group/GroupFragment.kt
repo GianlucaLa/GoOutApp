@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import it.gooutapp.R
@@ -21,17 +22,14 @@ class GroupFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_group, container, false)
         setHasOptionsMenu(true)
-
         recyclerView = root.findViewById(R.id.proposalRecycleView)
         recyclerView.layoutManager = LinearLayoutManager(root.context)
         proposalList = arrayListOf()
-
         fs.getProposalData(arguments?.get("groupCode").toString()) { proposalListData ->
             proposalList = proposalListData
             proposalAdapter = ProposalAdapter(proposalList)
             recyclerView.adapter = proposalAdapter
         }
-
         return root
     }
 

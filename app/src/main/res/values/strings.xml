@@ -53,7 +53,7 @@
     <string name="proposal_date">Click to choose the date</string>
     <string name="proposal_hour">Click to choose the time</string>
     <string name="places_api_key" translatable="false">AIzaSyBNPwGd6VZHLf7TToPGuI0ZmecATXvuWGY</string>
-    <string name="successfulProposal">the proposal was successfully created</string>
+    <string name="successfulProposal">The proposal was successfully created</string>
     <string name="failProposal">An error occurred while creating the proposal</string>
     <string name="place">Place</string>
     <string name="organizator">Organizator</string>
@@ -67,4 +67,6 @@
     <string name="date_empty_error">The date cannon be empty</string>
     <string name="time_empty_error">The timetable cannot be null</string>
     <string name="menu_history">History</string>
+    <string name="proposal_state_successful">The proposal state was successfully setted</string>
+    <string name="proposal_state_fail">An error occurred while updaating the proposal state</string>
 </resources>

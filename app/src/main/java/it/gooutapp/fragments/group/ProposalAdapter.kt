@@ -5,11 +5,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import it.gooutapp.R
+import it.gooutapp.firebase.FireStore
 import it.gooutapp.models.Proposal
 
 class ProposalAdapter (private val proposalList : ArrayList<Proposal>) : RecyclerView.Adapter<ProposalAdapter.MyViewHolder>() {
+    private val fs = FireStore()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.proposal_view_row, parent, false)
@@ -29,10 +32,24 @@ class ProposalAdapter (private val proposalList : ArrayList<Proposal>) : Recycle
         holder.oraProposta.text = "${proposal.time.toString()}"
         holder.organizzatoreProposta.text = "${proposal.organizator.toString()}"
         holder.btnAccept.setOnClickListener(){
-
+            fs.setProposalState(proposal.proposalCode.toString(), "accepted"){ result->
+                if(result){
+                    Toast.makeText(activityContext, R.string.proposal_state_successful, Toast.LENGTH_SHORT).show()
+                    notifyDataSetChanged()
+                }else{
+                    Toast.makeText(activityContext, R.string.proposal_state_fail, Toast.LENGTH_SHORT).show()
+                    notifyDataSetChanged()
+                }
+            }
         }
         holder.btnRefuse.setOnClickListener(){
-
+            fs.setProposalState(proposal.proposalCode.toString(), "refused"){ result->
+                if(result){
+                    Toast.makeText(activityContext, R.string.proposal_state_successful, Toast.LENGTH_SHORT).show()
+                }else{
+                    Toast.makeText(activityContext, R.string.proposal_state_fail, Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
