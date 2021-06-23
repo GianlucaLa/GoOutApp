@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="8dp"
+        app:cardMaxElevation="10dp"
+        app:cardPreventCornerOverlap="true"
+        app:cardUseCompatPadding="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/textViewHProposta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="16dp"
+                android:text="Nome Proposta"
+                android:textAllCaps="true"
+                android:textColor="@color/defaultBlue"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:maxLines="1" />
+
+            <TextView
+                android:id="@+id/textViewHData"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textViewHProposta"
+                android:layout_marginBottom="16dp"
+                android:text="Data: "
+                android:textSize="17sp"
+                android:textColor="@color/defaultBlue"
+                android:maxLines="1" />
+
+            <TextView
+                android:id="@+id/textViewHDataValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/textViewHData"
+                android:layout_toEndOf="@id/textViewHData"
+                android:layout_below="@id/textViewHProposta"
+                android:textSize="17sp"
+                android:text="TextView" />
+
+            <TextView
+                android:id="@+id/textViewHOra"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textViewHData"
+                android:layout_marginBottom="16dp"
+                android:text="Orario: "
+                android:textSize="17sp"
+                android:textColor="@color/defaultBlue"
+                android:maxLines="1" />
+
+            <TextView
+                android:id="@+id/textViewHOraValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/textViewHOra"
+                android:layout_toEndOf="@id/textViewHOra"
+                android:layout_below="@id/textViewHData"
+                android:textSize="17sp"
+                android:text="TextView" />
+
+            <TextView
+                android:id="@+id/textViewHOrganizator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textViewHOra"
+                android:layout_marginBottom="16dp"
+                android:text="Organizzatore: "
+                android:textSize="17sp"
+                android:textColor="@color/defaultBlue"
+                android:maxLines="1" />
+
+            <TextView
+                android:id="@+id/textViewHOrganizatorValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/textViewHOrganizator"
+                android:layout_toEndOf="@id/textViewHOrganizator"
+                android:layout_below="@id/textViewHOra"
+                android:textSize="17sp"
+                android:text="TextView" />
+
+            <TextView
+                android:id="@+id/textViewHLuogo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textViewHOrganizator"
+                android:layout_marginBottom="16dp"
+                android:text="Luogo: "
+                android:textColor="@color/defaultBlue"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/textViewHLuogoValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/textViewHLuogo"
+                android:layout_toEndOf="@id/textViewHLuogo"
+                android:layout_below="@id/textViewHOrganizator"
+                android:layout_marginBottom="16dp"
+                android:textSize="17sp"
+                android:text="TextView" />
+
+           <TextView
+               android:id="@+id/textViewHStatoProposta"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_below="@+id/textViewHLuogo"
+               android:text="METTERE ACCETTATA O RIFIUTATA"
+               android:textSize="17sp" />
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>
