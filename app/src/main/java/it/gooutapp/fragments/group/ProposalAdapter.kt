@@ -3,6 +3,7 @@ package it.gooutapp.fragments.group
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import it.gooutapp.R
@@ -27,6 +28,12 @@ class ProposalAdapter (private val proposalList : ArrayList<Proposal>) : Recycle
         holder.dataProposta.text = "${proposal.date.toString()}"
         holder.oraProposta.text = "${proposal.time.toString()}"
         holder.organizzatoreProposta.text = "${proposal.organizator.toString()}"
+        holder.btnAccept.setOnClickListener(){
+
+        }
+        holder.btnRefuse.setOnClickListener(){
+
+        }
     }
 
     override fun getItemCount(): Int {
@@ -43,5 +50,7 @@ class ProposalAdapter (private val proposalList : ArrayList<Proposal>) : Recycle
         val labelDate: TextView = itemView.findViewById(R.id.textViewRData)
         val labelTime: TextView = itemView.findViewById(R.id.textViewROra)
         val labelOrganizator: TextView = itemView.findViewById(R.id.textViewOrganizator)
+        val btnAccept: Button = itemView.findViewById(R.id.acceptProposal)
+        val btnRefuse: Button = itemView.findViewById(R.id.refuseProposal)
     }
 }

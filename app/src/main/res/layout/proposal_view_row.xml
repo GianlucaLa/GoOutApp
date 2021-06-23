@@ -114,20 +114,20 @@
                 android:text="TextView" />
 
             <Button
-                android:id="@+id/rifiutaProposta"
+                android:id="@+id/refuseProposal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textViewRLuogoValue"
                 android:layout_marginStart="28dp"
                 android:layout_marginLeft="28dp"
-                android:layout_toEndOf="@+id/accettaProposta"
-                android:layout_toRightOf="@+id/accettaProposta"
+                android:layout_toEndOf="@+id/acceptProposal"
+                android:layout_toRightOf="@+id/acceptProposal"
                 android:drawableRight="@drawable/ic_deny"
                 android:drawableTint="@color/lighRed"
                 android:text="Rifiuta"/>
 
             <Button
-                android:id="@+id/accettaProposta"
+                android:id="@+id/acceptProposal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/textViewRLuogoValue"

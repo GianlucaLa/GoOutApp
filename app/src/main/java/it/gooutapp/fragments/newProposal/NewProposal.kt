@@ -48,18 +48,33 @@ class NewProposal : Fragment(), DatePickerDialog.OnDateSetListener, TimePickerDi
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         root = inflater.inflate(R.layout.fragment_new_proposal, container, false)
-        confirmProposalButton = root.findViewById(R.id.confirmProposal)
         proposalNameEditText = root.findViewById(R.id.editTextNameProposal)
         proposalNameEditText.addTextChangedListener {
-            if(proposalNameEditText.text.length == 15){
-                Toast.makeText(root.context, R.string.max15chars, Toast.LENGTH_SHORT).show()
-            }
+            if(proposalNameEditText.text.length == 15){ Toast.makeText(root.context, R.string.max15chars, Toast.LENGTH_SHORT).show() }
+            editTextNameProposalView.isErrorEnabled = false
         }
-        confirmProposalButton.setOnClickListener{proposalConfirm()}
+
         placePickerEditText = root.findViewById(R.id.editTextPlace)
+        placePickerEditText.addTextChangedListener {
+            if (placePickerEditText.text?.length == 15) { Toast.makeText(root.context, R.string.max15chars, Toast.LENGTH_SHORT).show() }
+            editTextPlaceView.isErrorEnabled = false
+        }
         placePickerEditText.setOnClickListener(){
             startAutocompleteActivity()
         }
+
+        dateEditText = root.findViewById(R.id.editTextDate)
+        dateEditText.addTextChangedListener {
+            if (dateEditText.text?.length == 15) { Toast.makeText(root.context, R.string.max15chars, Toast.LENGTH_SHORT).show() }
+            editTextDateView.isErrorEnabled = false
+        }
+        timeEditText = root.findViewById(R.id.editTextHour)
+        timeEditText.addTextChangedListener {
+            if (timeEditText.text?.length == 15) { Toast.makeText(root.context, R.string.max15chars, Toast.LENGTH_SHORT).show() }
+            editTextHourView.isErrorEnabled = false
+        }
+        confirmProposalButton = root.findViewById(R.id.confirmProposal)
+        confirmProposalButton.setOnClickListener{proposalConfirm()}
         groupCode = arguments?.getString("groupCode") as String
         pickDate()
         pickTime()
@@ -81,7 +96,6 @@ class NewProposal : Fragment(), DatePickerDialog.OnDateSetListener, TimePickerDi
     }
 
     private fun pickDate() {
-        dateEditText = root.findViewById(R.id.editTextDate)
         dateEditText.setOnClickListener {
             editTextDate.isEnabled = false;
             getDateCalendar()
@@ -94,7 +108,6 @@ class NewProposal : Fragment(), DatePickerDialog.OnDateSetListener, TimePickerDi
     }
 
     private fun pickTime() {
-        timeEditText = root.findViewById(R.id.editTextHour)
         timeEditText.setOnClickListener {
             editTextHour.isEnabled = false;
             getTimeCalendar()
