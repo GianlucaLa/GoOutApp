@@ -5,15 +5,11 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.*
-import com.google.firebase.firestore.EventListener
 import com.google.firebase.ktx.Firebase
 import it.gooutapp.models.Group
 import it.gooutapp.models.Proposal
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.*
-import kotlin.collections.ArrayList
 
 class FireStore {
     private val db = FirebaseFirestore.getInstance()
@@ -226,7 +222,6 @@ class FireStore {
                     if (currDocDate.isAfter(currentDateTime)) {
                         if (dc.type == DocumentChange.Type.ADDED && stringDoc.contains(groupCode))
                             if (!(stringDoc.contains("accepted") || stringDoc.contains("refused")))
-                            //Log.e(TAG, dc.document.toString())
                                 proposalArrayList?.add(dc?.document?.toObject(Proposal::class.java))
                     }
                     callback(proposalArrayList)
@@ -235,10 +230,11 @@ class FireStore {
             })
     }
 
-    fun getUserProposalData(callback: (ArrayList<Proposal>) -> Unit){
+    fun getUserHistoryProposalData(callback: (ArrayList<Proposal>) -> Unit){
         currentUserNickname { currNickname ->
             var proposalArrayList = ArrayList<Proposal>()
             db.collection(proposalCollection).addSnapshotListener(object : EventListener<QuerySnapshot> {
+                @RequiresApi(Build.VERSION_CODES.O)
                 override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
                     if (error != null) {
                         Log.e("Firestore Error", error.message.toString())
@@ -246,7 +242,10 @@ class FireStore {
                     }
                     for (dc: DocumentChange in value?.documentChanges!!) {
                         //cerco e aggiungo i gruppi che contengono l'email dell'utente
-                        if (dc.type == DocumentChange.Type.ADDED && (dc.document.toString().contains("user_${currentUserId()}") || dc.document.contains("$currNickname")))
+                        if (dc.type == DocumentChange.Type.ADDED
+                            && (dc.document.toString().contains("user_${currentUserId()}")
+                                || dc.document.contains("$currNickname")
+                                || LocalDateTime.now().isAfter(LocalDateTime.parse(dc.document.get("dateTime").toString()))))
                             proposalArrayList?.add(dc?.document?.toObject(Proposal::class.java))
                     }
                     callback(proposalArrayList)
@@ -255,11 +254,12 @@ class FireStore {
         }
     }
 
-    fun getUserProposalState(proposalCode: String, callback: (String) -> Unit){
+    fun getUserProposalState(proposalCode: String, callback: (Any) -> Unit){
         db.collection(proposalCollection).whereEqualTo("proposalCode", "$proposalCode").get()
             .addOnSuccessListener { proposalDocs ->
-                var state = proposalDocs.documents.last().get("user_${currentUserId()}") as String
-                callback(state)
+                var state = proposalDocs?.documents?.last()?.get("user_${currentUserId()}")?.toString()
+                Log.e("TAG", state.toString())
+                state?.let { callback(it) }
             }
     }
 

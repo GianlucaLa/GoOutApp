@@ -31,14 +31,19 @@ class HistoryAdapter(private val historyList : ArrayList<Proposal>) : RecyclerVi
         holder.oraProposta.text = "${history.dateTime.toString().substring(11)}"
         holder.organizzatoreProposta.text = "${history.organizator.toString()}"
         fs.getUserProposalState(history.proposalCode.toString()) { proposalState ->
-            if (proposalState == "accepted") {
-                holder.statoProposta.text = activityContext.resources.getString(R.string.proposal_accepted)
-                holder.statoProposta.setTextColor(activityContext.resources.getColor(R.color.green))
-                holder.card.setCardBackgroundColor(activityContext.resources.getColor(R.color.greenProposal))
-            } else {
-                holder.statoProposta.text = activityContext.resources.getString(R.string.proposal_refused)
+            if(proposalState != null) {
+                if (proposalState == "accepted") {
+                    holder.statoProposta.text = activityContext.resources.getString(R.string.proposal_accepted)
+                    holder.statoProposta.setTextColor(activityContext.resources.getColor(R.color.green))
+                    holder.card.setCardBackgroundColor(activityContext.resources.getColor(R.color.greenProposal))
+                } else {
+                    holder.statoProposta.text = activityContext.resources.getString(R.string.proposal_refused)
+                    holder.statoProposta.setTextColor(activityContext.resources.getColor(R.color.lighRed))
+                    holder.card.setCardBackgroundColor(activityContext.resources.getColor(R.color.redProposal))
+                }
+            }else{
+                holder.statoProposta.text = activityContext.resources.getString(R.string.expired_proposal)
                 holder.statoProposta.setTextColor(activityContext.resources.getColor(R.color.lighRed))
-                holder.card.setCardBackgroundColor(activityContext.resources.getColor(R.color.redProposal))
             }
         }
     }

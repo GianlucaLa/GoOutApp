@@ -73,4 +73,5 @@
     <string name="proposal_refused">Refused</string>
     <string name="compile_date_first">The date field must be filled in first</string>
     <string name="time_not_valid">It is not possible to select a time in the past</string>
+    <string name="expired_proposal">Expired</string>
 </resources>

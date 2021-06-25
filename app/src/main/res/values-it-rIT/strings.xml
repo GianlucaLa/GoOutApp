@@ -68,4 +68,5 @@
     <string name="proposal_refused">Rifiutata</string>
     <string name="compile_date_first">E\' necessario compilare per prima il campo data</string>
     <string name="time_not_valid">Non è possibile selezionare un ora nel passato</string>
+    <string name="expired_proposal">Scaduta</string>
 </resources>

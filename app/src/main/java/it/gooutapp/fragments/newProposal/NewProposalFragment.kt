@@ -16,7 +16,6 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.google.android.libraries.places.api.Places
-import com.google.android.libraries.places.api.model.LocalTime
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.model.TypeFilter
 import com.google.android.libraries.places.widget.Autocomplete
@@ -25,10 +24,7 @@ import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import it.gooutapp.R
 import it.gooutapp.firebase.FireStore
 import kotlinx.android.synthetic.main.fragment_new_proposal.*
-import kotlinx.android.synthetic.main.registration.*
-import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 class NewProposalFragment : Fragment(), DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
@@ -36,7 +32,6 @@ class NewProposalFragment : Fragment(), DatePickerDialog.OnDateSetListener, Time
     private var placeString = ""
     private val fs = FireStore()
     private lateinit var c: Calendar
-    private lateinit var d: Calendar
     private lateinit var proposalNameEditText: EditText
     private lateinit var placePickerEditText: EditText
     private lateinit var dateEditText: EditText
@@ -84,7 +79,6 @@ class NewProposalFragment : Fragment(), DatePickerDialog.OnDateSetListener, Time
         groupCode = arguments?.getString("groupCode") as String
         pickDate()
         pickTime()
-
         return root
     }
 
@@ -96,9 +90,9 @@ class NewProposalFragment : Fragment(), DatePickerDialog.OnDateSetListener, Time
     }
 
     private fun getTimeCalendar() {
-        d = Calendar.getInstance()
-        hour = d.get(Calendar.HOUR_OF_DAY)
-        minute = d.get(Calendar.MINUTE)
+        c = Calendar.getInstance()
+        hour = c.get(Calendar.HOUR_OF_DAY)
+        minute = c.get(Calendar.MINUTE)
     }
 
     private fun pickDate() {
@@ -143,8 +137,8 @@ class NewProposalFragment : Fragment(), DatePickerDialog.OnDateSetListener, Time
         getTimeCalendar()
         time = if(hourOfDay<10) "0$hourOfDay" else "$hourOfDay"
         time += if(minute<10) ":0$minute" else ":$minute"
-        Log.e("TAG", "${d}")
-        if(d.timeInMillis > Calendar.getInstance().timeInMillis){
+        val date = LocalDateTime.parse("$date"+"T$time")
+        if(date.isAfter(LocalDateTime.now())){
             editTextHour.setText(time)
             editTextHour.isEnabled = true;
         } else {
@@ -178,15 +172,12 @@ class NewProposalFragment : Fragment(), DatePickerDialog.OnDateSetListener, Time
         placePickerEditText.isEnabled = true
     }
 
-    //TODO mettere controllo sugli input
     fun proposalConfirm(){
         var proposalName = proposalNameEditText.text.toString()
-
         if(proposalName.isEmpty()) editTextNameProposalView.error = resources.getString(R.string.name_empty_error)
         if(placeString.isEmpty()) editTextPlaceView.error = resources.getString(R.string.place_empty_error)
         if(date.isEmpty()) editTextDateView.error = resources.getString(R.string.date_empty_error)
         if(time.isEmpty()) editTextHourView.error = resources.getString(R.string.time_empty_error)
-
         if(!(editTextNameProposalView.isErrorEnabled || editTextPlaceView.isErrorEnabled || editTextDateView.isErrorEnabled || editTextHourView.isErrorEnabled)) {
             val dateTime = "$date"+"T$time"
             fs.createProposalData(groupCode, proposalName, dateTime, placeString) { result ->

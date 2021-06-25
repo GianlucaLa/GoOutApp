@@ -10,8 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import it.gooutapp.R
 import it.gooutapp.firebase.FireStore
 import it.gooutapp.models.Proposal
-import java.util.ArrayList
-
+import java.util.*
 
 class HistoryFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
@@ -26,7 +25,7 @@ class HistoryFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(root.context)
         historyList = arrayListOf()
 
-        fs.getUserProposalData() { historyListData ->
+        fs.getUserHistoryProposalData() { historyListData ->
             historyList = historyListData
             historyAdapter = HistoryAdapter(historyList)
             recyclerView.adapter = historyAdapter
