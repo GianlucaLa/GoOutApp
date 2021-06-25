@@ -121,13 +121,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textViewRLuogoValue"
-                android:layout_marginStart="28dp"
-                android:layout_marginLeft="28dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginLeft="24dp"
                 android:layout_toEndOf="@+id/acceptProposal"
                 android:layout_toRightOf="@+id/acceptProposal"
                 android:drawableRight="@drawable/ic_deny"
                 android:drawableTint="@color/lighRed"
-                android:text="Rifiuta"/>
+                android:text="@string/refuses"/>
 
             <Button
                 android:id="@+id/acceptProposal"
@@ -136,7 +136,18 @@
                 android:layout_below="@id/textViewRLuogoValue"
                 android:drawableRight="@drawable/ic_check"
                 android:drawableTint="@color/green"
-                android:text="Accetta" />
+                android:text="@string/accept" />
+
+            <Button
+                android:id="@+id/entryChat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/acceptProposal"
+                android:text="@string/enter_chat"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:drawableRight="@drawable/ic_row_message"
+                android:drawableTint="@color/white" />
 
         </RelativeLayout>
 

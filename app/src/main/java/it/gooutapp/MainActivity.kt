@@ -71,7 +71,6 @@ class MainActivity : AppCompatActivity() {
             appBarConfiguration = AppBarConfiguration(
                 setOf(
                     R.id.nav_home,
-                    R.id.nav_newProposal,
                     R.id.nav_userProfile,
                     R.id.nav_settings,
                     R.id.nav_history

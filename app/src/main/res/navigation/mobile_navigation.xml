@@ -22,6 +22,9 @@
         <action
             android:id="@+id/action_nav_group_to_nav_newProposal"
             app:destination="@id/nav_newProposal" />
+        <action
+            android:id="@+id/action_nav_group_to_nav_chat"
+            app:destination="@id/nav_chat" />
     </fragment>
 
     <fragment
@@ -35,6 +38,12 @@
         android:name="it.gooutapp.fragments.newProposal.NewProposalFragment"
         android:label="@string/menu_new_proposal"
         tools:layout="@layout/fragment_new_proposal" />
+
+    <fragment
+        android:id="@+id/nav_chat"
+        android:name="it.gooutapp.fragments.chat.ChatFragment"
+        android:label="@string/chat"
+        tools:layout="@layout/fragment_user_profile" />
 
     <fragment
         android:id="@+id/nav_userProfile"

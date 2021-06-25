@@ -1,21 +1,17 @@
 package it.gooutapp.fragments.group
 
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import it.gooutapp.R
 import it.gooutapp.firebase.FireStore
 import it.gooutapp.models.Proposal
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
-class ProposalAdapter (private val proposalList : ArrayList<Proposal>) : RecyclerView.Adapter<ProposalAdapter.MyViewHolder>() {
+class ProposalAdapter(private val proposalList: ArrayList<Proposal>, val clickListenerProposal: ClickListenerProposal) : RecyclerView.Adapter<ProposalAdapter.MyViewHolder>() {
     private val fs = FireStore()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -23,7 +19,6 @@ class ProposalAdapter (private val proposalList : ArrayList<Proposal>) : Recycle
         return MyViewHolder(itemView)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         var activityContext = holder.itemView.context
         val proposal: Proposal = proposalList[position]
@@ -56,6 +51,9 @@ class ProposalAdapter (private val proposalList : ArrayList<Proposal>) : Recycle
                     }
                 }
             }
+        holder.btnChat.setOnClickListener {
+            clickListenerProposal.onButtonClick(proposalList[position])
+        }
     }
 
     override fun getItemCount(): Int {
@@ -74,5 +72,10 @@ class ProposalAdapter (private val proposalList : ArrayList<Proposal>) : Recycle
         val labelOrganizator: TextView = itemView.findViewById(R.id.textViewOrganizator)
         val btnAccept: Button = itemView.findViewById(R.id.acceptProposal)
         val btnRefuse: Button = itemView.findViewById(R.id.refuseProposal)
+        val btnChat: Button = itemView.findViewById(R.id.entryChat)
+    }
+
+    interface ClickListenerProposal {
+        fun onButtonClick(proposal: Proposal)
     }
 }

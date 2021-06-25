@@ -74,4 +74,8 @@
     <string name="compile_date_first">The date field must be filled in first</string>
     <string name="time_not_valid">It is not possible to select a time in the past</string>
     <string name="expired_proposal">Expired</string>
+    <string name="chat" translatable="false">Chat</string>
+    <string name="enter_chat">Enter the chat</string>
+    <string name="accept">Accept</string>
+    <string name="refuses">Refuses</string>
 </resources>
