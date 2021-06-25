@@ -257,9 +257,11 @@ class FireStore {
     fun getUserProposalState(proposalCode: String, callback: (Any) -> Unit){
         db.collection(proposalCollection).whereEqualTo("proposalCode", "$proposalCode").get()
             .addOnSuccessListener { proposalDocs ->
-                var state = proposalDocs?.documents?.last()?.get("user_${currentUserId()}")?.toString()
-                Log.e("TAG", state.toString())
-                state?.let { callback(it) }
+                var state = proposalDocs.documents.last().get("user_${currentUserId()}")?.toString()
+                if(state == null)
+                    callback("")
+                else
+                    callback(state)
             }
     }
 

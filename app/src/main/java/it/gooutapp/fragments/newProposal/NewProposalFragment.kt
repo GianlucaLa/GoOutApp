@@ -129,6 +129,7 @@ class NewProposalFragment : Fragment(), DatePickerDialog.OnDateSetListener, Time
         date += if(dayOfMonth<10) "-0$dayOfMonth" else "-$dayOfMonth"
         getDateCalendar()
         editTextDate.setText(date)
+        timeEditText.setText("")
         editTextDate.isEnabled = true;
     }
 
@@ -163,7 +164,7 @@ class NewProposalFragment : Fragment(), DatePickerDialog.OnDateSetListener, Time
             var place = data?.let { Autocomplete.getPlaceFromIntent(it) }
             placePickerEditText.setText(place?.name)
             placeString = place?.name.toString()
-            Toast.makeText(root.context, "Place: ${place?.name}, ${place?.id}", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(root.context, "Place: ${place?.name}, ${place?.id}", Toast.LENGTH_SHORT).show()
             Log.i("MAPS", "Place: ${place?.name}, ${place?.id}")
         } else if(resultCode == AutocompleteActivity.RESULT_ERROR) {
             var status = data?.let { Autocomplete.getStatusFromIntent(it) }
