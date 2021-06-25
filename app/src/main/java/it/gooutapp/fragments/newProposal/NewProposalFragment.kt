@@ -3,17 +3,20 @@ package it.gooutapp.fragments.newProposal
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.LocalTime
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.model.TypeFilter
 import com.google.android.libraries.places.widget.Autocomplete
@@ -23,9 +26,12 @@ import it.gooutapp.R
 import it.gooutapp.firebase.FireStore
 import kotlinx.android.synthetic.main.fragment_new_proposal.*
 import kotlinx.android.synthetic.main.registration.*
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
-class NewProposal : Fragment(), DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+class NewProposalFragment : Fragment(), DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     private lateinit var groupCode: String
     private var placeString = ""
     private val fs = FireStore()
@@ -103,36 +109,48 @@ class NewProposal : Fragment(), DatePickerDialog.OnDateSetListener, TimePickerDi
             dateDialog.setOnCancelListener(){
                 editTextDate.isEnabled = true;
             }
+            dateDialog.datePicker.minDate = System.currentTimeMillis() - 1000
             dateDialog.show()
         }
     }
 
     private fun pickTime() {
         timeEditText.setOnClickListener {
-            editTextHour.isEnabled = false;
-            getTimeCalendar()
-            var timeDialog = TimePickerDialog(dateEditText.context, this, hour, minute, true)
-            timeDialog.setOnCancelListener(){
-                editTextHour.isEnabled = true;
+            if (editTextDate.text.toString() != "") {
+                editTextHour.isEnabled = false;
+                getTimeCalendar()
+                var timeDialog = TimePickerDialog(dateEditText.context, this, hour, minute, true)
+                timeDialog.setOnCancelListener() {
+                    editTextHour.isEnabled = true;
+                }
+                timeDialog.show()
+            } else {
+                Toast.makeText(root.context, R.string.compile_date_first, Toast.LENGTH_SHORT).show()
             }
-            timeDialog.show()
         }
     }
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-        date = if(month<10) "$year/0$month" else "$month"
-        date += if(dayOfMonth<10) "/0$dayOfMonth" else "/$dayOfMonth"
+        date = if(month+1<10) "$year-0${month+1}" else "$year-${month+1}"
+        date += if(dayOfMonth<10) "-0$dayOfMonth" else "-$dayOfMonth"
         getDateCalendar()
         editTextDate.setText(date)
         editTextDate.isEnabled = true;
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
+        getTimeCalendar()
         time = if(hourOfDay<10) "0$hourOfDay" else "$hourOfDay"
         time += if(minute<10) ":0$minute" else ":$minute"
-        getTimeCalendar()
-        editTextHour.setText(time)
-        editTextHour.isEnabled = true;
+        Log.e("TAG", "${d}")
+        if(d.timeInMillis > Calendar.getInstance().timeInMillis){
+            editTextHour.setText(time)
+            editTextHour.isEnabled = true;
+        } else {
+            Toast.makeText(root.context, R.string.time_not_valid, Toast.LENGTH_SHORT).show()
+            editTextHour.isEnabled = true;
+        }
     }
 
     fun startAutocompleteActivity() {
@@ -170,11 +188,10 @@ class NewProposal : Fragment(), DatePickerDialog.OnDateSetListener, TimePickerDi
         if(time.isEmpty()) editTextHourView.error = resources.getString(R.string.time_empty_error)
 
         if(!(editTextNameProposalView.isErrorEnabled || editTextPlaceView.isErrorEnabled || editTextDateView.isErrorEnabled || editTextHourView.isErrorEnabled)) {
-            fs.createProposalData(groupCode, proposalName, date, time, placeString) { result ->
+            val dateTime = "$date"+"T$time"
+            fs.createProposalData(groupCode, proposalName, dateTime, placeString) { result ->
                 if (result) {
                     activity?.findNavController(R.id.nav_host_fragment)?.navigateUp()
-                    Toast.makeText(root.context, R.string.successfulProposal, Toast.LENGTH_SHORT)
-                        .show()
                 } else {
                     Toast.makeText(root.context, R.string.failProposal, Toast.LENGTH_SHORT).show()
                 }

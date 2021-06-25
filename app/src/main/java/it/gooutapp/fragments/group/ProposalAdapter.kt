@@ -1,15 +1,19 @@
 package it.gooutapp.fragments.group
 
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import it.gooutapp.R
 import it.gooutapp.firebase.FireStore
 import it.gooutapp.models.Proposal
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class ProposalAdapter (private val proposalList : ArrayList<Proposal>) : RecyclerView.Adapter<ProposalAdapter.MyViewHolder>() {
     private val fs = FireStore()
@@ -19,38 +23,39 @@ class ProposalAdapter (private val proposalList : ArrayList<Proposal>) : Recycle
         return MyViewHolder(itemView)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         var activityContext = holder.itemView.context
         val proposal: Proposal = proposalList[position]
-        holder.nomeProposta.text = proposal.proposalName
-        holder.labelPlace.text = "${activityContext.resources.getString(R.string.place)}: "
-        holder.labelDate.text = "${activityContext.resources.getString(R.string.date)}: "
-        holder.labelTime.text = "${activityContext.resources.getString(R.string.time)}: "
-        holder.labelOrganizator.text = "${activityContext.resources.getString(R.string.organizator)}: "
-        holder.luogoProposta.text = "${proposal.place.toString()}"
-        holder.dataProposta.text = "${proposal.date.toString()}"
-        holder.oraProposta.text = "${proposal.time.toString()}"
-        holder.organizzatoreProposta.text = "${proposal.organizator.toString()}"
-        holder.btnAccept.setOnClickListener(){
-            fs.setProposalState(proposal.proposalCode.toString(), "accepted"){ result->
-                if(result){
-                    Toast.makeText(activityContext, R.string.proposal_state_successful, Toast.LENGTH_SHORT).show()
-                    notifyDataSetChanged()
-                }else{
-                    Toast.makeText(activityContext, R.string.proposal_state_fail, Toast.LENGTH_SHORT).show()
-                    notifyDataSetChanged()
+            holder.nomeProposta.text = proposal.proposalName
+            holder.labelPlace.text = "${activityContext.resources.getString(R.string.place)}: "
+            holder.labelDate.text = "${activityContext.resources.getString(R.string.date)}: "
+            holder.labelTime.text = "${activityContext.resources.getString(R.string.time)}: "
+            holder.labelOrganizator.text = "${activityContext.resources.getString(R.string.organizator)}: "
+            holder.luogoProposta.text = "${proposal.place.toString()}"
+            holder.dataProposta.text = "${proposal.dateTime.toString().substring(0,10)}"
+            holder.oraProposta.text = "${proposal.dateTime.toString().substring(11)}"
+            holder.organizzatoreProposta.text = "${proposal.organizator.toString()}"
+            holder.btnAccept.setOnClickListener(){
+                fs.setProposalState(proposal.proposalCode.toString(), "accepted"){ result->
+                    if(result){
+                        Toast.makeText(activityContext, R.string.proposal_state_successful, Toast.LENGTH_SHORT).show()
+                        notifyDataSetChanged()
+                    }else{
+                        Toast.makeText(activityContext, R.string.proposal_state_fail, Toast.LENGTH_SHORT).show()
+                        notifyDataSetChanged()
+                    }
                 }
             }
-        }
-        holder.btnRefuse.setOnClickListener(){
-            fs.setProposalState(proposal.proposalCode.toString(), "refused"){ result->
-                if(result){
-                    Toast.makeText(activityContext, R.string.proposal_state_successful, Toast.LENGTH_SHORT).show()
-                }else{
-                    Toast.makeText(activityContext, R.string.proposal_state_fail, Toast.LENGTH_SHORT).show()
+            holder.btnRefuse.setOnClickListener(){
+                fs.setProposalState(proposal.proposalCode.toString(), "refused"){ result->
+                    if(result){
+                        Toast.makeText(activityContext, R.string.proposal_state_successful, Toast.LENGTH_SHORT).show()
+                    }else{
+                        Toast.makeText(activityContext, R.string.proposal_state_fail, Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
-        }
     }
 
     override fun getItemCount(): Int {

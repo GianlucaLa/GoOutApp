@@ -1,12 +1,17 @@
 package it.gooutapp.firebase
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.ktx.Firebase
 import it.gooutapp.models.Group
 import it.gooutapp.models.Proposal
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -49,18 +54,17 @@ class FireStore {
                 callback(false) }
     }
 
-    fun createProposalData(groupCode: String, proposalName: String, date: String, time: String, place: String, callback: (Boolean) -> Unit){
+    fun createProposalData(groupCode: String, proposalName: String, dateTime: String, place: String, callback: (Boolean) -> Unit){
         val source: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
         val proposalCode: String = List(15) { source.random() }.joinToString("")
         currentUserNickname { currNickname ->
             val proposal = hashMapOf(
                 "groupCode" to groupCode,
-                "date" to date,
+                "dateTime" to dateTime,
                 "organizator" to currNickname,
                 "place" to place,
                 "proposalCode" to proposalCode,
-                "proposalName" to proposalName,
-                "time" to time
+                "proposalName" to proposalName
             )
             db.collection(proposalCollection).document()
                 .set(proposal)
@@ -208,6 +212,7 @@ class FireStore {
     fun getProposalData(groupCode: String, callback: (ArrayList<Proposal>) -> Unit) {
         var proposalArrayList = ArrayList<Proposal>()
         db.collection(proposalCollection).addSnapshotListener(object : EventListener<QuerySnapshot> {
+            @RequiresApi(Build.VERSION_CODES.O)
             override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
                 if (error != null) {
                     Log.e("Firestore Error", error.message.toString())
@@ -215,14 +220,18 @@ class FireStore {
                 }
                 for (dc: DocumentChange in value?.documentChanges!!) {
                     //cerco e aggiungo i gruppi che contengono l'email dell'utente
-                        var stringDoc = dc.document.toString()
+                    val currentDateTime = LocalDateTime.now()
+                    var stringDoc = dc.document.toString()
+                    val currDocDate = LocalDateTime.parse(dc.document.get("dateTime").toString(), DateTimeFormatter.ISO_DATE_TIME)
+                    if (currDocDate.isAfter(currentDateTime)) {
                         if (dc.type == DocumentChange.Type.ADDED && stringDoc.contains(groupCode))
-                            if(!(stringDoc.contains("accepted") || stringDoc.contains("refused")))
+                            if (!(stringDoc.contains("accepted") || stringDoc.contains("refused")))
                             //Log.e(TAG, dc.document.toString())
-                            proposalArrayList?.add(dc?.document?.toObject(Proposal::class.java))
+                                proposalArrayList?.add(dc?.document?.toObject(Proposal::class.java))
                     }
-                callback(proposalArrayList)
+                    callback(proposalArrayList)
                 }
+            }
             })
     }
 

@@ -64,4 +64,8 @@
     <string name="menu_history">Cronologia</string>
     <string name="proposal_state_successful">Lo stato della proposta è stato caricato con successo</string>
     <string name="proposal_state_fail">Si è verificato un errore durante l\'aggiornamento della proposta</string>
+    <string name="proposal_accepted">Accettata</string>
+    <string name="proposal_refused">Rifiutata</string>
+    <string name="compile_date_first">E\' necessario compilare per prima il campo data</string>
+    <string name="time_not_valid">Non è possibile selezionare un ora nel passato</string>
 </resources>

@@ -27,15 +27,16 @@ class HistoryAdapter(private val historyList : ArrayList<Proposal>) : RecyclerVi
         holder.labelTime.text = "${activityContext.resources.getString(R.string.time)}: "
         holder.labelOrganizator.text = "${activityContext.resources.getString(R.string.organizator)}: "
         holder.luogoProposta.text = "${history.place.toString()}"
-        holder.dataProposta.text = "${history.date.toString()}"
-        holder.oraProposta.text = "${history.time.toString()}"
+        holder.dataProposta.text = "${history.dateTime.toString().substring(0,10)}"
+        holder.oraProposta.text = "${history.dateTime.toString().substring(11)}"
         holder.organizzatoreProposta.text = "${history.organizator.toString()}"
         fs.getUserProposalState(history.proposalCode.toString()) { proposalState ->
-            holder.statoProposta.text = proposalState
             if (proposalState == "accepted") {
+                holder.statoProposta.text = activityContext.resources.getString(R.string.proposal_accepted)
                 holder.statoProposta.setTextColor(activityContext.resources.getColor(R.color.green))
                 holder.card.setCardBackgroundColor(activityContext.resources.getColor(R.color.greenProposal))
             } else {
+                holder.statoProposta.text = activityContext.resources.getString(R.string.proposal_refused)
                 holder.statoProposta.setTextColor(activityContext.resources.getColor(R.color.lighRed))
                 holder.card.setCardBackgroundColor(activityContext.resources.getColor(R.color.redProposal))
             }

@@ -69,4 +69,8 @@
     <string name="menu_history">History</string>
     <string name="proposal_state_successful">The proposal state was successfully setted</string>
     <string name="proposal_state_fail">An error occurred while updaating the proposal state</string>
+    <string name="proposal_accepted">Accepted</string>
+    <string name="proposal_refused">Refused</string>
+    <string name="compile_date_first">The date field must be filled in first</string>
+    <string name="time_not_valid">It is not possible to select a time in the past</string>
 </resources>
