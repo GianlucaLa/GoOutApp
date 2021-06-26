@@ -1,4 +1,4 @@
-package it.gooutapp.models
+package it.gooutapp.model
 
 class Proposal(
     var proposalName: String ?= null,

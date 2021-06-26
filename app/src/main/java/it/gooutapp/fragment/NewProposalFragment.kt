@@ -1,4 +1,4 @@
-package it.gooutapp.fragments.newProposal
+package it.gooutapp.fragment
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog

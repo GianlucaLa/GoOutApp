@@ -2,7 +2,6 @@ package it.gooutapp
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
@@ -21,7 +20,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.*
 import com.google.firebase.ktx.Firebase
 import it.gooutapp.firebase.FireStore
-import it.gooutapp.models.myDialog
+import it.gooutapp.model.myDialog
 import kotlinx.android.synthetic.main.fragment_new_proposal.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.nav_header_main.*

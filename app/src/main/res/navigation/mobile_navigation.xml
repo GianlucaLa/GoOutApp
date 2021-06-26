@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="it.gooutapp.fragments.home.HomeFragment"
+        android:name="it.gooutapp.fragment.HomeFragment"
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home" >
         <action
@@ -17,7 +17,7 @@
 
     <fragment
         android:id="@+id/nav_group"
-        android:name="it.gooutapp.fragments.group.GroupFragment"
+        android:name="it.gooutapp.fragment.GroupFragment"
         tools:layout="@layout/fragment_group" >
         <action
             android:id="@+id/action_nav_group_to_nav_newProposal"
@@ -29,30 +29,30 @@
 
     <fragment
         android:id="@+id/nav_history"
-        android:name="it.gooutapp.fragments.history.HistoryFragment"
+        android:name="it.gooutapp.fragment.HistoryFragment"
         android:label="@string/menu_history"
         tools:layout="@layout/fragment_new_proposal" />
 
     <fragment
         android:id="@+id/nav_newProposal"
-        android:name="it.gooutapp.fragments.newProposal.NewProposalFragment"
+        android:name="it.gooutapp.fragment.NewProposalFragment"
         android:label="@string/menu_new_proposal"
         tools:layout="@layout/fragment_new_proposal" />
 
     <fragment
         android:id="@+id/nav_chat"
-        android:name="it.gooutapp.fragments.chat.ChatFragment"
+        android:name="it.gooutapp.fragment.ChatFragment"
         tools:layout="@layout/fragment_user_profile" />
 
     <fragment
         android:id="@+id/nav_userProfile"
-        android:name="it.gooutapp.fragments.userProfile.UserProfile"
+        android:name="it.gooutapp.fragment.UserProfileFragment"
         android:label="@string/profile"
         tools:layout="@layout/fragment_user_profile" />
 
     <fragment
         android:id="@+id/nav_settings"
-        android:name="it.gooutapp.fragments.settings.SettingsFragment"
+        android:name="it.gooutapp.fragment.SettingsFragment"
         android:label="@string/menu_settings"
         tools:layout="@layout/fragment_settings" />
 

@@ -1,4 +1,4 @@
-package it.gooutapp.models
+package it.gooutapp.model
 
 import android.content.Context
 import android.view.LayoutInflater

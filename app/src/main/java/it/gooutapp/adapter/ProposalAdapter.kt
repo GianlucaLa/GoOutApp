@@ -1,4 +1,4 @@
-package it.gooutapp.fragments.group
+package it.gooutapp.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +9,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import it.gooutapp.R
 import it.gooutapp.firebase.FireStore
-import it.gooutapp.models.Proposal
+import it.gooutapp.model.Proposal
 
 class ProposalAdapter(private val proposalList: ArrayList<Proposal>, val clickListenerProposal: ClickListenerProposal) : RecyclerView.Adapter<ProposalAdapter.MyViewHolder>() {
     private val fs = FireStore()

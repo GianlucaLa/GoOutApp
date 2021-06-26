@@ -56,9 +56,6 @@ dependencies {
     //Autocomplete Fragment
     implementation 'com.google.android.libraries.places:places:2.4.0'
     implementation 'androidx.cardview:cardview:1.0.0'
-    //
-    implementation 'de.hdodenhof:circleimageview:2.2.0'
-    implementation 'com.xwray:groupie:2.1.0'
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

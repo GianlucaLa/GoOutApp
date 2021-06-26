@@ -1,4 +1,4 @@
-package it.gooutapp.fragments.home
+package it.gooutapp.fragment
 
 import android.graphics.*
 import android.graphics.drawable.ColorDrawable
@@ -19,9 +19,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import it.gooutapp.R
+import it.gooutapp.adapter.GroupAdapter
 import it.gooutapp.firebase.FireStore
-import it.gooutapp.models.Group
-import it.gooutapp.models.myDialog
+import it.gooutapp.model.Group
+import it.gooutapp.model.myDialog
 import kotlinx.android.synthetic.main.group_row.view.*
 
 class HomeFragment : Fragment(), GroupAdapter.ClickListener {

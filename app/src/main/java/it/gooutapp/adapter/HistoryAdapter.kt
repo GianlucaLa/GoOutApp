@@ -1,6 +1,5 @@
-package it.gooutapp.fragments.history
+package it.gooutapp.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +8,7 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import it.gooutapp.R
 import it.gooutapp.firebase.FireStore
-import it.gooutapp.models.Proposal
+import it.gooutapp.model.Proposal
 
 class HistoryAdapter(private val historyList : ArrayList<Proposal>) : RecyclerView.Adapter<HistoryAdapter.MyViewHolder>()  {
     private val fs = FireStore()

@@ -1,4 +1,4 @@
-package it.gooutapp.fragments.history
+package it.gooutapp.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,8 +8,9 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import it.gooutapp.R
+import it.gooutapp.adapter.HistoryAdapter
 import it.gooutapp.firebase.FireStore
-import it.gooutapp.models.Proposal
+import it.gooutapp.model.Proposal
 import java.util.*
 
 class HistoryFragment : Fragment() {

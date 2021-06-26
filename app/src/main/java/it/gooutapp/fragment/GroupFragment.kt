@@ -1,4 +1,4 @@
-package it.gooutapp.fragments.group
+package it.gooutapp.fragment
 
 import android.os.Bundle
 import android.util.Log
@@ -9,11 +9,10 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import it.gooutapp.R
+import it.gooutapp.adapter.ProposalAdapter
 import it.gooutapp.firebase.FireStore
-import it.gooutapp.fragments.home.GroupAdapter
-import it.gooutapp.models.Group
-import it.gooutapp.models.Proposal
-import java.util.ArrayList
+import it.gooutapp.model.Proposal
+import java.util.*
 
 class GroupFragment : Fragment(), ProposalAdapter.ClickListenerProposal {
     private val TAG = "GROUP_FRAGMENT"

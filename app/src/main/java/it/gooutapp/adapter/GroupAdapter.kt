@@ -1,4 +1,4 @@
-package it.gooutapp.fragments.home
+package it.gooutapp.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import it.gooutapp.R
-import it.gooutapp.models.Group
+import it.gooutapp.model.Group
 
 class GroupAdapter(private val userGroupList : ArrayList<Group>, val adminFlagList : ArrayList<Boolean>, val clickListener: ClickListener) : RecyclerView.Adapter<GroupAdapter.MyViewHolder>() {
 
@@ -18,13 +18,13 @@ class GroupAdapter(private val userGroupList : ArrayList<Group>, val adminFlagLi
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val user: Group = userGroupList[position]
         holder.groupName.text = user.groupName
-        val iniziale = user.groupName?.get(0)
+        val circleTextGroup = user.groupName?.get(0)
         holder.groupPosition.text = "15:46"
         if(adminFlagList[position]) {
             holder.adminFlag.text = "Admin"
         }
         //icona con iniziale
-        holder.icon.text = iniziale.toString().toUpperCase()
+        holder.icon.text = circleTextGroup.toString().toUpperCase()
         holder.itemView.setOnClickListener{
             clickListener.onItemClick(userGroupList[position])
         }

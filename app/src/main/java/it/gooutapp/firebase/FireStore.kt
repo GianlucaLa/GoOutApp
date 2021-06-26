@@ -6,8 +6,8 @@ import androidx.annotation.RequiresApi
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.*
 import com.google.firebase.ktx.Firebase
-import it.gooutapp.models.Group
-import it.gooutapp.models.Proposal
+import it.gooutapp.model.Group
+import it.gooutapp.model.Proposal
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
