@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
                 when(destination.id) {
                     R.id.nav_group -> {
                         toolbar.title = arguments?.getString("groupName")
-                        codeCurrentGroup = arguments?.getString("groupCode").toString()
+                        codeCurrentGroup = arguments?.getString("groupId").toString()
                     }
                     R.id.nav_chat -> {
                         toolbar.title = "Chat: ${arguments?.getString("proposalName")}"
@@ -95,8 +95,8 @@ class MainActivity : AppCompatActivity() {
     fun joinGroup(item: MenuItem) {
         var title = resources.getString(R.string.join_group)
         var message = resources.getString(R.string.enter_group_code)
-        myDialog(title, message, this, layoutInflater) { groupCode ->
-            fs.addUserToGroup(user_email, groupCode) { result ->
+        myDialog(title, message, this, layoutInflater) { groupId ->
+            fs.addUserToGroup(user_email, groupId) { result ->
                 when (result) {
                     "NM" -> {
                         Toast.makeText(applicationContext, R.string.user_successful_added_to_group, Toast.LENGTH_SHORT).show()
@@ -129,7 +129,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun openNewProposal(item: MenuItem){
-        val bundle = bundleOf("groupCode" to codeCurrentGroup)
+        val bundle = bundleOf("groupId" to codeCurrentGroup)
         findNavController(R.id.nav_host_fragment)?.navigate(R.id.action_nav_group_to_nav_newProposal, bundle)
     }
 }

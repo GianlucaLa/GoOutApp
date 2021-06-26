@@ -23,15 +23,17 @@ class GroupFragment : Fragment(), ProposalAdapter.ClickListenerProposal {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_group, container, false)
-        setHasOptionsMenu(true)
+        val groupId = arguments?.get("groupId").toString()
+
         recyclerView = root.findViewById(R.id.proposalRecycleView)
         recyclerView.layoutManager = LinearLayoutManager(root.context)
         proposalList = arrayListOf()
-        fs.getProposalData(arguments?.get("groupCode").toString()) { proposalListData ->
+        fs.getProposalData(groupId) { proposalListData ->
             proposalList = proposalListData
             proposalAdapter = ProposalAdapter(proposalList,this)
             recyclerView.adapter = proposalAdapter
         }
+        setHasOptionsMenu(true)
         return root
     }
 
@@ -44,6 +46,7 @@ class GroupFragment : Fragment(), ProposalAdapter.ClickListenerProposal {
     override fun onButtonClick(proposal: Proposal) {
         Log.e(TAG, proposal.proposalName.toString())
         val bundle = bundleOf(
+            "proposalId" to proposal.proposalId,
             "proposalName" to proposal.proposalName
         )
         activity?.findNavController(R.id.nav_host_fragment)?.navigate(R.id.action_nav_group_to_nav_chat, bundle)

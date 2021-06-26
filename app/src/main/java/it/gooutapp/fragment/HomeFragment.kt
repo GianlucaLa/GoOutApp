@@ -122,7 +122,7 @@ class HomeFragment : Fragment(), GroupAdapter.ClickListener {
                 groupAdapter.deleteItemRow(position)
                 //se utente amministratore
                 if(delete) {
-                    fs.deleteGroupData(userGroupList[position].groupCode.toString()){ result ->
+                    fs.deleteGroupData(userGroupList[position].groupId.toString()){ result ->
                         if (result) {
                             fs.getUserGroupData(user_email) { groupList, adminFlag ->
                                 userGroupList = groupList
@@ -136,7 +136,7 @@ class HomeFragment : Fragment(), GroupAdapter.ClickListener {
                     }
                 //se utente non amministratore
                 }else{
-                    fs.leaveGroup(userGroupList[position].groupCode.toString()){ result ->
+                    fs.leaveGroup(userGroupList[position].groupId.toString()){ result ->
                         if (result) {
                             fs.getUserGroupData(user_email) { groupList, adminFlag ->
                                 userGroupList = groupList
@@ -168,7 +168,7 @@ class HomeFragment : Fragment(), GroupAdapter.ClickListener {
     override fun onItemClick(group: Group) {
         val bundle = bundleOf(
             "groupName" to group.groupName,
-            "groupCode" to group.groupCode
+            "groupId" to group.groupId
         )
         activity?.findNavController(R.id.nav_host_fragment)?.navigate(R.id.action_nav_home_to_nav_group, bundle)
     }

@@ -33,13 +33,12 @@ class RegistrationActivity: AppCompatActivity() {
             if (editTextNickname.text?.length == 15) { Toast.makeText(this, R.string.max15chars, Toast.LENGTH_SHORT).show() }
             editTextNicknameView.isErrorEnabled = false
         }
-        editTextPassword.addTextChangedListener{
-            if (editTextPassword.text?.length == 15) { Toast.makeText(this, R.string.max15chars, Toast.LENGTH_SHORT).show() }
-            editTextPasswordView.isErrorEnabled = false
-        }
         editTextEmail.addTextChangedListener{
-            if (editTextEmail.text?.length == 15) { Toast.makeText(this, R.string.max15chars, Toast.LENGTH_SHORT).show() }
             editTextEmailView.isErrorEnabled = false
+        }
+        editTextPassword.addTextChangedListener{
+            if (editTextPassword.text?.length == 15) { Toast.makeText(this, R.string.max20characters, Toast.LENGTH_SHORT).show() }
+            editTextPasswordView.isErrorEnabled = false
         }
     }
 

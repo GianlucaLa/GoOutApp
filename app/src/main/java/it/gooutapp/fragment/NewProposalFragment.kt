@@ -28,7 +28,7 @@ import java.time.LocalDateTime
 import java.util.*
 
 class NewProposalFragment : Fragment(), DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
-    private lateinit var groupCode: String
+    private lateinit var groupId: String
     private var placeString = ""
     private val fs = FireStore()
     private lateinit var c: Calendar
@@ -54,29 +54,24 @@ class NewProposalFragment : Fragment(), DatePickerDialog.OnDateSetListener, Time
             if(proposalNameEditText.text.length == 15){ Toast.makeText(root.context, R.string.max15chars, Toast.LENGTH_SHORT).show() }
             editTextNameProposalView.isErrorEnabled = false
         }
-
         placePickerEditText = root.findViewById(R.id.editTextPlace)
         placePickerEditText.addTextChangedListener {
-            if (placePickerEditText.text?.length == 15) { Toast.makeText(root.context, R.string.max15chars, Toast.LENGTH_SHORT).show() }
             editTextPlaceView.isErrorEnabled = false
         }
         placePickerEditText.setOnClickListener(){
             startAutocompleteActivity()
         }
-
         dateEditText = root.findViewById(R.id.editTextDate)
         dateEditText.addTextChangedListener {
-            if (dateEditText.text?.length == 15) { Toast.makeText(root.context, R.string.max15chars, Toast.LENGTH_SHORT).show() }
             editTextDateView.isErrorEnabled = false
         }
         timeEditText = root.findViewById(R.id.editTextHour)
         timeEditText.addTextChangedListener {
-            if (timeEditText.text?.length == 15) { Toast.makeText(root.context, R.string.max15chars, Toast.LENGTH_SHORT).show() }
             editTextHourView.isErrorEnabled = false
         }
         confirmProposalButton = root.findViewById(R.id.confirmProposal)
         confirmProposalButton.setOnClickListener{proposalConfirm()}
-        groupCode = arguments?.getString("groupCode") as String
+        groupId = arguments?.getString("groupId") as String
         pickDate()
         pickTime()
         return root
@@ -138,7 +133,7 @@ class NewProposalFragment : Fragment(), DatePickerDialog.OnDateSetListener, Time
         getTimeCalendar()
         time = if(hourOfDay<10) "0$hourOfDay" else "$hourOfDay"
         time += if(minute<10) ":0$minute" else ":$minute"
-        val date = LocalDateTime.parse("$date"+"T$time")
+        var date = LocalDateTime.parse("$date"+"T$time")
         if(date.isAfter(LocalDateTime.now())){
             editTextHour.setText(time)
             editTextHour.isEnabled = true;
@@ -176,12 +171,12 @@ class NewProposalFragment : Fragment(), DatePickerDialog.OnDateSetListener, Time
     fun proposalConfirm(){
         var proposalName = proposalNameEditText.text.toString()
         if(proposalName.isEmpty()) editTextNameProposalView.error = resources.getString(R.string.name_empty_error)
-        if(placeString.isEmpty()) editTextPlaceView.error = resources.getString(R.string.place_empty_error)
-        if(date.isEmpty()) editTextDateView.error = resources.getString(R.string.date_empty_error)
-        if(time.isEmpty()) editTextHourView.error = resources.getString(R.string.time_empty_error)
+        if(editTextPlace.text.toString() == "") editTextPlaceView.error = resources.getString(R.string.place_empty_error)
+        if(editTextDate.text.toString() == "") editTextDateView.error = resources.getString(R.string.date_empty_error)
+        if(editTextHour.text.toString() == "") editTextHourView.error = resources.getString(R.string.time_empty_error)
         if(!(editTextNameProposalView.isErrorEnabled || editTextPlaceView.isErrorEnabled || editTextDateView.isErrorEnabled || editTextHourView.isErrorEnabled)) {
             val dateTime = "$date"+"T$time"
-            fs.createProposalData(groupCode, proposalName, dateTime, placeString) { result ->
+            fs.createProposalData(groupId, proposalName, dateTime, placeString) { result ->
                 if (result) {
                     activity?.findNavController(R.id.nav_host_fragment)?.navigateUp()
                 } else {

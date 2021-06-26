@@ -73,4 +73,5 @@
     <string name="refuses">Rifiuta</string>
     <string name="accept">Accetta</string>
     <string name="edittext_message_hint">Scrivi un messaggio</string>
+    <string name="max20characters">Inserire massimo 20 caratteri</string>
 </resources>

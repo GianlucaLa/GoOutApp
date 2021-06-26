@@ -32,7 +32,7 @@ class ProposalAdapter(private val proposalList: ArrayList<Proposal>, val clickLi
             holder.oraProposta.text = "${proposal.dateTime.toString().substring(11)}"
             holder.organizzatoreProposta.text = "${proposal.organizator.toString()}"
             holder.btnAccept.setOnClickListener(){
-                fs.setProposalState(proposal.proposalCode.toString(), "accepted"){ result->
+                fs.setProposalState(proposal.proposalId.toString(), "accepted"){ result->
                     if(result){
                         Toast.makeText(activityContext, R.string.proposal_state_successful, Toast.LENGTH_SHORT).show()
                         notifyDataSetChanged()
@@ -43,7 +43,7 @@ class ProposalAdapter(private val proposalList: ArrayList<Proposal>, val clickLi
                 }
             }
             holder.btnRefuse.setOnClickListener(){
-                fs.setProposalState(proposal.proposalCode.toString(), "refused"){ result->
+                fs.setProposalState(proposal.proposalId.toString(), "refused"){ result->
                     if(result){
                         Toast.makeText(activityContext, R.string.proposal_state_successful, Toast.LENGTH_SHORT).show()
                     }else{

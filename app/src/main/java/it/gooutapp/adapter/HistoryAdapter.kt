@@ -30,7 +30,7 @@ class HistoryAdapter(private val historyList : ArrayList<Proposal>) : RecyclerVi
         holder.dataProposta.text = "${history.dateTime.toString().substring(0,10)}"
         holder.oraProposta.text = "${history.dateTime.toString().substring(11)}"
         holder.organizzatoreProposta.text = "${history.organizator.toString()}"
-        fs.getUserProposalState(history.proposalCode.toString()) { proposalState ->
+        fs.getUserProposalState(history.proposalId.toString()) { proposalState ->
             if(proposalState != "") {
                 if (proposalState == "accepted") {
                     holder.statoProposta.setTextColor(activityContext.resources.getColor(R.color.green))

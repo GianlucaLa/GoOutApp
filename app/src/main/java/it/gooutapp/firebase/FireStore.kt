@@ -7,6 +7,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.*
 import com.google.firebase.ktx.Firebase
 import it.gooutapp.model.Group
+import it.gooutapp.model.Message
 import it.gooutapp.model.Proposal
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -16,8 +17,11 @@ class FireStore {
     private val groupCollection = "groups"
     private val userCollection = "users"
     private val proposalCollection = "proposals"
+    private val chatCollection = "chats"
+    private val messageSubCollection = "messages"
     private val TAG = "FIRE_STORE"
 
+    //CREATE METHODS
     fun createUserData(name: String, surname: String, nickname: String, email: String) {
         val user = hashMapOf(
             "name" to name,
@@ -34,9 +38,9 @@ class FireStore {
     fun createGroupData(groupName: String, email: String, callback: (Boolean) -> Unit) {
         // generazione randomica di character
         val source: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
-        val groupCode: String = List(15) { source.random() }.joinToString("")
+        val groupId: String = List(15) { source.random() }.joinToString("")
         val group = hashMapOf(
-            "groupCode" to groupCode,
+            "groupId" to groupId,
             "groupName" to groupName,
             "admin_${currentUserId()}" to email
         )
@@ -50,22 +54,23 @@ class FireStore {
                 callback(false) }
     }
 
-    fun createProposalData(groupCode: String, proposalName: String, dateTime: String, place: String, callback: (Boolean) -> Unit){
+    fun createProposalData(groupId: String, proposalName: String, dateTime: String, place: String, callback: (Boolean) -> Unit){
         val source: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
-        val proposalCode: String = List(15) { source.random() }.joinToString("")
+        val proposalId: String = List(15) { source.random() }.joinToString("")
         currentUserNickname { currNickname ->
             val proposal = hashMapOf(
-                "groupCode" to groupCode,
+                "groupId" to groupId,
                 "dateTime" to dateTime,
                 "organizator" to currNickname,
                 "place" to place,
-                "proposalCode" to proposalCode,
+                "proposalId" to proposalId,
                 "proposalName" to proposalName
             )
             db.collection(proposalCollection).document()
                 .set(proposal)
                 .addOnSuccessListener {
                     Log.d(TAG, "DocumentSnapshot successfully written!")
+                    createChatData(groupId, proposalId)
                     callback(true)
                 }
                 .addOnFailureListener { e ->
@@ -75,92 +80,28 @@ class FireStore {
         }
     }
 
-    fun leaveGroup(groupCode: String, callback: (Boolean) -> Unit) {
-        getGroupDocumentId(groupCode) { groupDoc ->
-            // Remove the 'user' field from the document
-            val updates = hashMapOf<String, Any>(
-                "user_${currentUserId()}" to FieldValue.delete()
-            )
-            db.collection(groupCollection).document(groupDoc).update(updates)
+    private fun createChatData(groupId: String, proposalId: String){
+        val chat = hashMapOf(
+            "proposalId" to proposalId,
+            "groupId" to groupId
+        )
+        db.collection(chatCollection).document(proposalId)
+            .set(chat)
             .addOnSuccessListener {
-                Log.d(TAG, "DocumentSnapshot successfully deleted!")
-                callback(true)}
-            .addOnFailureListener {
-                e -> Log.w(TAG, "Error deleting document", e)
-                callback(false)}
-        }
+                Log.d(TAG, "DocumentSnapshot successfully written!")
+                db.collection(chatCollection).document(proposalId).collection(messageSubCollection).document("firstMessage").set(hashMapOf("firstMessage" to ""))
+            }
+            .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
     }
 
-    //solo per ADMINISTRATORS
-    fun deleteGroupData(groupCode: String, callback: (Boolean) -> Unit) {
-        getGroupDocumentId(groupCode) { documentToDelete ->
-            db.collection(groupCollection).document(documentToDelete)
-                .delete()
-                .addOnSuccessListener {
-                    Log.d(TAG, "DocumentSnapshot successfully deleted!")
-                    callback(true)}
-                .addOnFailureListener {
-                        e -> Log.w(TAG, "Error deleting document", e)
-                    callback(false)}
-            db.collection(proposalCollection).document(documentToDelete).delete()
-            db.collection(proposalCollection).whereEqualTo("groupCode", "$groupCode").get()
-                .addOnSuccessListener { proposalDocs ->
-                    for(dc in proposalDocs){
-                        db.collection(proposalCollection).document(dc.id).delete()
-                    }
-                }
-        }
-    }
-
-    private fun getGroupDocumentId(groupCode: String, callback: (String) -> Unit) {
-        db.collection(groupCollection).whereEqualTo("groupCode", "$groupCode").get()
-            .addOnSuccessListener { foundGroupCode ->
-                callback(foundGroupCode.last().id)
-            }.addOnFailureListener { exception ->
-            Log.d(TAG, "get failed with ", exception)
-        }
-    }
-
-    private fun getProposalDocumentId(proposalCode: String, callback: (String) -> Unit) {
-        db.collection(proposalCollection).whereEqualTo("proposalCode", "$proposalCode").get()
-            .addOnSuccessListener { foundProposalCode ->
-                callback(foundProposalCode.last().id)
+    //GET-SET METHODS
+    private fun getGroupDocumentId(groupId: String, callback: (String) -> Unit) {
+        db.collection(groupCollection).whereEqualTo("groupId", "$groupId").get()
+            .addOnSuccessListener { foundgroupId ->
+                callback(foundgroupId.last().id)
             }.addOnFailureListener { exception ->
                 Log.d(TAG, "get failed with ", exception)
             }
-    }
-
-    //RETURN INFO: AM=already member, NM=not member, ER=group code not valid
-    private fun isAlreadyMemberOf(groupCode: String, callback: (String, String) -> Unit) {
-        db.collection(groupCollection).whereEqualTo("groupCode", "$groupCode").get()
-            .addOnSuccessListener { documents ->
-                if (documents.size() == 0) {
-                    callback("ER", "")
-                } else if (documents.last().contains("user_${currentUserId()}")) {
-                    callback("AM", "")
-                } else {
-                    callback("NM", documents.last().id)
-                }
-            }.addOnFailureListener { exception ->
-            Log.d(TAG, "get failed with ", exception)
-        }
-    }
-
-    fun addUserToGroup(email: String, groupId: String, callback: (String) -> Unit) {
-        isAlreadyMemberOf(groupId) { alreadyMember, groupDocId ->
-            /*inserisco il nuovo utente al gruppo su FireStore assegnando come id
-            il ritorno della calback di checkForNewUserId
-            */
-            if (alreadyMember == "AM" || alreadyMember == "ER") {
-                callback(alreadyMember)
-            } else {
-                db.collection(groupCollection).document(groupDocId)  //nome gruppo
-                    .update("user_${currentUserId()}", email)
-                    .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
-                    .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
-                callback(alreadyMember)
-            }
-        }
     }
 
     fun getUserData(email: String, callback: (DocumentSnapshot) -> Unit) {
@@ -175,7 +116,6 @@ class FireStore {
         }
     }
 
-    //Restituisce i dati dei gruppi, utilizzata da Adapter per popolare la RecycleView
     fun getUserGroupData(email: String, callback: (ArrayList<Group>, ArrayList<Boolean>) -> Unit) {
         lateinit var document: DocumentSnapshot
         val userGroupList = ArrayList<Group>()
@@ -205,7 +145,7 @@ class FireStore {
         })
     }
 
-    fun getProposalData(groupCode: String, callback: (ArrayList<Proposal>) -> Unit) {
+    fun getProposalData(groupId: String, callback: (ArrayList<Proposal>) -> Unit) {
         var proposalArrayList = ArrayList<Proposal>()
         db.collection(proposalCollection).addSnapshotListener(object : EventListener<QuerySnapshot> {
             @RequiresApi(Build.VERSION_CODES.O)
@@ -220,14 +160,14 @@ class FireStore {
                     var stringDoc = dc.document.toString()
                     val currDocDate = LocalDateTime.parse(dc.document.get("dateTime").toString(), DateTimeFormatter.ISO_DATE_TIME)
                     if (currDocDate.isAfter(currentDateTime)) {
-                        if (dc.type == DocumentChange.Type.ADDED && stringDoc.contains(groupCode))
+                        if (dc.type == DocumentChange.Type.ADDED && stringDoc.contains(groupId))
                             if (!(stringDoc.contains("accepted") || stringDoc.contains("refused")))
                                 proposalArrayList?.add(dc?.document?.toObject(Proposal::class.java))
                     }
                     callback(proposalArrayList)
                 }
             }
-            })
+        })
     }
 
     fun getUserHistoryProposalData(callback: (ArrayList<Proposal>) -> Unit){
@@ -244,8 +184,8 @@ class FireStore {
                         //cerco e aggiungo i gruppi che contengono l'email dell'utente
                         if (dc.type == DocumentChange.Type.ADDED
                             && (dc.document.toString().contains("user_${currentUserId()}")
-                                || dc.document.contains("$currNickname")
-                                || LocalDateTime.now().isAfter(LocalDateTime.parse(dc.document.get("dateTime").toString()))))
+                                    || dc.document.contains("$currNickname")
+                                    || LocalDateTime.now().isAfter(LocalDateTime.parse(dc.document.get("dateTime").toString()))))
                             proposalArrayList?.add(dc?.document?.toObject(Proposal::class.java))
                     }
                     callback(proposalArrayList)
@@ -254,8 +194,8 @@ class FireStore {
         }
     }
 
-    fun getUserProposalState(proposalCode: String, callback: (Any) -> Unit){
-        db.collection(proposalCollection).whereEqualTo("proposalCode", "$proposalCode").get()
+    fun getUserProposalState(proposalId: String, callback: (Any) -> Unit){
+        db.collection(proposalCollection).whereEqualTo("proposalId", "$proposalId").get()
             .addOnSuccessListener { proposalDocs ->
                 var state = proposalDocs.documents.last().get("user_${currentUserId()}")?.toString()
                 if(state == null)
@@ -265,8 +205,35 @@ class FireStore {
             }
     }
 
-    fun setProposalState(proposalCode: String, state: String, callback: (Boolean) -> Unit){
-        getProposalDocumentId(proposalCode) { proposalDoc ->
+    private fun getProposalDocumentId(proposalId: String, callback: (String) -> Unit) {
+        db.collection(proposalCollection).whereEqualTo("proposalId", "$proposalId").get()
+            .addOnSuccessListener { foundproposalId ->
+                callback(foundproposalId.last().id)
+            }.addOnFailureListener { exception ->
+                Log.d(TAG, "get failed with ", exception)
+            }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getChatData(proposalId: String, callback: (ArrayList<Message>) -> Unit){
+        val chatArray = ArrayList<Message>()
+        db.collection(chatCollection).document(proposalId).collection(messageSubCollection).addSnapshotListener(object : EventListener<QuerySnapshot> {
+            override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
+                if (error != null) {
+                    Log.e("Firestore Error", error.message.toString())
+                    return
+                }
+                for (dc: DocumentChange in value?.documentChanges!!) {
+                    if (dc.type == DocumentChange.Type.ADDED)
+                        chatArray.add(dc.document.toObject(Message::class.java))
+                }
+                callback(chatArray)
+            }
+        })
+    }
+
+    fun setProposalState(proposalId: String, state: String, callback: (Boolean) -> Unit){
+        getProposalDocumentId(proposalId) { proposalDoc ->
             // Remove the 'user' field from the document
             val updates = hashMapOf<String, Any>(
                 "user_${currentUserId()}" to "$state"
@@ -276,8 +243,92 @@ class FireStore {
                     Log.d(TAG, "Proposal state of user ${currentUserId()} setted")
                     callback(true)}
                 .addOnFailureListener {
-                    e -> Log.w(TAG, "Error setting proposal state", e)
+                        e -> Log.w(TAG, "Error setting proposal state", e)
                     callback(false)}
+        }
+    }
+
+    fun addUserToGroup(email: String, groupId: String, callback: (String) -> Unit) {
+        isAlreadyMemberOf(groupId) { alreadyMember, groupDocId ->
+            /*inserisco il nuovo utente al gruppo su FireStore assegnando come id
+            il ritorno della calback di checkForNewUserId
+            */
+            if (alreadyMember == "AM" || alreadyMember == "ER") {
+                callback(alreadyMember)
+            } else {
+                db.collection(groupCollection).document(groupDocId)  //nome gruppo
+                    .update("user_${currentUserId()}", email)
+                    .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
+                    .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
+                callback(alreadyMember)
+            }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun addMessageToChat(msgText: String, proposalId: String){
+        currentUserNickname { nickname ->
+            val message = hashMapOf(
+                "owner" to currentUserId(),
+                "ownerNickname" to nickname,
+                "text" to msgText
+            )
+            db.collection(chatCollection).document(proposalId).collection(messageSubCollection).document("message_${LocalDateTime.now()}").set(message)
+        }
+    }
+
+    //DELETE DATA METHODS
+    fun leaveGroup(groupId: String, callback: (Boolean) -> Unit) {
+        getGroupDocumentId(groupId) { groupDoc ->
+            // Remove the 'user' field from the document
+            val updates = hashMapOf<String, Any>(
+                "user_${currentUserId()}" to FieldValue.delete()
+            )
+            db.collection(groupCollection).document(groupDoc).update(updates)
+            .addOnSuccessListener {
+                Log.d(TAG, "DocumentSnapshot successfully deleted!")
+                callback(true)}
+            .addOnFailureListener {
+                e -> Log.w(TAG, "Error deleting document", e)
+                callback(false)}
+        }
+    }
+
+    fun deleteGroupData(groupId: String, callback: (Boolean) -> Unit) {
+        //solo per ADMINISTRATORS
+        getGroupDocumentId(groupId) { documentToDelete ->
+            db.collection(groupCollection).document(documentToDelete)
+                .delete()
+                .addOnSuccessListener {
+                    Log.d(TAG, "DocumentSnapshot successfully deleted!")
+                    callback(true)}
+                .addOnFailureListener {
+                        e -> Log.w(TAG, "Error deleting document", e)
+                    callback(false)}
+            db.collection(proposalCollection).document(documentToDelete).delete()
+            db.collection(proposalCollection).whereEqualTo("groupId", "$groupId").get()
+                .addOnSuccessListener { proposalDocs ->
+                    for(dc in proposalDocs){
+                        db.collection(proposalCollection).document(dc.id).delete()
+                    }
+                }
+        }
+    }
+
+    //OTHER METHODS
+    private fun isAlreadyMemberOf(groupId: String, callback: (String, String) -> Unit) {
+        //RETURN INFO: AM=already member, NM=not member, ER=group code not valid
+        db.collection(groupCollection).whereEqualTo("groupId", "$groupId").get()
+            .addOnSuccessListener { documents ->
+                if (documents.size() == 0) {
+                    callback("ER", "")
+                } else if (documents.last().contains("user_${currentUserId()}")) {
+                    callback("AM", "")
+                } else {
+                    callback("NM", documents.last().id)
+                }
+            }.addOnFailureListener { exception ->
+            Log.d(TAG, "get failed with ", exception)
         }
     }
 

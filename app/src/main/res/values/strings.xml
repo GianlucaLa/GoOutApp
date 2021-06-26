@@ -79,4 +79,5 @@
     <string name="accept">Accept</string>
     <string name="refuses">Refuses</string>
     <string name="edittext_message_hint">Write a message</string>
+    <string name="max20characters">Enter up to 20 characters</string>
 </resources>
