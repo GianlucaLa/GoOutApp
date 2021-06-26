@@ -39,11 +39,13 @@ class ChatFragment: Fragment() {
             messageList = chatArray
             chatAdapter = ChatAdapter(root.context, messageList)
             recyclerView.adapter = chatAdapter
+            recyclerView.scrollToPosition(chatAdapter.itemCount -1);
         }
 
         btnSendMessage.setOnClickListener(){
             var msgText = editTextMessage.text.toString()
             fs.addMessageToChat(msgText, proposalId)
+            editTextMessage.setText("")
         }
 
         //var recyclerView = root.findViewById<RecyclerView>(R.id.messagesRecycleView)

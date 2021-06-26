@@ -224,7 +224,7 @@ class FireStore {
                     return
                 }
                 for (dc: DocumentChange in value?.documentChanges!!) {
-                    if (dc.type == DocumentChange.Type.ADDED)
+                    if (dc.type == DocumentChange.Type.ADDED && dc.document.id != "firstMessage")
                         chatArray.add(dc.document.toObject(Message::class.java))
                 }
                 callback(chatArray)
