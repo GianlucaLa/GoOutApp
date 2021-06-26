@@ -42,7 +42,6 @@
     <fragment
         android:id="@+id/nav_chat"
         android:name="it.gooutapp.fragments.chat.ChatFragment"
-        android:label="@string/chat"
         tools:layout="@layout/fragment_user_profile" />
 
     <fragment

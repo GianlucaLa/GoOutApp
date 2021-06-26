@@ -78,4 +78,5 @@
     <string name="enter_chat">Enter the chat</string>
     <string name="accept">Accept</string>
     <string name="refuses">Refuses</string>
+    <string name="edittext_message_hint">Write a message</string>
 </resources>

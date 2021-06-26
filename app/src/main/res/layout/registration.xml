@@ -49,7 +49,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/imageViewRegDoodle"
-        app:startIconContentDescription="Prova"
         app:startIconDrawable="@drawable/ic_menu_user_profile">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextName"
@@ -71,7 +70,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextNameView"
-        app:startIconContentDescription="Prova"
         app:startIconDrawable="@drawable/ic_menu_user_profile">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextSurname"
@@ -93,7 +91,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextSurnameView"
-        app:startIconContentDescription="Prova"
         app:startIconDrawable="@drawable/ic_menu_user_profile">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextNickname"
@@ -115,7 +112,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextNicknameView"
-        app:startIconContentDescription="Prova"
         app:startIconDrawable="@drawable/ic_edittext_email">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextEmail"
@@ -137,7 +133,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextEmailView"
-        app:startIconContentDescription="Prova"
         app:startIconDrawable="@drawable/ic_edittext_password">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextPassword"

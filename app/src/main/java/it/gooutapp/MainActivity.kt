@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -17,23 +16,15 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.google.android.libraries.places.api.Places
-import com.google.android.libraries.places.api.model.Place
-import com.google.android.libraries.places.api.model.TypeFilter
-import com.google.android.libraries.places.widget.Autocomplete
-import com.google.android.libraries.places.widget.AutocompleteActivity
-import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.*
 import com.google.firebase.ktx.Firebase
 import it.gooutapp.firebase.FireStore
-import it.gooutapp.models.Group
 import it.gooutapp.models.myDialog
 import kotlinx.android.synthetic.main.fragment_new_proposal.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.nav_header_main.*
-import kotlinx.android.synthetic.main.recycle_view_row.view.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -64,6 +55,9 @@ class MainActivity : AppCompatActivity() {
                     R.id.nav_group -> {
                         toolbar.title = arguments?.getString("groupName")
                         codeCurrentGroup = arguments?.getString("groupCode").toString()
+                    }
+                    R.id.nav_chat -> {
+                        toolbar.title = "Chat: ${arguments?.getString("proposalName")}"
                     }
                 }
             }

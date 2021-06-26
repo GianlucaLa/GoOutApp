@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="6dp">
+
+    <TextView
+        android:id="@+id/textViewDrawable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:gravity="center"
+        android:text="Nickname"
+        android:textColor="@color/defaultBlue"
+        android:textStyle="bold"
+        android:textSize="21sp" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textViewDrawable"
+        android:text="message"
+        style="@drawable/rounded_textview"
+        android:textSize="17sp"/>
+
+</RelativeLayout>

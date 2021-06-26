@@ -1,6 +1,7 @@
 package it.gooutapp.fragments.group
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -42,9 +43,9 @@ class GroupFragment : Fragment(), ProposalAdapter.ClickListenerProposal {
 
     //TODO aggiungere nel bundle quello che ci serve
     override fun onButtonClick(proposal: Proposal) {
+        Log.e(TAG, proposal.proposalName.toString())
         val bundle = bundleOf(
-//            "groupName" to group.groupName,
-//            "groupCode" to group.groupCode
+            "proposalName" to proposal.proposalName
         )
         activity?.findNavController(R.id.nav_host_fragment)?.navigate(R.id.action_nav_group_to_nav_chat, bundle)
     }

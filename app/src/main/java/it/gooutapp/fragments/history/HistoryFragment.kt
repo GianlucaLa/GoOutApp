@@ -21,7 +21,7 @@ class HistoryFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_history, container, false)
 
-        recyclerView = root.findViewById(R.id.historyRecycleView)
+        recyclerView = root.findViewById(R.id.messagesRecycleView)
         recyclerView.layoutManager = LinearLayoutManager(root.context)
         historyList = arrayListOf()
 

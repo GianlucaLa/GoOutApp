@@ -22,7 +22,7 @@ import it.gooutapp.R
 import it.gooutapp.firebase.FireStore
 import it.gooutapp.models.Group
 import it.gooutapp.models.myDialog
-import kotlinx.android.synthetic.main.recycle_view_row.view.*
+import kotlinx.android.synthetic.main.group_row.view.*
 
 class HomeFragment : Fragment(), GroupAdapter.ClickListener {
 
