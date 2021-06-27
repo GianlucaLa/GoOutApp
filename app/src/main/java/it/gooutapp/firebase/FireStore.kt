@@ -157,11 +157,10 @@ class FireStore {
                 for (dc: DocumentChange in value?.documentChanges!!) {
                     //cerco e aggiungo i gruppi che contengono l'email dell'utente
                     val currentDateTime = LocalDateTime.now()
-                    var stringDoc = dc.document.toString()
                     val currDocDate = LocalDateTime.parse(dc.document.get("dateTime").toString(), DateTimeFormatter.ISO_DATE_TIME)
                     if (currDocDate.isAfter(currentDateTime)) {
-                        if (dc.type == DocumentChange.Type.ADDED && stringDoc.contains(groupId))
-                            if (!(stringDoc.contains("accepted") || stringDoc.contains("refused")))
+                        if (dc.type == DocumentChange.Type.ADDED && dc.document.toString().contains(groupId))
+                            if (!(dc.document.contains("user_${currentUserId()}")))
                                 proposalArrayList?.add(dc?.document?.toObject(Proposal::class.java))
                     }
                     callback(proposalArrayList)

@@ -2,6 +2,7 @@ package it.gooutapp.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.text.Html
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -41,7 +42,8 @@ class ChatAdapter(private val context: Context, private val messageList: ArrayLi
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val message = messageList[position]
         if(getItemViewType(position) == MESSAGE_TYPE_LEFT) {
-            holder.txtUserName.text = "${message.ownerNickname}\n${message.text}"
+            holder.txtUserName.text = Html.fromHtml("<b>${message.ownerNickname}</b><br>${message.text}");
+            //holder.txtUserName.text = "${message.ownerNickname}\n${message.text}"
         } else {
             holder.txtUserName.text = "${message.text}"
         }
