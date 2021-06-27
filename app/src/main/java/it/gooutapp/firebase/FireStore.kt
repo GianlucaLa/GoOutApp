@@ -96,15 +96,6 @@ class FireStore {
     }
 
     //GET-SET METHODS
-    private fun getGroupDocumentId(groupId: String, callback: (String) -> Unit) {
-        db.collection(groupCollection).whereEqualTo("groupId", "$groupId").get()
-            .addOnSuccessListener { foundgroupId ->
-                callback(foundgroupId.last().id)
-            }.addOnFailureListener { exception ->
-                Log.d(TAG, "get failed with ", exception)
-            }
-    }
-
     fun getUserData(email: String, callback: (DocumentSnapshot) -> Unit) {
         db.collection(userCollection).document(email).get().addOnSuccessListener { document ->
             if (document.data != null) {
@@ -197,6 +188,15 @@ class FireStore {
                     callback("")
                 else
                     callback(state)
+            }
+    }
+
+    private fun getGroupDocumentId(groupId: String, callback: (String) -> Unit) {
+        db.collection(groupCollection).whereEqualTo("groupId", "$groupId").get()
+            .addOnSuccessListener { foundgroupId ->
+                callback(foundgroupId.last().id)
+            }.addOnFailureListener { exception ->
+                Log.d(TAG, "get failed with ", exception)
             }
     }
 

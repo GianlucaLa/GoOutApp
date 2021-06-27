@@ -2,7 +2,6 @@ package it.gooutapp.fragment
 
 import android.os.Build
 import android.os.Bundle
-import android.os.Message
 import android.view.*
 import android.widget.EditText
 import androidx.annotation.RequiresApi
@@ -12,9 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import it.gooutapp.R
 import it.gooutapp.adapter.ChatAdapter
-import it.gooutapp.adapter.ProposalAdapter
 import it.gooutapp.firebase.FireStore
-import it.gooutapp.model.Proposal
 import java.util.ArrayList
 
 class ChatFragment: Fragment() {
@@ -22,6 +19,7 @@ class ChatFragment: Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var messageList: ArrayList<it.gooutapp.model.Message>
     private lateinit var chatAdapter: ChatAdapter
+    private lateinit var proposalId: String
     private val fs = FireStore()
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -30,7 +28,9 @@ class ChatFragment: Fragment() {
         //acquisisco interfaccia fragment
         val editTextMessage = root.findViewById<EditText>(R.id.editTextChatMessage)
         val btnSendMessage = root.findViewById<FloatingActionButton>(R.id.sendMessageFAB)
-        val proposalId = arguments?.get("proposalId").toString()
+
+        //acquisisco l'id della proposal a cui è associata la chat
+        proposalId = arguments?.get("proposalId").toString()
 
         recyclerView = root.findViewById(R.id.messagesRecycleView)
         recyclerView.layoutManager = LinearLayoutManager(root.context)
