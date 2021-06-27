@@ -48,8 +48,6 @@ class ChatFragment: Fragment() {
             editTextMessage.setText("")
         }
 
-        //var recyclerView = root.findViewById<RecyclerView>(R.id.messagesRecycleView)
-        //recyclerView.adapter = adapter
         setHasOptionsMenu(true)
         return root
     }
