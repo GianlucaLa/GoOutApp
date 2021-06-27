@@ -1,8 +1,10 @@
 package it.gooutapp.fragment
 
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
@@ -21,6 +23,7 @@ class GroupFragment : Fragment(), ProposalAdapter.ClickListenerProposal {
     private lateinit var proposalAdapter: ProposalAdapter
     private val fs = FireStore()
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_group, container, false)
         val groupId = arguments?.get("groupId").toString()

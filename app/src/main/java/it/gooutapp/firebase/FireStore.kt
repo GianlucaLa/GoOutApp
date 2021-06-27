@@ -89,7 +89,8 @@ class FireStore {
             .set(chat)
             .addOnSuccessListener {
                 Log.d(TAG, "DocumentSnapshot successfully written!")
-                db.collection(chatCollection).document(proposalId).collection(messageSubCollection).document("firstMessage").set(hashMapOf("firstMessage" to ""))
+                db.collection(chatCollection).document(proposalId).collection(messageSubCollection)
+                    .document("firstMessage").set(hashMapOf("firstMessage" to ""))
             }
             .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
     }
@@ -116,80 +117,75 @@ class FireStore {
         }
     }
 
-    fun getUserGroupData(email: String, callback: (ArrayList<Group>, ArrayList<Boolean>) -> Unit) {
-        lateinit var document: DocumentSnapshot
+    fun getUserGroupData(callback: (ArrayList<Group>, ArrayList<Boolean>) -> Unit) {
         val userGroupList = ArrayList<Group>()
         val adminFlagList = ArrayList<Boolean>()
-        db.collection(groupCollection).addSnapshotListener(object : EventListener<QuerySnapshot> {
-            override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
-                if (error != null) {
-                    Log.e("Firestore Error", error.message.toString())
-                    return
-                }
-                for (dc: DocumentChange in value?.documentChanges!!) {
-                    document = dc.document
-                    //cerco e aggiungo i gruppi che contengono l'email dell'utente
-                    if (document.contains("admin_${currentUserId()}")) {
-                        adminFlagList.add(true)
-                        if (dc.type == DocumentChange.Type.ADDED)
-                            userGroupList.add(dc.document.toObject(Group::class.java))
-
-                    } else if (document.contains("user_${currentUserId()}")) {
-                        adminFlagList.add(false)
-                        if (dc.type == DocumentChange.Type.ADDED)
-                            userGroupList.add(dc.document.toObject(Group::class.java))
-                    }
-                }
-                callback(userGroupList, adminFlagList)
+        db.collection(groupCollection).addSnapshotListener { value, error ->
+            if (error != null) {
+                Log.e("Firestore Error", error.message.toString())
+                return@addSnapshotListener
             }
-        })
+            for (dc: DocumentChange in value?.documentChanges!!) {
+                //cerco e aggiungo i gruppi che contengono l'email dell'utente
+                if (dc.document.contains("admin_${currentUserId()}")) {
+                    adminFlagList.add(true)
+                    if (dc.type == DocumentChange.Type.ADDED)
+                        userGroupList.add(dc.document.toObject(Group::class.java))
+                    else if (dc.type == DocumentChange.Type.REMOVED)
+                        userGroupList.remove(dc.document.toObject(Group::class.java))
+                } else if (dc.document.contains("user_${currentUserId()}")) {
+                    adminFlagList.add(false)
+                    if (dc.type == DocumentChange.Type.ADDED)
+                        userGroupList.add(dc.document.toObject(Group::class.java))
+                    else if (dc.type == DocumentChange.Type.REMOVED)
+                        userGroupList.remove(dc.document.toObject(Group::class.java))
+                }
+            }
+            callback(userGroupList, adminFlagList)
+        }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun getProposalData(groupId: String, callback: (ArrayList<Proposal>) -> Unit) {
         var proposalArrayList = ArrayList<Proposal>()
-        db.collection(proposalCollection).addSnapshotListener(object : EventListener<QuerySnapshot> {
-            @RequiresApi(Build.VERSION_CODES.O)
-            override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
+        db.collection(proposalCollection)
+            .whereEqualTo("groupId", "$groupId").addSnapshotListener { value, error ->
+                proposalArrayList.clear()
                 if (error != null) {
                     Log.e("Firestore Error", error.message.toString())
-                    return
+                    return@addSnapshotListener
                 }
                 for (dc: DocumentChange in value?.documentChanges!!) {
                     //cerco e aggiungo i gruppi che contengono l'email dell'utente
                     val currentDateTime = LocalDateTime.now()
                     val currDocDate = LocalDateTime.parse(dc.document.get("dateTime").toString(), DateTimeFormatter.ISO_DATE_TIME)
-                    if (currDocDate.isAfter(currentDateTime)) {
-                        if (dc.type == DocumentChange.Type.ADDED && dc.document.toString().contains(groupId))
-                            if (!(dc.document.contains("user_${currentUserId()}")))
-                                proposalArrayList?.add(dc?.document?.toObject(Proposal::class.java))
-                    }
-                    callback(proposalArrayList)
+                    if (currDocDate.isAfter(currentDateTime) && !(dc.document.contains("user_${currentUserId()}")))
+                            proposalArrayList.add(dc.document.toObject(Proposal::class.java))
                 }
-            }
-        })
+                Log.e(TAG, proposalArrayList.toString())
+                callback(proposalArrayList)
+        }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun getUserHistoryProposalData(callback: (ArrayList<Proposal>) -> Unit){
         currentUserNickname { currNickname ->
             var proposalArrayList = ArrayList<Proposal>()
-            db.collection(proposalCollection).addSnapshotListener(object : EventListener<QuerySnapshot> {
-                @RequiresApi(Build.VERSION_CODES.O)
-                override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
-                    if (error != null) {
-                        Log.e("Firestore Error", error.message.toString())
-                        return
-                    }
-                    for (dc: DocumentChange in value?.documentChanges!!) {
-                        //cerco e aggiungo i gruppi che contengono l'email dell'utente
-                        if (dc.type == DocumentChange.Type.ADDED
-                            && (dc.document.toString().contains("user_${currentUserId()}")
-                                    || dc.document.contains("$currNickname")
-                                    || LocalDateTime.now().isAfter(LocalDateTime.parse(dc.document.get("dateTime").toString()))))
-                            proposalArrayList?.add(dc?.document?.toObject(Proposal::class.java))
-                    }
-                    callback(proposalArrayList)
+            db.collection(proposalCollection).addSnapshotListener { value, error ->
+                if (error != null) {
+                    Log.e("Firestore Error", error.message.toString())
+                    return@addSnapshotListener
                 }
-            })
+                for (dc: DocumentChange in value?.documentChanges!!) {
+                    //cerco e aggiungo i gruppi che contengono l'email dell'utente
+                    if (dc.type == DocumentChange.Type.ADDED
+                        && (dc.document.toString().contains("user_${currentUserId()}")
+                                || dc.document.contains("$currNickname")
+                                || LocalDateTime.now().isAfter(LocalDateTime.parse(dc.document.get("dateTime").toString()))))
+                        proposalArrayList?.add(dc?.document?.toObject(Proposal::class.java))
+                }
+                callback(proposalArrayList)
+            }
         }
     }
 
@@ -216,19 +212,17 @@ class FireStore {
     @RequiresApi(Build.VERSION_CODES.O)
     fun getChatData(proposalId: String, callback: (ArrayList<Message>) -> Unit){
         val chatArray = ArrayList<Message>()
-        db.collection(chatCollection).document(proposalId).collection(messageSubCollection).addSnapshotListener(object : EventListener<QuerySnapshot> {
-            override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
-                if (error != null) {
-                    Log.e("Firestore Error", error.message.toString())
-                    return
-                }
-                for (dc: DocumentChange in value?.documentChanges!!) {
-                    if (dc.type == DocumentChange.Type.ADDED && dc.document.id != "firstMessage")
-                        chatArray.add(dc.document.toObject(Message::class.java))
-                }
-                callback(chatArray)
+        db.collection(chatCollection).document(proposalId).collection(messageSubCollection).addSnapshotListener { value, error ->
+            if (error != null) {
+                Log.e("Firestore Error", error.message.toString())
+                return@addSnapshotListener
             }
-        })
+            for (dc: DocumentChange in value?.documentChanges!!) {
+                if (dc.type == DocumentChange.Type.ADDED && dc.document.id != "firstMessage")
+                    chatArray.add(dc.document.toObject(Message::class.java))
+            }
+            callback(chatArray)
+        }
     }
 
     fun setProposalState(proposalId: String, state: String, callback: (Boolean) -> Unit){
@@ -242,7 +236,7 @@ class FireStore {
                     Log.d(TAG, "Proposal state of user ${currentUserId()} setted")
                     callback(true)}
                 .addOnFailureListener {
-                        e -> Log.w(TAG, "Error setting proposal state", e)
+                    e -> Log.w(TAG, "Error setting proposal state", e)
                     callback(false)}
         }
     }
@@ -272,7 +266,8 @@ class FireStore {
                 "ownerNickname" to nickname,
                 "text" to msgText
             )
-            db.collection(chatCollection).document(proposalId).collection(messageSubCollection).document("message_${LocalDateTime.now()}").set(message)
+            db.collection(chatCollection).document(proposalId).collection(messageSubCollection)
+                .document("message_${LocalDateTime.now()}").set(message)
         }
     }
 

@@ -46,7 +46,7 @@ class HomeFragment : Fragment(), GroupAdapter.ClickListener {
         userGroupList = arrayListOf()
         adminFlagList = arrayListOf()
 
-        fs.getUserGroupData(user_email) { groupList, adminFlag ->
+        fs.getUserGroupData() { groupList, adminFlag ->
             userGroupList = groupList
             adminFlagList = adminFlag
             groupAdapter = GroupAdapter(userGroupList, adminFlagList,this)
@@ -123,30 +123,12 @@ class HomeFragment : Fragment(), GroupAdapter.ClickListener {
                 //se utente amministratore
                 if(delete) {
                     fs.deleteGroupData(userGroupList[position].groupId.toString()){ result ->
-                        if (result) {
-                            fs.getUserGroupData(user_email) { groupList, adminFlag ->
-                                userGroupList = groupList
-                                adminFlagList = adminFlag
-                                groupAdapter = GroupAdapter(userGroupList, adminFlagList, this)
-                                recyclerView.adapter = groupAdapter
-                            }
-                        } else {
-                            Log.e(TAG, "error during delete of document")
-                        }
+                        if (!result) Log.e(TAG, "error during delete of document")
                     }
                 //se utente non amministratore
                 }else{
                     fs.leaveGroup(userGroupList[position].groupId.toString()){ result ->
-                        if (result) {
-                            fs.getUserGroupData(user_email) { groupList, adminFlag ->
-                                userGroupList = groupList
-                                adminFlagList = adminFlag
-                                groupAdapter = GroupAdapter(userGroupList, adminFlagList, this)
-                                recyclerView.adapter = groupAdapter
-                            }
-                        } else {
-                            Log.e(TAG, "error during delete of user's field")
-                        }
+                        if (!result) Log.e(TAG, "error during delete of document")
                     }
                 }
                 userGroupList.removeAt(position)

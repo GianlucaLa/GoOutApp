@@ -1,4 +1,4 @@
-package it.gooutapp
+package it.gooutapp.activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import it.gooutapp.R
 import kotlinx.android.synthetic.main.login.*
 import kotlinx.android.synthetic.main.registration.*
 

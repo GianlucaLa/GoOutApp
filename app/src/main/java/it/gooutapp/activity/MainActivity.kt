@@ -1,4 +1,4 @@
-package it.gooutapp
+package it.gooutapp.activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -19,6 +19,7 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.*
 import com.google.firebase.ktx.Firebase
+import it.gooutapp.R
 import it.gooutapp.firebase.FireStore
 import it.gooutapp.model.myDialog
 import kotlinx.android.synthetic.main.fragment_new_proposal.*
@@ -99,8 +100,8 @@ class MainActivity : AppCompatActivity() {
             fs.addUserToGroup(user_email, groupId) { result ->
                 when (result) {
                     "NM" -> {
-                        Toast.makeText(applicationContext, R.string.user_successful_added_to_group, Toast.LENGTH_SHORT).show()
-                        refreshFragment()
+                        Toast.makeText(applicationContext,
+                            R.string.user_successful_added_to_group, Toast.LENGTH_SHORT).show()
                     }
                     "AM" -> {
                         Toast.makeText(applicationContext, R.string.user_is_already_member, Toast.LENGTH_SHORT).show()
@@ -122,10 +123,6 @@ class MainActivity : AppCompatActivity() {
     private fun closeDrawer(){
         var mDrawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
         mDrawerLayout.closeDrawers();
-    }
-
-    private fun refreshFragment(){
-        findNavController(R.id.nav_host_fragment).navigate(R.id.nav_home)
     }
 
     fun openNewProposal(item: MenuItem){

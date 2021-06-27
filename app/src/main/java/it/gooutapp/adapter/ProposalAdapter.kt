@@ -22,35 +22,33 @@ class ProposalAdapter(private val proposalList: ArrayList<Proposal>, val clickLi
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         var activityContext = holder.itemView.context
         val proposal: Proposal = proposalList[position]
-            holder.nomeProposta.text = proposal.proposalName
-            holder.labelPlace.text = "${activityContext.resources.getString(R.string.place)}: "
-            holder.labelDate.text = "${activityContext.resources.getString(R.string.date)}: "
-            holder.labelTime.text = "${activityContext.resources.getString(R.string.time)}: "
-            holder.labelOrganizator.text = "${activityContext.resources.getString(R.string.organizator)}: "
-            holder.luogoProposta.text = "${proposal.place.toString()}"
-            holder.dataProposta.text = "${proposal.dateTime.toString().substring(0,10)}"
-            holder.oraProposta.text = "${proposal.dateTime.toString().substring(11)}"
-            holder.organizzatoreProposta.text = "${proposal.organizator.toString()}"
-            holder.btnAccept.setOnClickListener(){
-                fs.setProposalState(proposal.proposalId.toString(), "accepted"){ result->
-                    if(result){
-                        Toast.makeText(activityContext, R.string.proposal_state_successful, Toast.LENGTH_SHORT).show()
-                        notifyDataSetChanged()
-                    }else{
-                        Toast.makeText(activityContext, R.string.proposal_state_fail, Toast.LENGTH_SHORT).show()
-                        notifyDataSetChanged()
-                    }
+        holder.nomeProposta.text = proposal.proposalName
+        holder.labelPlace.text = "${activityContext.resources.getString(R.string.place)}: "
+        holder.labelDate.text = "${activityContext.resources.getString(R.string.date)}: "
+        holder.labelTime.text = "${activityContext.resources.getString(R.string.time)}: "
+        holder.labelOrganizator.text = "${activityContext.resources.getString(R.string.organizator)}: "
+        holder.luogoProposta.text = "${proposal.place.toString()}"
+        holder.dataProposta.text = "${proposal.dateTime.toString().substring(0,10)}"
+        holder.oraProposta.text = "${proposal.dateTime.toString().substring(11)}"
+        holder.organizzatoreProposta.text = "${proposal.organizator.toString()}"
+        holder.btnAccept.setOnClickListener(){
+            fs.setProposalState(proposal.proposalId.toString(), "accepted"){ result->
+                if(result){
+                    Toast.makeText(activityContext, R.string.proposal_state_successful, Toast.LENGTH_SHORT).show()
+                }else{
+                    Toast.makeText(activityContext, R.string.proposal_state_fail, Toast.LENGTH_SHORT).show()
                 }
             }
-            holder.btnRefuse.setOnClickListener(){
-                fs.setProposalState(proposal.proposalId.toString(), "refused"){ result->
-                    if(result){
-                        Toast.makeText(activityContext, R.string.proposal_state_successful, Toast.LENGTH_SHORT).show()
-                    }else{
-                        Toast.makeText(activityContext, R.string.proposal_state_fail, Toast.LENGTH_SHORT).show()
-                    }
+        }
+        holder.btnRefuse.setOnClickListener(){
+            fs.setProposalState(proposal.proposalId.toString(), "refused"){ result->
+                if(result){
+                    Toast.makeText(activityContext, R.string.proposal_state_successful, Toast.LENGTH_SHORT).show()
+                }else{
+                    Toast.makeText(activityContext, R.string.proposal_state_fail, Toast.LENGTH_SHORT).show()
                 }
             }
+        }
         holder.btnChat.setOnClickListener {
             clickListenerProposal.onButtonClick(proposalList[position])
         }

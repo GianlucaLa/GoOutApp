@@ -1,4 +1,4 @@
-package it.gooutapp
+package it.gooutapp.activity
 
 
 import android.app.Activity
@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import it.gooutapp.R
 import it.gooutapp.firebase.FireStore
 import kotlinx.android.synthetic.main.registration.*
 
@@ -26,18 +27,21 @@ class RegistrationActivity: AppCompatActivity() {
             editTextNameView.isErrorEnabled = false
         }
         editTextSurname.addTextChangedListener {
-            if (editTextSurname.text?.length == 15) { Toast.makeText(this, R.string.max15chars, Toast.LENGTH_SHORT).show() }
+            if (editTextSurname.text?.length == 15) { Toast.makeText(this,
+                R.string.max15chars, Toast.LENGTH_SHORT).show() }
             editTextSurnameView.isErrorEnabled = false
         }
         editTextNickname.addTextChangedListener {
-            if (editTextNickname.text?.length == 15) { Toast.makeText(this, R.string.max15chars, Toast.LENGTH_SHORT).show() }
+            if (editTextNickname.text?.length == 15) { Toast.makeText(this,
+                R.string.max15chars, Toast.LENGTH_SHORT).show() }
             editTextNicknameView.isErrorEnabled = false
         }
         editTextEmail.addTextChangedListener{
             editTextEmailView.isErrorEnabled = false
         }
         editTextPassword.addTextChangedListener{
-            if (editTextPassword.text?.length == 15) { Toast.makeText(this, R.string.max20characters, Toast.LENGTH_SHORT).show() }
+            if (editTextPassword.text?.length == 15) { Toast.makeText(this,
+                R.string.max20characters, Toast.LENGTH_SHORT).show() }
             editTextPasswordView.isErrorEnabled = false
         }
     }
