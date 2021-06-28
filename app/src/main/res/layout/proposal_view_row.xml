@@ -116,38 +116,43 @@
                 android:textSize="17sp"
                 android:text="TextView" />
 
-            <Button
-                android:id="@+id/refuseProposal"
+            <LinearLayout
+                android:id="@+id/layoutButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/textViewRLuogoValue"
-                android:layout_marginRight="30dp"
                 android:layout_alignParentRight="true"
-                android:drawableRight="@drawable/ic_deny"
-                android:drawableTint="@color/lighRed"
-                android:text="@string/refuses"/>
-
-            <Button
-                android:id="@+id/acceptProposal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/textViewRLuogoValue"
-                android:layout_marginLeft="30dp"
                 android:layout_alignParentLeft="true"
-                android:layout_marginRight="40dp"
-                android:drawableRight="@drawable/ic_check"
-                android:drawableTint="@color/green"
-                android:text="@string/accept" />
+                android:layout_below="@+id/textViewRLuogo"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/acceptProposal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:layout_marginRight="8dp"
+                    android:drawableRight="@drawable/ic_check"
+                    android:drawableTint="@color/green"
+                    android:text="@string/accept" />
+
+                <Button
+                    android:id="@+id/refuseProposal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_weight="0.5"
+                    android:drawableRight="@drawable/ic_deny"
+                    android:drawableTint="@color/lighRed"
+                    android:text="@string/refuses" />
+            </LinearLayout>
 
             <Button
                 android:id="@+id/entryChat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="30dp"
-                android:layout_marginLeft="30dp"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentLeft="true"
-                android:layout_below="@id/acceptProposal"
+                android:layout_below="@id/layoutButton"
                 android:text="@string/enter_chat"
 
                 android:textAlignment="center"

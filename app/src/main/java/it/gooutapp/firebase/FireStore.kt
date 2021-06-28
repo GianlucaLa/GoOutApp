@@ -209,10 +209,20 @@ class FireStore {
 
     private fun getProposalDocumentId(proposalId: String, callback: (String) -> Unit) {
         db.collection(proposalCollection).whereEqualTo("proposalId", "$proposalId").get()
-            .addOnSuccessListener { foundproposalId ->
-                callback(foundproposalId.last().id)
+            .addOnSuccessListener { foundproposalDocId ->
+                callback(foundproposalDocId.last().id)
             }.addOnFailureListener { exception ->
                 Log.d(TAG, "get failed with ", exception)
+            }
+    }
+
+    private fun getProposalId(groupId: String, callback: (String) -> Unit) {
+        db.collection(proposalCollection).whereEqualTo("groupId", groupId).get()
+            .addOnSuccessListener { foundProposaliId ->
+                for (dc in foundProposaliId) {
+                    Log.e("CIAOOO1", "${dc.data["proposalId"]}")
+                    callback(dc.data["proposalId"].toString())
+                }
             }
     }
 
@@ -295,7 +305,8 @@ class FireStore {
         }
     }
 
-    fun deleteGroupData(groupId: String, proposalId: String, callback: (Boolean) -> Unit) {
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun deleteGroupData(groupId: String, callback: (Boolean) -> Unit) {
         //solo per ADMINISTRATORS
         getGroupDocumentId(groupId) { documentToDelete ->
             db.collection(groupCollection).document(documentToDelete)
@@ -315,14 +326,17 @@ class FireStore {
                         db.collection(proposalCollection).document(dc.id).delete()
                     }
                 }
-            //TODO sistemare per eliminare anche la raccolta messages
-            db.collection(chatCollection).whereEqualTo("groupId", "$groupId").get()
-                .addOnSuccessListener { chatDocs ->
-                    for (dc in chatDocs) {
-                        db.collection(chatCollection).document(dc.id).delete()
+            getProposalId(groupId) { proposalId ->
+                db.collection(chatCollection).document(proposalId).collection(messageSubCollection)
+                    .get()
+                    .addOnSuccessListener { chatToDelete ->
+                        for (dc in chatToDelete) {
+                            db.collection(chatCollection).document(proposalId).collection(messageSubCollection).document(dc.id).delete()
+                            db.collection(chatCollection).document(proposalId).delete()
+                        }
                     }
-                }
-                }
+            }
+        }
     }
 
     //OTHER METHODS

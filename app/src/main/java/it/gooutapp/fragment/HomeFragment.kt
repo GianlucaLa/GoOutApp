@@ -121,10 +121,9 @@ class HomeFragment : Fragment(), GroupAdapter.ClickListener {
             builder.setPositiveButton(R.string.ok) { dialog, wich ->
                 var position = viewHolder.adapterPosition
                 groupAdapter.deleteItemRow(position)
-                val proposalId = arguments?.get("proposalId").toString()
                     //se utente amministratore
                     if (delete) {
-                        fs.deleteGroupData(userGroupList[position].groupId.toString(), proposalId) { result ->
+                        fs.deleteGroupData(userGroupList[position].groupId.toString()) { result ->
                             if (!result) Log.e(TAG, "error during delete of document")
                         }
                         //se utente non amministratore
