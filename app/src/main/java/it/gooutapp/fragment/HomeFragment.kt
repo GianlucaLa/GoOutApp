@@ -113,6 +113,7 @@ class HomeFragment : Fragment(), GroupAdapter.ClickListener {
     }
 
     //popup per confermare cancellazione row
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun showDialog(viewHolder: RecyclerView.ViewHolder, title: String, message: String, delete: Boolean) {
         val builder = view?.let { AlertDialog.Builder(it.context) }
         if (builder != null) {
