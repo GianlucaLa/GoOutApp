@@ -19,6 +19,7 @@ class FireStore {
     private val proposalCollection = "proposals"
     private val chatCollection = "chats"
     private val messageSubCollection = "messages"
+    private val source: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')   // per generazione randomica di character
     private val TAG = "FIRE_STORE"
 
     //CREATE METHODS
@@ -36,8 +37,6 @@ class FireStore {
     }
 
     fun createGroupData(groupName: String, email: String, callback: (Boolean) -> Unit) {
-        // generazione randomica di character
-        val source: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
         val groupId: String = List(15) { source.random() }.joinToString("")
         val group = hashMapOf(
             "groupId" to groupId,
@@ -55,7 +54,6 @@ class FireStore {
     }
 
     fun createProposalData(groupId: String, proposalName: String, dateTime: String, place: String, callback: (Boolean) -> Unit){
-        val source: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
         val proposalId: String = List(15) { source.random() }.joinToString("")
         currentUserNickname { currNickname ->
             val proposal = hashMapOf(
@@ -66,7 +64,7 @@ class FireStore {
                 "proposalId" to proposalId,
                 "proposalName" to proposalName
             )
-            db.collection(proposalCollection).document()
+            db.collection(proposalCollection).document("proposal_$dateTime")
                 .set(proposal)
                 .addOnSuccessListener {
                     Log.d(TAG, "DocumentSnapshot successfully written!")
@@ -139,22 +137,31 @@ class FireStore {
     @RequiresApi(Build.VERSION_CODES.O)
     fun getProposalData(groupId: String, callback: (ArrayList<Proposal>) -> Unit) {
         var proposalArrayList = ArrayList<Proposal>()
-        db.collection(proposalCollection)
-            .whereEqualTo("groupId", "$groupId").addSnapshotListener { value, error ->
-                proposalArrayList.clear()
-                if (error != null) {
-                    Log.e("Firestore Error", error.message.toString())
-                    return@addSnapshotListener
-                }
-                for (dc: DocumentChange in value?.documentChanges!!) {
-                    //cerco e aggiungo i gruppi che contengono l'email dell'utente
-                    val currentDateTime = LocalDateTime.now()
-                    val currDocDate = LocalDateTime.parse(dc.document.get("dateTime").toString(), DateTimeFormatter.ISO_DATE_TIME)
-                    if (currDocDate.isAfter(currentDateTime) && !(dc.document.contains("user_${currentUserId()}")))
-                            proposalArrayList.add(dc.document.toObject(Proposal::class.java))
-                }
-                Log.e(TAG, proposalArrayList.toString())
-                callback(proposalArrayList)
+        db.collection(proposalCollection).whereEqualTo("groupId", "$groupId")
+            .addSnapshotListener { value, error ->
+            if (error != null) {
+                Log.e("Firestore Error", error.message.toString())
+                return@addSnapshotListener
+            }
+            for (dc: DocumentChange in value?.documentChanges!!) {
+                //cerco e aggiungo i gruppi che contengono l'email dell'utente
+                val currentDateTime = LocalDateTime.now()
+                val currDocDate = LocalDateTime.parse(dc.document.get("dateTime").toString(), DateTimeFormatter.ISO_DATE_TIME)
+
+                if (currDocDate.isAfter(currentDateTime))
+                    if (dc.type == DocumentChange.Type.ADDED && !(dc.document.contains("user_${currentUserId()}")))
+                        proposalArrayList.add(dc.document.toObject(Proposal::class.java))
+                    else if (dc.type == DocumentChange.Type.MODIFIED && dc.document.contains("user_${currentUserId()}")){
+                        Log.e(TAG, "DOCUMENT MODIFICIATO")
+                        Log.e(TAG, "Doc modificato ${dc.document.toObject(Proposal::class.java)}")
+                        //var b = proposalArrayList.remove(dc.document.toObject(Proposal::class.java))
+                        proposalArrayList.removeIf{ p ->
+                            p.proposalId == dc.document.get("proposalId").toString()
+                        }
+                    }
+            }
+            Log.e(TAG, proposalArrayList.toString())
+            callback(proposalArrayList)
         }
     }
 

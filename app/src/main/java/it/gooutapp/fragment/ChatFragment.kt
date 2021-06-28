@@ -4,6 +4,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.*
 import android.widget.EditText
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -44,7 +45,10 @@ class ChatFragment: Fragment() {
 
         btnSendMessage.setOnClickListener(){
             var msgText = editTextMessage.text.toString()
-            fs.addMessageToChat(msgText, proposalId)
+            if(msgText != "")
+                fs.addMessageToChat(msgText, proposalId)
+            else
+                Toast.makeText(root.context, R.string.message_empty_error, Toast.LENGTH_SHORT).show()
             editTextMessage.setText("")
         }
 

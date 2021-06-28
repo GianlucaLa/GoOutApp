@@ -179,6 +179,7 @@ class NewProposalFragment : Fragment(), DatePickerDialog.OnDateSetListener, Time
             fs.createProposalData(groupId, proposalName, dateTime, placeString) { result ->
                 if (result) {
                     activity?.findNavController(R.id.nav_host_fragment)?.navigateUp()
+                    Toast.makeText(root.context, R.string.successfulProposal, Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(root.context, R.string.failProposal, Toast.LENGTH_SHORT).show()
                 }
