@@ -3,6 +3,7 @@ package it.gooutapp.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
@@ -10,7 +11,7 @@ import it.gooutapp.R
 import it.gooutapp.firebase.FireStore
 import it.gooutapp.model.Proposal
 
-class HistoryAdapter(private val historyList : ArrayList<Proposal>) : RecyclerView.Adapter<HistoryAdapter.MyViewHolder>()  {
+class HistoryAdapter(private val historyList : ArrayList<Proposal>, val clickListenerHistory: ClickListenerHistory) : RecyclerView.Adapter<HistoryAdapter.MyViewHolder>()  {
     private val fs = FireStore()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -30,6 +31,9 @@ class HistoryAdapter(private val historyList : ArrayList<Proposal>) : RecyclerVi
         holder.dataProposta.text = "${history.dateTime.toString().substring(0,10)}"
         holder.oraProposta.text = "${history.dateTime.toString().substring(11)}"
         holder.organizzatoreProposta.text = "${history.organizator.toString()}"
+        holder.btnChat.setOnClickListener {
+            clickListenerHistory.onButtonClick(historyList[position])
+        }
         fs.getUserProposalState(history.proposalId.toString()) { proposalState ->
             if(proposalState != "") {
                 if (proposalState == "accepted") {
@@ -65,5 +69,10 @@ class HistoryAdapter(private val historyList : ArrayList<Proposal>) : RecyclerVi
         val labelTime: TextView = itemView.findViewById(R.id.textViewHOra)
         val labelOrganizator: TextView = itemView.findViewById(R.id.textViewHOrganizator)
         val card: CardView = itemView.findViewById(R.id.historyCV)
+        val btnChat : Button = itemView.findViewById(R.id.entryChatHistory)
+    }
+
+    interface ClickListenerHistory {
+        fun onButtonClick(proposal: Proposal)
     }
 }

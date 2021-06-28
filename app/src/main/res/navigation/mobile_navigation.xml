@@ -31,7 +31,11 @@
         android:id="@+id/nav_history"
         android:name="it.gooutapp.fragment.HistoryFragment"
         android:label="@string/menu_history"
-        tools:layout="@layout/fragment_new_proposal" />
+        tools:layout="@layout/fragment_new_proposal" >
+        <action
+            android:id="@+id/action_nav_history_to_nav_chat"
+            app:destination="@id/nav_chat" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_newProposal"

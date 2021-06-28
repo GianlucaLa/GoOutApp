@@ -121,10 +121,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textViewRLuogoValue"
-                android:layout_marginStart="24dp"
-                android:layout_marginLeft="24dp"
-                android:layout_toEndOf="@+id/acceptProposal"
-                android:layout_toRightOf="@+id/acceptProposal"
+                android:layout_marginRight="30dp"
+                android:layout_alignParentRight="true"
                 android:drawableRight="@drawable/ic_deny"
                 android:drawableTint="@color/lighRed"
                 android:text="@string/refuses"/>
@@ -134,16 +132,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/textViewRLuogoValue"
+                android:layout_marginLeft="30dp"
+                android:layout_alignParentLeft="true"
+                android:layout_marginRight="40dp"
                 android:drawableRight="@drawable/ic_check"
                 android:drawableTint="@color/green"
                 android:text="@string/accept" />
 
             <Button
                 android:id="@+id/entryChat"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="30dp"
+                android:layout_marginLeft="30dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentLeft="true"
                 android:layout_below="@id/acceptProposal"
                 android:text="@string/enter_chat"
+
                 android:textAlignment="center"
                 android:gravity="center"
                 android:drawableRight="@drawable/ic_row_message"

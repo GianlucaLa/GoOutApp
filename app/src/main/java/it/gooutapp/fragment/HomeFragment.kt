@@ -3,10 +3,12 @@ package it.gooutapp.fragment
 import android.graphics.*
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
@@ -116,29 +118,30 @@ class HomeFragment : Fragment(), GroupAdapter.ClickListener {
         if (builder != null) {
             builder.setTitle(title)
             builder.setMessage(message)
-            builder.setPositiveButton(R.string.ok) {dialog, wich ->
+            builder.setPositiveButton(R.string.ok) { dialog, wich ->
                 var position = viewHolder.adapterPosition
                 groupAdapter.deleteItemRow(position)
-                //se utente amministratore
-                if(delete) {
-                    fs.deleteGroupData(userGroupList[position].groupId.toString()){ result ->
-                        if (!result) Log.e(TAG, "error during delete of document")
+                val proposalId = arguments?.get("proposalId").toString()
+                    //se utente amministratore
+                    if (delete) {
+                        fs.deleteGroupData(userGroupList[position].groupId.toString(), proposalId) { result ->
+                            if (!result) Log.e(TAG, "error during delete of document")
+                        }
+                        //se utente non amministratore
+                    } else {
+                        fs.leaveGroup(userGroupList[position].groupId.toString()) { result ->
+                            if (!result) Log.e(TAG, "error during delete of document")
+                        }
                     }
-                //se utente non amministratore
-                }else{
-                    fs.leaveGroup(userGroupList[position].groupId.toString()){ result ->
-                        if (!result) Log.e(TAG, "error during delete of document")
-                    }
+                    userGroupList.removeAt(position)
+                    groupAdapter.notifyItemRemoved(position)
                 }
-                userGroupList.removeAt(position)
-                groupAdapter.notifyItemRemoved(position)
+                builder.setNegativeButton(R.string.cancel) { dialog, wich ->
+                    groupAdapter.notifyDataSetChanged()
+                }
+                builder.setCancelable(false);
+                builder.show()
             }
-            builder.setNegativeButton(R.string.cancel){dialog, wich ->
-                groupAdapter.notifyDataSetChanged()
-            }
-            builder.setCancelable(false);
-            builder.show()
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

@@ -2,21 +2,26 @@ package it.gooutapp.fragment
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import it.gooutapp.R
+import it.gooutapp.adapter.ChatAdapter
 import it.gooutapp.adapter.HistoryAdapter
 import it.gooutapp.firebase.FireStore
 import it.gooutapp.model.Proposal
 import kotlinx.android.synthetic.main.fragment_chat.view.*
 import java.util.*
 
-class HistoryFragment : Fragment() {
+class HistoryFragment : Fragment(), HistoryAdapter.ClickListenerHistory {
     private lateinit var recyclerView: RecyclerView
     private lateinit var historyList: ArrayList<Proposal>
     private lateinit var historyAdapter: HistoryAdapter
@@ -32,9 +37,18 @@ class HistoryFragment : Fragment() {
 
         fs.getUserHistoryProposalData { historyListData ->
             historyList = historyListData
-            historyAdapter = HistoryAdapter(historyList)
+            historyAdapter = HistoryAdapter(historyList,this)
             recyclerView.adapter = historyAdapter
         }
+
         return root
+    }
+
+    override fun onButtonClick(proposal: Proposal) {
+        val bundle = bundleOf(
+            "proposalId" to proposal.proposalId,
+            "proposalName" to proposal.proposalName
+        )
+        activity?.findNavController(R.id.nav_host_fragment)?.navigate(R.id.action_nav_history_to_nav_chat, bundle)
     }
 }

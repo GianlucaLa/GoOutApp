@@ -295,25 +295,34 @@ class FireStore {
         }
     }
 
-    fun deleteGroupData(groupId: String, callback: (Boolean) -> Unit) {
+    fun deleteGroupData(groupId: String, proposalId: String, callback: (Boolean) -> Unit) {
         //solo per ADMINISTRATORS
         getGroupDocumentId(groupId) { documentToDelete ->
             db.collection(groupCollection).document(documentToDelete)
                 .delete()
                 .addOnSuccessListener {
                     Log.d(TAG, "DocumentSnapshot successfully deleted!")
-                    callback(true)}
-                .addOnFailureListener {
-                        e -> Log.w(TAG, "Error deleting document", e)
-                    callback(false)}
+                    callback(true)
+                }
+                .addOnFailureListener { e ->
+                    Log.w(TAG, "Error deleting document", e)
+                    callback(false)
+                }
             db.collection(proposalCollection).document(documentToDelete).delete()
             db.collection(proposalCollection).whereEqualTo("groupId", "$groupId").get()
                 .addOnSuccessListener { proposalDocs ->
-                    for(dc in proposalDocs){
+                    for (dc in proposalDocs) {
                         db.collection(proposalCollection).document(dc.id).delete()
                     }
                 }
-        }
+            //TODO sistemare per eliminare anche la raccolta messages
+            db.collection(chatCollection).whereEqualTo("groupId", "$groupId").get()
+                .addOnSuccessListener { chatDocs ->
+                    for (dc in chatDocs) {
+                        db.collection(chatCollection).document(dc.id).delete()
+                    }
+                }
+                }
     }
 
     //OTHER METHODS
