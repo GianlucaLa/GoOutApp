@@ -59,7 +59,7 @@ class NewProposalFragment : Fragment(), DatePickerDialog.OnDateSetListener, Time
         placePickerEditText.addTextChangedListener {
             editTextPlaceView.isErrorEnabled = false
         }
-        placePickerEditText.setOnClickListener(){
+        placePickerEditText.setOnClickListener {
             startAutocompleteActivity()
         }
         dateEditText = root.editTextDate
@@ -96,7 +96,7 @@ class NewProposalFragment : Fragment(), DatePickerDialog.OnDateSetListener, Time
             editTextDate.isEnabled = false;
             getDateCalendar()
             var dateDialog = DatePickerDialog( dateEditText.context, this , year,  month, day)
-            dateDialog.setOnCancelListener(){
+            dateDialog.setOnCancelListener {
                 editTextDate.isEnabled = true;
             }
             dateDialog.datePicker.minDate = System.currentTimeMillis() - 1000
@@ -110,7 +110,7 @@ class NewProposalFragment : Fragment(), DatePickerDialog.OnDateSetListener, Time
                 editTextHour.isEnabled = false;
                 getTimeCalendar()
                 var timeDialog = TimePickerDialog(dateEditText.context, this, hour, minute, true)
-                timeDialog.setOnCancelListener() {
+                timeDialog.setOnCancelListener {
                     editTextHour.isEnabled = true;
                 }
                 timeDialog.show()
@@ -160,7 +160,6 @@ class NewProposalFragment : Fragment(), DatePickerDialog.OnDateSetListener, Time
             var place = data?.let { Autocomplete.getPlaceFromIntent(it) }
             placePickerEditText.setText(place?.name)
             placeString = place?.name.toString()
-            //Toast.makeText(root.context, "Place: ${place?.name}, ${place?.id}", Toast.LENGTH_SHORT).show()
             Log.i("MAPS", "Place: ${place?.name}, ${place?.id}")
         } else if(resultCode == AutocompleteActivity.RESULT_ERROR) {
             var status = data?.let { Autocomplete.getStatusFromIntent(it) }

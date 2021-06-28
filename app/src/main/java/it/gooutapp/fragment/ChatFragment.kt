@@ -42,7 +42,7 @@ class ChatFragment: Fragment() {
             recyclerView.scrollToPosition(chatAdapter.itemCount -1);
         }
 
-        sendMessageButton.setOnClickListener{
+        sendMessageButton.setOnClickListener {
             val msgText = editTextMessage.text.toString()
             if(msgText != "")
                 fs.addMessageToChat(msgText, proposalId)

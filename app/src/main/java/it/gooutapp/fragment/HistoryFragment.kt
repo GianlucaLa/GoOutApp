@@ -30,7 +30,7 @@ class HistoryFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(root.context)
         historyList = arrayListOf()
 
-        fs.getUserHistoryProposalData() { historyListData ->
+        fs.getUserHistoryProposalData { historyListData ->
             historyList = historyListData
             historyAdapter = HistoryAdapter(historyList)
             recyclerView.adapter = historyAdapter

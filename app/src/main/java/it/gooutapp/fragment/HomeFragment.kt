@@ -45,7 +45,7 @@ class HomeFragment : Fragment(), GroupAdapter.ClickListener {
         userGroupList = arrayListOf()
         adminFlagList = arrayListOf()
 
-        fs.getUserGroupData() { groupList, adminFlag ->
+        fs.getUserGroupData { groupList, adminFlag ->
             userGroupList = groupList
             adminFlagList = adminFlag
             groupAdapter = GroupAdapter(userGroupList, adminFlagList,this)
