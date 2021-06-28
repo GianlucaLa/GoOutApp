@@ -14,6 +14,7 @@ import it.gooutapp.R
 import it.gooutapp.adapter.ProposalAdapter
 import it.gooutapp.firebase.FireStore
 import it.gooutapp.model.Proposal
+import kotlinx.android.synthetic.main.fragment_group.view.*
 import java.util.*
 
 class GroupFragment : Fragment(), ProposalAdapter.ClickListenerProposal {
@@ -28,7 +29,7 @@ class GroupFragment : Fragment(), ProposalAdapter.ClickListenerProposal {
         val root = inflater.inflate(R.layout.fragment_group, container, false)
         val groupId = arguments?.get("groupId").toString()
 
-        recyclerView = root.findViewById(R.id.proposalRecycleView)
+        recyclerView = root.proposalRecycleView
         recyclerView.layoutManager = LinearLayoutManager(root.context)
         proposalList = arrayListOf()
         fs.getProposalData(groupId) { proposalListData ->

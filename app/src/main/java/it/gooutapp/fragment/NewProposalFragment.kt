@@ -24,6 +24,7 @@ import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import it.gooutapp.R
 import it.gooutapp.firebase.FireStore
 import kotlinx.android.synthetic.main.fragment_new_proposal.*
+import kotlinx.android.synthetic.main.fragment_new_proposal.view.*
 import java.time.LocalDateTime
 import java.util.*
 
@@ -49,27 +50,27 @@ class NewProposalFragment : Fragment(), DatePickerDialog.OnDateSetListener, Time
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         root = inflater.inflate(R.layout.fragment_new_proposal, container, false)
-        proposalNameEditText = root.findViewById(R.id.editTextNameProposal)
+        proposalNameEditText = root.editTextNameProposal
         proposalNameEditText.addTextChangedListener {
             if(proposalNameEditText.text.length == 15){ Toast.makeText(root.context, R.string.max15chars, Toast.LENGTH_SHORT).show() }
             editTextNameProposalView.isErrorEnabled = false
         }
-        placePickerEditText = root.findViewById(R.id.editTextPlace)
+        placePickerEditText = root.editTextPlace
         placePickerEditText.addTextChangedListener {
             editTextPlaceView.isErrorEnabled = false
         }
         placePickerEditText.setOnClickListener(){
             startAutocompleteActivity()
         }
-        dateEditText = root.findViewById(R.id.editTextDate)
+        dateEditText = root.editTextDate
         dateEditText.addTextChangedListener {
             editTextDateView.isErrorEnabled = false
         }
-        timeEditText = root.findViewById(R.id.editTextHour)
+        timeEditText = root.editTextHour
         timeEditText.addTextChangedListener {
             editTextHourView.isErrorEnabled = false
         }
-        confirmProposalButton = root.findViewById(R.id.confirmProposal)
+        confirmProposalButton = root.confirmProposal
         confirmProposalButton.setOnClickListener{proposalConfirm()}
         groupId = arguments?.getString("groupId") as String
         pickDate()

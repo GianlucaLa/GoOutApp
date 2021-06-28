@@ -15,7 +15,6 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import it.gooutapp.R
@@ -23,6 +22,7 @@ import it.gooutapp.adapter.GroupAdapter
 import it.gooutapp.firebase.FireStore
 import it.gooutapp.model.Group
 import it.gooutapp.model.myDialog
+import kotlinx.android.synthetic.main.fragment_home.view.*
 import kotlinx.android.synthetic.main.group_row.view.*
 
 class HomeFragment : Fragment(), GroupAdapter.ClickListener {
@@ -39,8 +39,7 @@ class HomeFragment : Fragment(), GroupAdapter.ClickListener {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         root = inflater.inflate(R.layout.fragment_home, container, false)
-        var createGroupButton: FloatingActionButton = root.findViewById(R.id.fab)
-        recyclerView = root.findViewById(R.id.recycleView)
+        recyclerView = root.recycleView
         recyclerView.layoutManager = LinearLayoutManager(root.context)
         recyclerView.setHasFixedSize(true)
         userGroupList = arrayListOf()
@@ -94,7 +93,7 @@ class HomeFragment : Fragment(), GroupAdapter.ClickListener {
         }
 
         //Create Group Listener
-        createGroupButton.setOnClickListener { view ->
+        root.newGroupFab.setOnClickListener { view ->
             var title = resources.getString(R.string.create_group)
             var message = resources.getString(R.string.enter_group_name)
             myDialog(title, message, root.context, layoutInflater) { groupName ->
