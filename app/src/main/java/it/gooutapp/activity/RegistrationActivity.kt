@@ -52,11 +52,12 @@ class RegistrationActivity: AppCompatActivity() {
         finish()
     }
 
-    fun createUser(email: String, password: String) {
+    fun createUser(email: String, password: String, name: String, surname: String, nickname: String) {
         Firebase.auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
+                    fs.createUserData(name, surname, nickname, email)
                     Log.d(TAG, "createUserWithEmail:success")
                     Toast.makeText(applicationContext, getString(R.string.successful_registration), Toast.LENGTH_SHORT).show()
                     closeActivity()
@@ -93,8 +94,7 @@ class RegistrationActivity: AppCompatActivity() {
 
         //final check
         if (!(editTextNameView.isErrorEnabled || editTextSurnameView.isErrorEnabled || editTextNicknameView.isErrorEnabled || editTextEmailView.isErrorEnabled || editTextPasswordView.isErrorEnabled)) {
-            fs.createUserData(name, surname, nickname, email)
-            createUser(email, password)
+            createUser(email, password, name, surname, nickname)
         }
     }
 }

@@ -144,6 +144,7 @@
                     android:drawableRight="@drawable/ic_deny"
                     android:drawableTint="@color/lighRed"
                     android:text="@string/refuses" />
+
             </LinearLayout>
 
             <Button
@@ -154,7 +155,6 @@
                 android:layout_alignParentLeft="true"
                 android:layout_below="@id/layoutButton"
                 android:text="@string/enter_chat"
-
                 android:textAlignment="center"
                 android:gravity="center"
                 android:drawableRight="@drawable/ic_row_message"

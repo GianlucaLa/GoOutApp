@@ -27,6 +27,7 @@ class HistoryAdapter(private val historyList : ArrayList<Proposal>, val clickLis
         holder.labelDate.text = "${activityContext.resources.getString(R.string.date)}: "
         holder.labelTime.text = "${activityContext.resources.getString(R.string.time)}: "
         holder.labelOrganizator.text = "${activityContext.resources.getString(R.string.organizator)}: "
+        holder.labelState.text = "${activityContext.resources.getString(R.string.state)}: "
         holder.luogoProposta.text = "${history.place.toString()}"
         holder.dataProposta.text = "${history.dateTime.toString().substring(0,10)}"
         holder.oraProposta.text = "${history.dateTime.toString().substring(11)}"
@@ -63,11 +64,12 @@ class HistoryAdapter(private val historyList : ArrayList<Proposal>, val clickLis
         val dataProposta: TextView = itemView.findViewById(R.id.textViewHDataValue)
         val oraProposta: TextView = itemView.findViewById(R.id.textViewHOraValue)
         val organizzatoreProposta: TextView = itemView.findViewById(R.id.textViewHOrganizatorValue)
-        val statoProposta: TextView = itemView.findViewById(R.id.textViewHStatoProposta)
+        val statoProposta: TextView = itemView.findViewById(R.id.textViewHStatoValue)
         val labelPlace: TextView = itemView.findViewById(R.id.textViewHLuogo)
         val labelDate: TextView = itemView.findViewById(R.id.textViewHData)
         val labelTime: TextView = itemView.findViewById(R.id.textViewHOra)
         val labelOrganizator: TextView = itemView.findViewById(R.id.textViewHOrganizator)
+        val labelState: TextView = itemView.findViewById(R.id.textViewHState)
         val card: CardView = itemView.findViewById(R.id.historyCV)
         val btnChat : Button = itemView.findViewById(R.id.entryChatHistory)
     }

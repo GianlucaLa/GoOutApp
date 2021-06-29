@@ -81,4 +81,5 @@
     <string name="edittext_message_hint">Write a message</string>
     <string name="max20characters">Enter up to 20 characters</string>
     <string name="message_empty_error">The message text cannot be empty</string>
+    <string name="state">State</string>
 </resources>

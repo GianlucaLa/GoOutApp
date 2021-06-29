@@ -116,31 +116,36 @@
                 android:textSize="17sp"
                 android:text="TextView" />
 
-           <TextView
-               android:id="@+id/textViewHStatoProposta"
+            <TextView
+                android:id="@+id/textViewHState"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textViewHLuogo"
+                android:layout_marginBottom="8dp"
+                android:text="Stato: "
+                android:textColor="@color/defaultBlue"
+                android:textSize="17sp" />
+
+
+            <TextView
+               android:id="@+id/textViewHStatoValue"
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
                android:layout_below="@+id/textViewHLuogo"
-               android:text=""
+               android:layout_toRightOf="@id/textViewHState"
+               android:layout_toEndOf="@id/textViewHState"
                android:textAllCaps="true"
-               android:layout_alignParentEnd="true"
-               android:layout_alignParentRight="true"
-               android:layout_alignParentStart="true"
-               android:layout_alignParentLeft="true"
                android:gravity="center"
-               android:textSize="23sp" />
+               android:textSize="17sp" />
 
             <Button
                 android:id="@+id/entryChatHistory"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="30dp"
-                android:layout_marginLeft="30dp"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentLeft="true"
-                android:layout_below="@id/textViewHStatoProposta"
+                android:layout_below="@id/textViewHStatoValue"
                 android:text="@string/enter_chat"
-
                 android:textAlignment="center"
                 android:gravity="center"
                 android:drawableRight="@drawable/ic_row_message"
