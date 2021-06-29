@@ -12,7 +12,7 @@
     <string name="email_empty_error">L\'indirizzo email non può essere vuoto</string>
     <string name="error_invalid_email">L\'indirizzo email non è valido</string>
     <string name="password_empty_error">La password non può essere vuota</string>
-    <string name="error_invalid_password">La password deve contenere almeno 6 caratteri</string>
+    <string name="error_invalid_password">La password non è valida</string>
     <string name="menu_create_group">Crea nuovo gruppo</string>
     <string name="menu_new_proposal">Nuova proposta</string>
     <string name="menu_join_group">Partecipa ad un gruppo</string>
@@ -70,10 +70,19 @@
     <string name="time_not_valid">Non è possibile selezionare un ora nel passato</string>
     <string name="expired_proposal">Scaduta</string>
     <string name="enter_chat">Entra nella chat</string>
-    <string name="refuses">Rifiuta</string>
+    <string name="decline">Rifiuta</string>
     <string name="accept">Accetta</string>
     <string name="edittext_message_hint">Scrivi un messaggio</string>
     <string name="max20characters">Inserire massimo 20 caratteri</string>
     <string name="message_empty_error">Il testo del messaggio non può essere vuoto</string>
     <string name="state">Stato</string>
+    <string name="duplicate_mail">L\'indirizzo email inserito è già stato registrato</string>
+    <string name="duplicate_nickname">Il nickname inserito è già stato registrato</string>
+    <string name="proposal_accept_title_popup">Accetta Proposta</string>
+    <string name="proposal_decline_title_popup">Rifiuta Proposta</string>
+    <string name="proposal_accept_message_popup">Sei sicuro di voler accettare?</string>
+    <string name="proposal_decline_message_popup">Sei sicuro di voler rifiutare?</string>
+    <string name="group_invitation_code">Codice invito</string>
+    <string name="copy">Copia</string>
+    <string name="text_copied_to_clipboard">Testo copiato negli appunti</string>
 </resources>

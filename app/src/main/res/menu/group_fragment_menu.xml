@@ -9,4 +9,11 @@
         app:showAsAction="never"
         android:onClick="openNewProposal"/>
 
+    <item
+        android:id="@+id/group_code"
+        android:orderInCategory="100"
+        android:title="@string/group_invitation_code"
+        app:showAsAction="never"
+        android:onClick="popupInvitationCode"/>
+
 </menu>

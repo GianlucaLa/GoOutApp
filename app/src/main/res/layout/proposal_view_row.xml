@@ -143,7 +143,7 @@
                     android:layout_weight="0.5"
                     android:drawableRight="@drawable/ic_deny"
                     android:drawableTint="@color/lighRed"
-                    android:text="@string/refuses" />
+                    android:text="@string/decline" />
 
             </LinearLayout>
 

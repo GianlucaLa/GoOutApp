@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import it.gooutapp.R
 import it.gooutapp.firebase.FireStore
 import it.gooutapp.model.Proposal
+import it.gooutapp.model.MyDialog
 
 class ProposalAdapter(private val proposalList: ArrayList<Proposal>, val clickListenerProposal: ClickListenerProposal) : RecyclerView.Adapter<ProposalAdapter.MyViewHolder>() {
     private val fs = FireStore()
@@ -32,20 +33,32 @@ class ProposalAdapter(private val proposalList: ArrayList<Proposal>, val clickLi
         holder.oraProposta.text = "${proposal.dateTime.toString().substring(11)}"
         holder.organizzatoreProposta.text = "${proposal.organizator.toString()}"
         holder.btnAccept.setOnClickListener(){
-            fs.setProposalState(proposal.proposalId.toString(), "accepted"){ result->
-                if(result){
-                    Toast.makeText(activityContext, R.string.proposal_state_successful, Toast.LENGTH_SHORT).show()
-                }else{
-                    Toast.makeText(activityContext, R.string.proposal_state_fail, Toast.LENGTH_SHORT).show()
+            val title = activityContext.resources.getString(R.string.proposal_accept_title_popup)
+            val message = activityContext.resources.getString(R.string.proposal_accept_message_popup)
+            MyDialog(title, message, activityContext){ confirm ->
+                if(confirm){
+                    fs.setProposalState(proposal.proposalId.toString(), "accepted"){ result->
+                        if(result){
+                            Toast.makeText(activityContext, R.string.proposal_state_successful, Toast.LENGTH_SHORT).show()
+                        }else {
+                            Toast.makeText(activityContext, R.string.proposal_state_fail, Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 }
             }
         }
         holder.btnRefuse.setOnClickListener(){
-            fs.setProposalState(proposal.proposalId.toString(), "refused"){ result->
-                if(result){
-                    Toast.makeText(activityContext, R.string.proposal_state_successful, Toast.LENGTH_SHORT).show()
-                }else{
-                    Toast.makeText(activityContext, R.string.proposal_state_fail, Toast.LENGTH_SHORT).show()
+            val title = activityContext.resources.getString(R.string.proposal_decline_title_popup)
+            val message = activityContext.resources.getString(R.string.proposal_decline_message_popup)
+            MyDialog(title, message, activityContext){ confirm ->
+                if(confirm){
+                    fs.setProposalState(proposal.proposalId.toString(), "refused"){ result->
+                        if(result){
+                            Toast.makeText(activityContext, R.string.proposal_state_successful, Toast.LENGTH_SHORT).show()
+                        }else{
+                            Toast.makeText(activityContext, R.string.proposal_state_fail, Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 }
             }
         }

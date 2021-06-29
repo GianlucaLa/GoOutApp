@@ -9,7 +9,6 @@ import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -23,12 +22,12 @@ import it.gooutapp.R
 import it.gooutapp.adapter.GroupAdapter
 import it.gooutapp.firebase.FireStore
 import it.gooutapp.model.Group
-import it.gooutapp.model.myDialog
+import it.gooutapp.model.MyDialog
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import kotlinx.android.synthetic.main.group_row.view.*
 
 class HomeFragment : Fragment(), GroupAdapter.ClickListener {
-
+    private val TAG = "HOME_FRAGMENT"
     private lateinit var recyclerView: RecyclerView
     private lateinit var userGroupList: ArrayList<Group>
     private lateinit var adminFlagList: ArrayList<Boolean>
@@ -37,7 +36,6 @@ class HomeFragment : Fragment(), GroupAdapter.ClickListener {
     private val fs = FireStore()
     private val OFFSET_PX = 30
     private lateinit var root: View
-    private val TAG = "HOME_FRAGMENT"
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         root = inflater.inflate(R.layout.fragment_home, container, false)
@@ -63,11 +61,11 @@ class HomeFragment : Fragment(), GroupAdapter.ClickListener {
                     super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
                     //creo background, che in realtà corrisponde allo spazio libero lasciato dalla draw mentre slida a sinistra
                     if(dX > -viewHolder.itemView.width/3){
-                        var background = ColorDrawable(Color.GRAY)
+                        val background = ColorDrawable(Color.GRAY)
                         background.setBounds((viewHolder.itemView.right + dX).toInt(), viewHolder.itemView.top, viewHolder.itemView.right, viewHolder.itemView.bottom)
                         background.draw(c)
                     }else{
-                        var background = ColorDrawable(ContextCompat.getColor(root.context, R.color.lighRed))
+                        val background = ColorDrawable(ContextCompat.getColor(root.context, R.color.lighRed))
                         background.setBounds((viewHolder.itemView.right + dX).toInt(), viewHolder.itemView.top, viewHolder.itemView.right, viewHolder.itemView.bottom)
                         background.draw(c)
                     }
@@ -78,15 +76,30 @@ class HomeFragment : Fragment(), GroupAdapter.ClickListener {
                     icon?.draw(c)
                 }
 
+                @RequiresApi(Build.VERSION_CODES.O)
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                    if(viewHolder.itemView.textViewAdminFlag.text.toString() == "") {
-                        var title = resources.getString(R.string.leave_group)
-                        var message = resources.getString(R.string.leave_group_message)
-                        showDialog(viewHolder, title, message, false)
-                    } else {
-                        var title = resources.getString(R.string.delete_group)
-                        var message = resources.getString(R.string.delete_group_message)
-                        showDialog(viewHolder, title, message, true)
+                    val position = viewHolder.adapterPosition
+                    val userIsAdmin = viewHolder.itemView.textViewAdminFlag.text.toString() != ""
+                    var title = if(userIsAdmin) resources.getString(R.string.delete_group) else resources.getString(R.string.leave_group)
+                    var message = if(userIsAdmin) resources.getString(R.string.delete_group_message) else resources.getString(R.string.leave_group_message)
+                    MyDialog(title, message, root.context) { confirm ->
+                        if (confirm) {
+                            if (userIsAdmin) {
+                                fs.deleteGroupData(userGroupList[position].groupId.toString()) { result ->
+                                    groupAdapter.deleteItemRow(position)
+                                    if (!result) Log.e(TAG, "error during delete of document")
+                                }
+                            } else {
+                                fs.leaveGroup(userGroupList[position].groupId.toString()) { result ->
+                                    groupAdapter.deleteItemRow(position)
+                                    if (!result) Log.e(TAG, "error during update of document")
+                                }
+                            }
+                            userGroupList.removeAt(position)
+                            groupAdapter.notifyItemRemoved(position)
+                        } else {
+                            groupAdapter.notifyDataSetChanged()
+                        }
                     }
                 }
             }
@@ -98,7 +111,7 @@ class HomeFragment : Fragment(), GroupAdapter.ClickListener {
         root.newGroupFab.setOnClickListener { view ->
             var title = resources.getString(R.string.create_group)
             var message = resources.getString(R.string.enter_group_name)
-            myDialog(title, message, root.context, layoutInflater) { groupName ->
+            MyDialog(title, message, root.context, layoutInflater) { groupName ->
                 fs.createGroupData(groupName, user_email) { result ->
                     if(result){
                         Toast.makeText(root.context, R.string.group_creation_successful, Toast.LENGTH_SHORT).show()
@@ -110,38 +123,6 @@ class HomeFragment : Fragment(), GroupAdapter.ClickListener {
         }
         setHasOptionsMenu(true)
         return root
-    }
-
-    //popup per confermare cancellazione row
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun showDialog(viewHolder: RecyclerView.ViewHolder, title: String, message: String, delete: Boolean) {
-        val builder = view?.let { AlertDialog.Builder(it.context) }
-        if (builder != null) {
-            builder.setTitle(title)
-            builder.setMessage(message)
-            builder.setPositiveButton(R.string.ok) { dialog, wich ->
-                var position = viewHolder.adapterPosition
-                groupAdapter.deleteItemRow(position)
-                    //se utente amministratore
-                    if (delete) {
-                        fs.deleteGroupData(userGroupList[position].groupId.toString()) { result ->
-                            if (!result) Log.e(TAG, "error during delete of document")
-                        }
-                        //se utente non amministratore
-                    } else {
-                        fs.leaveGroup(userGroupList[position].groupId.toString()) { result ->
-                            if (!result) Log.e(TAG, "error during delete of document")
-                        }
-                    }
-                    userGroupList.removeAt(position)
-                    groupAdapter.notifyItemRemoved(position)
-                }
-                builder.setNegativeButton(R.string.cancel) { dialog, wich ->
-                    groupAdapter.notifyDataSetChanged()
-                }
-                builder.setCancelable(false);
-                builder.show()
-            }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

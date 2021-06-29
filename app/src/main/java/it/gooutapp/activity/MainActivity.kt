@@ -1,5 +1,6 @@
 package it.gooutapp.activity
 
+import android.content.ClipboardManager
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -21,7 +22,7 @@ import com.google.firebase.firestore.*
 import com.google.firebase.ktx.Firebase
 import it.gooutapp.R
 import it.gooutapp.firebase.FireStore
-import it.gooutapp.model.myDialog
+import it.gooutapp.model.MyDialog
 import kotlinx.android.synthetic.main.fragment_new_proposal.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.nav_header_main.*
@@ -96,7 +97,7 @@ class MainActivity : AppCompatActivity() {
     fun joinGroup(item: MenuItem) {
         var title = resources.getString(R.string.join_group)
         var message = resources.getString(R.string.enter_group_code)
-        myDialog(title, message, this, layoutInflater) { groupId ->
+        MyDialog(title, message, this, layoutInflater) { groupId ->
             fs.addUserToGroup(user_email, groupId) { result ->
                 when (result) {
                     "NM" -> {
@@ -128,5 +129,11 @@ class MainActivity : AppCompatActivity() {
     fun openNewProposal(item: MenuItem){
         val bundle = bundleOf("groupId" to codeCurrentGroup)
         findNavController(R.id.nav_host_fragment)?.navigate(R.id.action_nav_group_to_nav_newProposal, bundle)
+    }
+
+    fun popupInvitationCode(item: MenuItem){
+        val invitationCode = codeCurrentGroup
+        val title = resources.getString(R.string.group_invitation_code)
+        MyDialog(title, invitationCode, this)
     }
 }

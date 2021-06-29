@@ -44,10 +44,10 @@ class NewProposalFragment : Fragment(), DatePickerDialog.OnDateSetListener, Time
     private var year = 0
     private var hour = 0
     private var minute = 0
-
     private var time = ""
     private var date = ""
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         root = inflater.inflate(R.layout.fragment_new_proposal, container, false)
         proposalNameEditText = root.editTextNameProposal
@@ -144,7 +144,7 @@ class NewProposalFragment : Fragment(), DatePickerDialog.OnDateSetListener, Time
         }
     }
 
-    fun startAutocompleteActivity() {
+    private fun startAutocompleteActivity() {
         placePickerEditText.isEnabled = false
         Places.initialize(root.context, resources.getString(R.string.places_api_key))
         val intent = Autocomplete.IntentBuilder(
@@ -168,7 +168,8 @@ class NewProposalFragment : Fragment(), DatePickerDialog.OnDateSetListener, Time
         placePickerEditText.isEnabled = true
     }
 
-    fun proposalConfirm(){
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun proposalConfirm(){
         var proposalName = proposalNameEditText.text.toString()
         if(proposalName.isEmpty()) editTextNameProposalView.error = resources.getString(R.string.name_empty_error)
         if(editTextPlace.text.toString() == "") editTextPlaceView.error = resources.getString(R.string.place_empty_error)

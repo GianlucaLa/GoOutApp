@@ -13,6 +13,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class FireStore {
+    private val TAG = "FIRE_STORE"
     private val db = FirebaseFirestore.getInstance()
     private val groupCollection = "groups"
     private val userCollection = "users"
@@ -20,7 +21,6 @@ class FireStore {
     private val chatCollection = "chats"
     private val messageSubCollection = "messages"
     private val source: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')   // per generazione randomica di character
-    private val TAG = "FIRE_STORE"
 
     //CREATE METHODS
     fun createUserData(name: String, surname: String, nickname: String, email: String) {
@@ -53,6 +53,7 @@ class FireStore {
                 callback(false) }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun createProposalData(groupId: String, proposalName: String, dateTime: String, place: String, callback: (Boolean) -> Unit){
         val proposalId: String = List(15) { source.random() }.joinToString("")
         currentUserNickname { currNickname ->
@@ -64,7 +65,7 @@ class FireStore {
                 "proposalId" to proposalId,
                 "proposalName" to proposalName
             )
-            db.collection(proposalCollection).document("proposal_$dateTime")
+            db.collection(proposalCollection).document("proposal_${LocalDateTime.now()}")
                 .set(proposal)
                 .addOnSuccessListener {
                     Log.d(TAG, "DocumentSnapshot successfully written!")
@@ -209,8 +210,8 @@ class FireStore {
 
     private fun getProposalDocumentId(proposalId: String, callback: (String) -> Unit) {
         db.collection(proposalCollection).whereEqualTo("proposalId", "$proposalId").get()
-            .addOnSuccessListener { foundproposalDocId ->
-                callback(foundproposalDocId.last().id)
+            .addOnSuccessListener { foundProposalDocId ->
+                callback(foundProposalDocId.last().id)
             }.addOnFailureListener { exception ->
                 Log.d(TAG, "get failed with ", exception)
             }
@@ -218,9 +219,8 @@ class FireStore {
 
     private fun getProposalId(groupId: String, callback: (String) -> Unit) {
         db.collection(proposalCollection).whereEqualTo("groupId", groupId).get()
-            .addOnSuccessListener { foundProposaliId ->
-                for (dc in foundProposaliId) {
-                    Log.e("CIAOOO1", "${dc.data["proposalId"]}")
+            .addOnSuccessListener { foundProposalId ->
+                for (dc in foundProposalId) {
                     callback(dc.data["proposalId"].toString())
                 }
             }
@@ -309,44 +309,52 @@ class FireStore {
     fun deleteGroupData(groupId: String, callback: (Boolean) -> Unit) {
         //solo per ADMINISTRATORS
         getGroupDocumentId(groupId) { documentToDelete ->
-            db.collection(groupCollection).document(documentToDelete)
-                .delete()
-                .addOnSuccessListener {
-                    Log.d(TAG, "DocumentSnapshot successfully deleted!")
-                    callback(true)
-                }
-                .addOnFailureListener { e ->
-                    Log.w(TAG, "Error deleting document", e)
-                    callback(false)
-                }
-            db.collection(proposalCollection).document(documentToDelete).delete()
+            //ELIMINO IL GRUPPO
+            db.collection(groupCollection).document(documentToDelete).delete()
+                .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully deleted!") }
+                .addOnFailureListener { e -> Log.w(TAG, "Error deleting document", e) }
+            //ELIMINO LE PROPOSTE
             db.collection(proposalCollection).whereEqualTo("groupId", "$groupId").get()
                 .addOnSuccessListener { proposalDocs ->
-                    for (dc in proposalDocs) {
+                    for (dc in proposalDocs)
                         db.collection(proposalCollection).document(dc.id).delete()
-                    }
                 }
             getProposalId(groupId) { proposalId ->
-                db.collection(chatCollection).document(proposalId).collection(messageSubCollection)
-                    .get()
+                db.collection(chatCollection).document(proposalId).collection(messageSubCollection).get()
                     .addOnSuccessListener { chatToDelete ->
                         for (dc in chatToDelete) {
                             db.collection(chatCollection).document(proposalId).collection(messageSubCollection).document(dc.id).delete()
-                            db.collection(chatCollection).document(proposalId).delete()
                         }
+                        db.collection(chatCollection).document(proposalId).delete()
                     }
             }
         }
     }
 
     //OTHER METHODS
+    fun checkForDuplicateUser(email: String, nickname: String, callback: (Boolean, Boolean) -> Unit){
+        var duplicateMail = false
+        var duplicateNick = false
+        db.collection(userCollection).get().addOnSuccessListener { collectionUser ->
+            for(dc in collectionUser){
+                if(dc.id == email)
+                    duplicateMail = true
+                if(dc.get("nickname") == nickname)
+                    duplicateNick = true
+            }
+            callback(duplicateMail, duplicateNick)
+        }.addOnFailureListener { exception ->
+            Log.d(TAG, "get failed with ", exception)
+        }
+    }
+
     private fun isAlreadyMemberOf(groupId: String, callback: (String, String) -> Unit) {
         //RETURN INFO: AM=already member, NM=not member, ER=group code not valid
         db.collection(groupCollection).whereEqualTo("groupId", "$groupId").get()
             .addOnSuccessListener { documents ->
                 if (documents.size() == 0) {
                     callback("ER", "")
-                } else if (documents.last().contains("user_${currentUserId()}")) {
+                } else if (documents.last().contains("user_${currentUserId()}") || documents.last().contains("admin_${currentUserId()}")) {
                     callback("AM", "")
                 } else {
                     callback("NM", documents.last().id)

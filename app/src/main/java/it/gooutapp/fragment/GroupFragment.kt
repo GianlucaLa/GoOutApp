@@ -46,7 +46,6 @@ class GroupFragment : Fragment(), ProposalAdapter.ClickListenerProposal {
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    //TODO aggiungere nel bundle quello che ci serve
     override fun onButtonClick(proposal: Proposal) {
         Log.e(TAG, proposal.proposalName.toString())
         val bundle = bundleOf(
