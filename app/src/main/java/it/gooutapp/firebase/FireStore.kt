@@ -288,6 +288,12 @@ class FireStore {
         }
     }
 
+    fun getCurrentUserNickname(callback: (String) -> Unit) {
+        currentUserNickname { nickname ->
+            callback(nickname)
+        }
+    }
+
     //DELETE DATA METHODS
     fun leaveGroup(groupId: String, callback: (Boolean) -> Unit) {
         getGroupDocumentId(groupId) { groupDoc ->

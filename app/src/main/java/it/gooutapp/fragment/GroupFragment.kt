@@ -4,8 +4,11 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.Button
 import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
+import androidx.core.view.isEmpty
+import androidx.core.view.size
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -35,7 +38,8 @@ class GroupFragment : Fragment(), ProposalAdapter.ClickListenerProposal {
         fs.getProposalData(groupId) { proposalListData ->
             proposalList = proposalListData
             proposalAdapter = ProposalAdapter(proposalList,this)
-            recyclerView.adapter = proposalAdapter
+                recyclerView.scrollToPosition(proposalAdapter.itemCount - 1)
+                recyclerView.adapter = proposalAdapter
         }
         setHasOptionsMenu(true)
         return root

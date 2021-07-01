@@ -6,6 +6,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.isInvisible
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import it.gooutapp.R
 import it.gooutapp.firebase.FireStore
@@ -23,6 +25,7 @@ class ProposalAdapter(private val proposalList: ArrayList<Proposal>, val clickLi
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         var activityContext = holder.itemView.context
         val proposal: Proposal = proposalList[position]
+        fs.getCurrentUserNickname { userNick ->
         holder.nomeProposta.text = proposal.proposalName
         holder.labelPlace.text = "${activityContext.resources.getString(R.string.place)}: "
         holder.labelDate.text = "${activityContext.resources.getString(R.string.date)}: "
@@ -32,6 +35,12 @@ class ProposalAdapter(private val proposalList: ArrayList<Proposal>, val clickLi
         holder.dataProposta.text = "${proposal.dateTime.toString().substring(0,10)}"
         holder.oraProposta.text = "${proposal.dateTime.toString().substring(11)}"
         holder.organizzatoreProposta.text = "${proposal.organizator.toString()}"
+        if (proposal.organizator != userNick) {
+          holder.btnModify.visibility = View.GONE
+        }
+        holder.btnModify.setOnClickListener {
+
+        }
         holder.btnAccept.setOnClickListener(){
             val title = activityContext.resources.getString(R.string.proposal_accept_title_popup)
             val message = activityContext.resources.getString(R.string.proposal_accept_message_popup)
@@ -65,6 +74,7 @@ class ProposalAdapter(private val proposalList: ArrayList<Proposal>, val clickLi
         holder.btnChat.setOnClickListener {
             clickListenerProposal.onButtonClick(proposalList[position])
         }
+        }
     }
 
     override fun getItemCount(): Int {
@@ -84,6 +94,7 @@ class ProposalAdapter(private val proposalList: ArrayList<Proposal>, val clickLi
         val btnAccept: Button = itemView.findViewById(R.id.acceptProposal)
         val btnRefuse: Button = itemView.findViewById(R.id.refuseProposal)
         val btnChat: Button = itemView.findViewById(R.id.entryChat)
+        val btnModify: Button = itemView.findViewById(R.id.modifyProposal)
     }
 
     interface ClickListenerProposal {
