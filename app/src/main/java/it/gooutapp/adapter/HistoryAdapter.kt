@@ -33,7 +33,7 @@ class HistoryAdapter(private val historyList : ArrayList<Proposal>, val clickLis
         holder.oraProposta.text = "${history.dateTime.toString().substring(11)}"
         holder.organizzatoreProposta.text = "${history.organizator.toString()}"
         holder.btnChat.setOnClickListener {
-            clickListenerHistory.onButtonClick(historyList[position])
+            clickListenerHistory.enterChatListener(historyList[position])
         }
         fs.getUserProposalState(history.proposalId.toString()) { proposalState ->
             if(proposalState != "") {
@@ -75,6 +75,6 @@ class HistoryAdapter(private val historyList : ArrayList<Proposal>, val clickLis
     }
 
     interface ClickListenerHistory {
-        fun onButtonClick(proposal: Proposal)
+        fun enterChatListener(proposal: Proposal)
     }
 }

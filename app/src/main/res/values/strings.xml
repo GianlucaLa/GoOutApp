@@ -53,8 +53,8 @@
     <string name="proposal_date">Click to choose the date</string>
     <string name="proposal_hour">Click to choose the time</string>
     <string name="places_api_key" translatable="false">AIzaSyBNPwGd6VZHLf7TToPGuI0ZmecATXvuWGY</string>
-    <string name="successfulProposal">The proposal was successfully created</string>
-    <string name="failProposal">An error occurred while creating the proposal</string>
+    <string name="successfulProposalCreation">The proposal was successfully created</string>
+    <string name="failProposalCreation">An error occurred while creating the proposal</string>
     <string name="place">Place</string>
     <string name="organizator">Organizator</string>
     <string name="time">Time</string>
@@ -91,4 +91,7 @@
     <string name="group_invitation_code">Invitation code</string>
     <string name="copy">Copy</string>
     <string name="text_copied_to_clipboard">Text copied into clipboard</string>
+    <string name="successfulProposalModified">The proposal was successfully modified</string>
+    <string name="failProposalModify">An error occured during the modify</string>
+    <string name="modifyBtnString">Modify</string>
 </resources>

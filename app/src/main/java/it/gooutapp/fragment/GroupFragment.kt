@@ -37,7 +37,7 @@ class GroupFragment : Fragment(), ProposalAdapter.ClickListenerProposal {
         proposalList = arrayListOf()
         fs.getProposalData(groupId) { proposalListData ->
             proposalList = proposalListData
-            proposalAdapter = ProposalAdapter(proposalList,this)
+            proposalAdapter = ProposalAdapter(proposalList, this)
                 recyclerView.scrollToPosition(proposalAdapter.itemCount - 1)
                 recyclerView.adapter = proposalAdapter
         }
@@ -50,12 +50,20 @@ class GroupFragment : Fragment(), ProposalAdapter.ClickListenerProposal {
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    override fun onButtonClick(proposal: Proposal) {
-        Log.e(TAG, proposal.proposalName.toString())
+    override fun enterChatListener(proposal: Proposal) {
         val bundle = bundleOf(
             "proposalId" to proposal.proposalId,
             "proposalName" to proposal.proposalName
         )
         activity?.findNavController(R.id.nav_host_fragment)?.navigate(R.id.action_nav_group_to_nav_chat, bundle)
+    }
+
+    override fun modifyProposalListener(proposal: Proposal) {
+        val bundle = bundleOf(
+            "proposalId" to proposal.proposalId,
+            "proposalName" to proposal.proposalName,
+            "place" to proposal.place
+        )
+        activity?.findNavController(R.id.nav_host_fragment)?.navigate(R.id.action_nav_group_to_nav_newProposal, bundle)
     }
 }

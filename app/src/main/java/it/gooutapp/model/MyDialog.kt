@@ -18,7 +18,7 @@ class MyDialog {
         with(builder) {
             setTitle(title)
             editText.addTextChangedListener {
-                if(editText.text.length == 15){
+                if(editText.text.length > 15){
                     Toast.makeText(context, R.string.max15chars, Toast.LENGTH_SHORT).show()
                 }
             }

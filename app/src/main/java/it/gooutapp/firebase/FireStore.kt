@@ -61,6 +61,7 @@ class FireStore {
                 "groupId" to groupId,
                 "dateTime" to dateTime,
                 "organizator" to currNickname,
+                "organizatorId" to currentUserId(),
                 "place" to place,
                 "proposalId" to proposalId,
                 "proposalName" to proposalName
@@ -288,12 +289,6 @@ class FireStore {
         }
     }
 
-    fun getCurrentUserNickname(callback: (String) -> Unit) {
-        currentUserNickname { nickname ->
-            callback(nickname)
-        }
-    }
-
     //DELETE DATA METHODS
     fun leaveGroup(groupId: String, callback: (Boolean) -> Unit) {
         getGroupDocumentId(groupId) { groupDoc ->
@@ -334,6 +329,27 @@ class FireStore {
                         db.collection(chatCollection).document(proposalId).delete()
                     }
             }
+        }
+    }
+
+    fun modifyProposalData(proposalId: String, proposalName: String, dateTime: String, place: String, callback: (Boolean) -> Unit){
+        db.collection(proposalCollection).whereEqualTo("proposalId", "$proposalId").get().addOnSuccessListener { documents ->
+            val docId = documents.last().id
+            val proposal = hashMapOf<String, Any>(
+                "dateTime" to dateTime,
+                "place" to place,
+                "proposalName" to proposalName
+            )
+            db.collection(proposalCollection).document(docId)
+                .update(proposal)
+                .addOnSuccessListener {
+                    Log.d(TAG, "DocumentSnapshot successfully written!")
+                    callback(true)
+                }
+                .addOnFailureListener { e ->
+                    Log.w(TAG, "Error writing document", e)
+                    callback(false)
+                }
         }
     }
 

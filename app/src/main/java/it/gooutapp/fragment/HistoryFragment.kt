@@ -44,7 +44,7 @@ class HistoryFragment : Fragment(), HistoryAdapter.ClickListenerHistory {
         return root
     }
 
-    override fun onButtonClick(proposal: Proposal) {
+    override fun enterChatListener(proposal: Proposal) {
         val bundle = bundleOf(
             "proposalId" to proposal.proposalId,
             "proposalName" to proposal.proposalName

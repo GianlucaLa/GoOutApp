@@ -30,6 +30,7 @@ import java.util.*
 
 class NewProposalFragment : Fragment(), DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     private lateinit var groupId: String
+    private lateinit var proposalId: String
     private var placeString = ""
     private val fs = FireStore()
     private lateinit var c: Calendar
@@ -50,6 +51,15 @@ class NewProposalFragment : Fragment(), DatePickerDialog.OnDateSetListener, Time
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         root = inflater.inflate(R.layout.fragment_new_proposal, container, false)
+
+        //se si apre per modificare la proposal
+        if(arguments?.get("groupId") == null){
+            proposalId = arguments?.get("proposalId").toString()
+            setProposalText()
+        }else {
+            groupId = arguments?.getString("groupId").toString()
+        }
+
         proposalNameEditText = root.editTextNameProposal
         proposalNameEditText.addTextChangedListener {
             if(proposalNameEditText.text.length == 15){ Toast.makeText(root.context, R.string.max15chars, Toast.LENGTH_SHORT).show() }
@@ -72,7 +82,7 @@ class NewProposalFragment : Fragment(), DatePickerDialog.OnDateSetListener, Time
         }
         confirmProposalButton = root.confirmProposal
         confirmProposalButton.setOnClickListener{proposalConfirm()}
-        groupId = arguments?.getString("groupId") as String
+
         pickDate()
         pickTime()
         return root
@@ -177,14 +187,31 @@ class NewProposalFragment : Fragment(), DatePickerDialog.OnDateSetListener, Time
         if(editTextHour.text.toString() == "") editTextHourView.error = resources.getString(R.string.time_empty_error)
         if(!(editTextNameProposalView.isErrorEnabled || editTextPlaceView.isErrorEnabled || editTextDateView.isErrorEnabled || editTextHourView.isErrorEnabled)) {
             val dateTime = "$date"+"T$time"
-            fs.createProposalData(groupId, proposalName, dateTime, placeString) { result ->
-                if (result) {
-                    activity?.findNavController(R.id.nav_host_fragment)?.navigateUp()
-                    Toast.makeText(root.context, R.string.successfulProposal, Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(root.context, R.string.failProposal, Toast.LENGTH_SHORT).show()
+            if(arguments?.get("place") != null){
+                fs.modifyProposalData(proposalId, proposalName, dateTime, placeString) { result ->
+                    if (result) {
+                        activity?.findNavController(R.id.nav_host_fragment)?.navigateUp()
+                        Toast.makeText(root.context, R.string.successfulProposalModified, Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(root.context, R.string.failProposalModify, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }else{
+                fs.createProposalData(groupId, proposalName, dateTime, placeString) { result ->
+                    if (result) {
+                        activity?.findNavController(R.id.nav_host_fragment)?.navigateUp()
+                        Toast.makeText(root.context, R.string.successfulProposalCreation, Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(root.context, R.string.failProposalCreation, Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
+    }
+
+    private fun setProposalText(){
+        root.editTextNameProposal.setText(arguments?.get("proposalName").toString())
+        placeString = arguments?.get("place").toString()
+        root.editTextPlace.setText(placeString)
     }
 }

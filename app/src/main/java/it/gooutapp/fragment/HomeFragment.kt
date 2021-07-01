@@ -12,6 +12,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation.findNavController
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -84,21 +85,19 @@ class HomeFragment : Fragment(), GroupAdapter.ClickListener {
                     var message = if(userIsAdmin) resources.getString(R.string.delete_group_message) else resources.getString(R.string.leave_group_message)
                     MyDialog(title, message, root.context) { confirm ->
                         if (confirm) {
+                            var thisPosition = viewHolder.adapterPosition
+                            groupAdapter.deleteItemRow(thisPosition)
                             if (userIsAdmin) {
-                                fs.deleteGroupData(userGroupList[position].groupId.toString()) { result ->
-                                    groupAdapter.deleteItemRow(position)
+                                fs.deleteGroupData(userGroupList[thisPosition].groupId.toString()) { result ->
                                     if (!result) Log.e(TAG, "error during delete of document")
                                 }
                             } else {
-                                fs.leaveGroup(userGroupList[position].groupId.toString()) { result ->
-                                    groupAdapter.deleteItemRow(position)
+                                fs.leaveGroup(userGroupList[thisPosition].groupId.toString()) { result ->
                                     if (!result) Log.e(TAG, "error during update of document")
                                 }
                             }
                             userGroupList.removeAt(position)
                             groupAdapter.notifyItemRemoved(position)
-                        } else {
-                            groupAdapter.notifyDataSetChanged()
                         }
                     }
                 }
