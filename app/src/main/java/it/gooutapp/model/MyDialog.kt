@@ -68,6 +68,8 @@ class MyDialog {
                 myClipboard.setPrimaryClip(myClip)
                 Toast.makeText(context, R.string.text_copied_to_clipboard, Toast.LENGTH_SHORT).show();
             }
+            setNegativeButton(R.string.cancel) { dialog, wich ->
+            }
             setCancelable(false);
             show()
         }
