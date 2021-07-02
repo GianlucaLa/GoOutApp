@@ -20,7 +20,6 @@ class FireStore {
     private val proposalCollection = "proposals"
     private val chatCollection = "chats"
     private val messageSubCollection = "messages"
-    private val proposalUserSubCollection = "users"
     private val source: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')   // per generazione randomica di character
 
     //CREATE METHODS
@@ -179,9 +178,16 @@ class FireStore {
                     //cerco e aggiungo i gruppi che contengono l'email dell'utente
                     if (dc.type == DocumentChange.Type.ADDED
                         && (dc.document.toString().contains("user_${currentUserId()}")
-                                || LocalDateTime.now().isAfter(LocalDateTime.parse(dc.document.get("dateTime").toString()))
-                                || dc.document.contains("canceled")))
+                                || LocalDateTime.now()
+                            .isAfter(LocalDateTime.parse(dc.document.get("dateTime").toString()))
+                                || dc.document.contains("canceled"))
+                    ) {
                         proposalArrayList?.add(dc?.document?.toObject(Proposal::class.java))
+                } else if (dc.type == DocumentChange.Type.MODIFIED && !(dc.document.contains("user_${currentUserId()}"))){
+                        proposalArrayList.removeIf{ p ->
+                            p.proposalId == dc.document.get("proposalId").toString()
+                        }
+                    }
                 }
                 callback(proposalArrayList)
             }
@@ -358,7 +364,8 @@ class FireStore {
                 "proposalName" to proposalName,
                 "groupId" to groupId,
                 "organizator" to organizator,
-                "organizatorId" to organizatorId
+                "organizatorId" to organizatorId,
+                "proposalId" to proposalId
             )
             db.collection(proposalCollection).document(docId)
                 .delete()
