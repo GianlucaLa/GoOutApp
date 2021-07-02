@@ -38,8 +38,7 @@ class GroupFragment : Fragment(), ProposalAdapter.ClickListenerProposal {
         fs.getProposalData(groupId) { proposalListData ->
             proposalList = proposalListData
             proposalAdapter = ProposalAdapter(proposalList, this)
-                recyclerView.scrollToPosition(proposalAdapter.itemCount - 1)
-                recyclerView.adapter = proposalAdapter
+            recyclerView.adapter = proposalAdapter
         }
         setHasOptionsMenu(true)
         return root
@@ -62,7 +61,12 @@ class GroupFragment : Fragment(), ProposalAdapter.ClickListenerProposal {
         val bundle = bundleOf(
             "proposalId" to proposal.proposalId,
             "proposalName" to proposal.proposalName,
-            "place" to proposal.place
+            "place" to proposal.place,
+            "dateTime" to proposal.dateTime,
+            "groupId" to proposal.groupId,
+            "organizator" to proposal.organizator,
+            "organizatorId" to proposal.organizatorId,
+            "modify" to true
         )
         activity?.findNavController(R.id.nav_host_fragment)?.navigate(R.id.action_nav_group_to_nav_newProposal, bundle)
     }

@@ -88,4 +88,7 @@
     <string name="successfulProposalModified">La proposta è stata modificata con successo</string>
     <string name="failProposalModify">Si è verificato un errore durante la modifica</string>
     <string name="modifyBtnString">Modifica</string>
+    <string name="cancel_event">Annulla l\'evento</string>
+    <string name="cancel_event_message">"Sei sicuro di voler annullare l'evento? "</string>
+    <string name="canceled">Annullato</string>
 </resources>

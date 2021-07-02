@@ -39,10 +39,29 @@ class ProposalAdapter(private val proposalList: ArrayList<Proposal>, val clickLi
         holder.oraProposta.text = "${proposal.dateTime.toString().substring(11)}"
         holder.organizzatoreProposta.text = "${proposal.organizator.toString()}"
         if (proposal.organizatorId != user_auth_id) {
-          holder.btnModify.visibility = View.GONE
+            holder.btnModify.visibility = View.GONE
+            holder.btnCancelEvent.visibility = View.GONE
+        } else {
+            holder.btnAccept.visibility = View.GONE
+            holder.btnRefuse.visibility = View.GONE
         }
         holder.btnModify.setOnClickListener {
             clickListenerProposal.modifyProposalListener(proposalList[position])
+        }
+        holder.btnCancelEvent.setOnClickListener(){
+            val title = activityContext.resources.getString(R.string.cancel_event)
+            val message = activityContext.resources.getString(R.string.cancel_event_message)
+            MyDialog(title, message, activityContext){ confirm ->
+                if(confirm){
+                    fs.cancelProposal(proposal.proposalId.toString()){ result->
+                        if(result){
+                            Toast.makeText(activityContext, R.string.proposal_state_successful, Toast.LENGTH_SHORT).show()
+                        }else {
+                            Toast.makeText(activityContext, R.string.proposal_state_fail, Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            }
         }
         holder.btnAccept.setOnClickListener(){
             val title = activityContext.resources.getString(R.string.proposal_accept_title_popup)
@@ -97,6 +116,7 @@ class ProposalAdapter(private val proposalList: ArrayList<Proposal>, val clickLi
         val btnRefuse: Button = itemView.findViewById(R.id.refuseProposal)
         val btnChat: Button = itemView.findViewById(R.id.entryChat)
         val btnModify: Button = itemView.findViewById(R.id.modifyProposal)
+        val btnCancelEvent: Button = itemView.findViewById(R.id.cancelEvent)
     }
 
     interface ClickListenerProposal {

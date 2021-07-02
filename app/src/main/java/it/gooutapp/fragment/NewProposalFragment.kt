@@ -53,7 +53,7 @@ class NewProposalFragment : Fragment(), DatePickerDialog.OnDateSetListener, Time
         root = inflater.inflate(R.layout.fragment_new_proposal, container, false)
 
         //se si apre per modificare la proposal
-        if(arguments?.get("groupId") == null){
+        if(arguments?.get("modify") == true){
             proposalId = arguments?.get("proposalId").toString()
             setProposalText()
         }else {
@@ -188,7 +188,7 @@ class NewProposalFragment : Fragment(), DatePickerDialog.OnDateSetListener, Time
         if(!(editTextNameProposalView.isErrorEnabled || editTextPlaceView.isErrorEnabled || editTextDateView.isErrorEnabled || editTextHourView.isErrorEnabled)) {
             val dateTime = "$date"+"T$time"
             if(arguments?.get("place") != null){
-                fs.modifyProposalData(proposalId, proposalName, dateTime, placeString) { result ->
+                fs.modifyProposalData(proposalId, proposalName, dateTime, placeString, arguments?.get("groupId").toString(), arguments?.get("organizator").toString(), arguments?.get("organizatorId").toString()) { result ->
                     if (result) {
                         activity?.findNavController(R.id.nav_host_fragment)?.navigateUp()
                         Toast.makeText(root.context, R.string.successfulProposalModified, Toast.LENGTH_SHORT).show()

@@ -136,13 +136,26 @@
                 android:textSize="17sp"
                 android:text="TextView" />
 
+            <Button
+                android:id="@+id/entryChat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/textViewRLuogoValue"
+                android:text="@string/enter_chat"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:drawableRight="@drawable/ic_row_message"
+                android:drawableTint="@color/white" />
+
             <LinearLayout
                 android:id="@+id/layoutButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentLeft="true"
-                android:layout_below="@+id/textViewRLuogoValue"
+                android:layout_below="@+id/entryChat"
                 android:orientation="horizontal">
 
                 <Button
@@ -168,16 +181,16 @@
             </LinearLayout>
 
             <Button
-                android:id="@+id/entryChat"
+                android:id="@+id/cancelEvent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentLeft="true"
                 android:layout_below="@id/layoutButton"
-                android:text="@string/enter_chat"
+                android:text="@string/cancel_event"
                 android:textAlignment="center"
                 android:gravity="center"
-                android:drawableRight="@drawable/ic_row_message"
+                android:drawableRight="@drawable/ic_row_cancel_event"
                 android:drawableTint="@color/white" />
 
         </RelativeLayout>

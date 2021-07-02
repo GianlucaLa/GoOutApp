@@ -36,7 +36,12 @@ class HistoryAdapter(private val historyList : ArrayList<Proposal>, val clickLis
             clickListenerHistory.enterChatListener(historyList[position])
         }
         fs.getUserProposalState(history.proposalId.toString()) { proposalState ->
-            if(proposalState != "") {
+            if (history.canceled == "canceled") {
+                holder.statoProposta.setTextColor(activityContext.resources.getColor(R.color.quantum_orange600))
+                holder.statoProposta.text = activityContext.resources.getString(R.string.canceled)
+                holder.card.setCardBackgroundColor(activityContext.resources.getColor(R.color.quantum_orange100))
+                holder.btnChat.visibility = View.GONE
+            } else if(proposalState != "") {
                 if (proposalState == "accepted") {
                     holder.statoProposta.setTextColor(activityContext.resources.getColor(R.color.green))
                     holder.statoProposta.text = activityContext.resources.getString(R.string.proposal_accepted)
