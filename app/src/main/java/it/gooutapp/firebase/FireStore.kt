@@ -178,12 +178,10 @@ class FireStore {
                     //cerco e aggiungo i gruppi che contengono l'email dell'utente
                     if (dc.type == DocumentChange.Type.ADDED
                         && (dc.document.toString().contains("user_${currentUserId()}")
-                                || LocalDateTime.now()
-                            .isAfter(LocalDateTime.parse(dc.document.get("dateTime").toString()))
-                                || dc.document.contains("canceled"))
-                    ) {
+                                || LocalDateTime.now().isAfter(LocalDateTime.parse(dc.document.get("dateTime").toString()))
+                                || dc.document.contains("canceled"))) {
                         proposalArrayList?.add(dc?.document?.toObject(Proposal::class.java))
-                } else if (dc.type == DocumentChange.Type.MODIFIED && !(dc.document.contains("user_${currentUserId()}"))){
+                    } else if (dc.type == DocumentChange.Type.REMOVED){
                         proposalArrayList.removeIf{ p ->
                             p.proposalId == dc.document.get("proposalId").toString()
                         }
