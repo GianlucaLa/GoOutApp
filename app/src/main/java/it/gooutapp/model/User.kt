@@ -1,4 +1,10 @@
 package it.gooutapp.model
 
-class User {
-}
+import java.io.Serializable
+
+class User(
+    var name: String ?= null,
+    var surname: String ?= null,
+    var nickname: String ?= null,
+    var email: String ?= null,
+): Serializable

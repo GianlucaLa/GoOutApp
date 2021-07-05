@@ -16,10 +16,9 @@ class GroupAdapter(private val userGroupList : ArrayList<Group>, val adminFlagLi
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val user: Group = userGroupList[position]
-        holder.groupName.text = user.groupName
-        val circleTextGroup = user.groupName?.get(0)
-        holder.groupPosition.text = "15:46"
+        val groupList: Group = userGroupList[position]
+        holder.groupName.text = groupList.groupName
+        val circleTextGroup = groupList.groupName?.get(0)
         if(adminFlagList[position]) {
             holder.adminFlag.text = "Admin"
         }

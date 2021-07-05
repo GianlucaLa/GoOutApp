@@ -19,6 +19,7 @@ import it.gooutapp.adapter.HistoryAdapter
 import it.gooutapp.firebase.FireStore
 import it.gooutapp.model.Proposal
 import kotlinx.android.synthetic.main.fragment_chat.view.*
+import kotlinx.android.synthetic.main.fragment_history.*
 import java.util.*
 
 class HistoryFragment : Fragment(), HistoryAdapter.ClickListenerHistory {
@@ -39,6 +40,7 @@ class HistoryFragment : Fragment(), HistoryAdapter.ClickListenerHistory {
             historyList = historyListData
             historyAdapter = HistoryAdapter(historyList,this)
             recyclerView.adapter = historyAdapter
+            HistoryPB.visibility = View.INVISIBLE
         }
 
         return root

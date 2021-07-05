@@ -17,6 +17,7 @@ import it.gooutapp.R
 import it.gooutapp.adapter.ProposalAdapter
 import it.gooutapp.firebase.FireStore
 import it.gooutapp.model.Proposal
+import kotlinx.android.synthetic.main.fragment_group.*
 import kotlinx.android.synthetic.main.fragment_group.view.*
 import java.util.*
 
@@ -39,6 +40,7 @@ class GroupFragment : Fragment(), ProposalAdapter.ClickListenerProposal {
             proposalList = proposalListData
             proposalAdapter = ProposalAdapter(proposalList, this)
             recyclerView.adapter = proposalAdapter
+            GroupPB.visibility = View.INVISIBLE
         }
         setHasOptionsMenu(true)
         return root

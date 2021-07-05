@@ -20,7 +20,7 @@ import java.util.regex.Pattern
 class RegistrationActivity: AppCompatActivity() {
     private val TAG = "REGISTRATION_ACTIVITY"
     private val fs : FireStore = FireStore()
-    private val PASSWORD_PATTERN = Pattern.compile("^" + "(?=.*[@#$%^&+=])" + "(?=\\S+$)" + ".{6,}" + "$")
+    private val PASSWORD_PATTERN = Pattern.compile("^" + "(?=.*[@!?#$%^&+=])" + "(?=\\S+$)" + ".{6,}" + "$")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

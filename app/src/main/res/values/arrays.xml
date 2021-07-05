@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Reply Preference -->
+    <string-array name="reply_entries">
+        <item>@string/italian</item>
+        <item>@string/english</item>
+    </string-array>
+
+    <string-array name="reply_values">
+        <item>italian</item>
+        <item>english</item>
+    </string-array>
+</resources>

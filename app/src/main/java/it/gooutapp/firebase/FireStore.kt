@@ -9,6 +9,7 @@ import com.google.firebase.ktx.Firebase
 import it.gooutapp.model.Group
 import it.gooutapp.model.Message
 import it.gooutapp.model.Proposal
+import it.gooutapp.model.User
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -96,11 +97,12 @@ class FireStore {
     }
 
     //GET-SET METHODS
-    fun getUserData(email: String, callback: (DocumentSnapshot) -> Unit) {
+    fun getUserData(email: String, callback: (User) -> Unit) {
         db.collection(userCollection).document(email).get().addOnSuccessListener { document ->
             if (document.data != null) {
-                callback(document)
+                callback(document.toObject(User::class.java)!!)
             } else {
+                callback(User())
                 Log.d(TAG, "No such document")
             }
         }.addOnFailureListener { exception ->
@@ -167,28 +169,26 @@ class FireStore {
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun getUserHistoryProposalData(callback: (ArrayList<Proposal>) -> Unit){
-        currentUserNickname { currNickname ->
-            var proposalArrayList = ArrayList<Proposal>()
-            db.collection(proposalCollection).addSnapshotListener { value, error ->
-                if (error != null) {
-                    Log.e("Firestore Error", error.message.toString())
-                    return@addSnapshotListener
-                }
-                for (dc: DocumentChange in value?.documentChanges!!) {
-                    //cerco e aggiungo i gruppi che contengono l'email dell'utente
-                    if (dc.type == DocumentChange.Type.ADDED
-                        && (dc.document.toString().contains("user_${currentUserId()}")
-                                || LocalDateTime.now().isAfter(LocalDateTime.parse(dc.document.get("dateTime").toString()))
-                                || dc.document.contains("canceled"))) {
-                        proposalArrayList?.add(dc?.document?.toObject(Proposal::class.java))
-                    } else if (dc.type == DocumentChange.Type.REMOVED){
-                        proposalArrayList.removeIf{ p ->
-                            p.proposalId == dc.document.get("proposalId").toString()
-                        }
+        var proposalArrayList = ArrayList<Proposal>()
+        db.collection(proposalCollection).addSnapshotListener { value, error ->
+            if (error != null) {
+                Log.e("Firestore Error", error.message.toString())
+                return@addSnapshotListener
+            }
+            for (dc: DocumentChange in value?.documentChanges!!) {
+                //cerco e aggiungo i gruppi che contengono l'email dell'utente
+                if (dc.type == DocumentChange.Type.ADDED
+                    && (dc.document.toString().contains("user_${currentUserId()}")
+                            || LocalDateTime.now().isAfter(LocalDateTime.parse(dc.document.get("dateTime").toString()))
+                            || dc.document.contains("canceled"))) {
+                    proposalArrayList?.add(dc?.document?.toObject(Proposal::class.java))
+                } else if (dc.type == DocumentChange.Type.REMOVED){
+                    proposalArrayList.removeIf{ p ->
+                        p.proposalId == dc.document.get("proposalId").toString()
                     }
                 }
-                callback(proposalArrayList)
             }
+            callback(proposalArrayList)
         }
     }
 

@@ -91,4 +91,8 @@
     <string name="cancel_event">Annulla l\'evento</string>
     <string name="cancel_event_message">"Sei sicuro di voler annullare l'evento? "</string>
     <string name="canceled">Annullato</string>
+    <string name="language">Lingua</string>
+    <string name="italian">Italiano</string>
+    <string name="english">Inglese</string>
+    <string name="options">Opzioni</string>
 </resources>

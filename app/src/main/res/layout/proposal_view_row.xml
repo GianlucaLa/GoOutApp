@@ -160,7 +160,7 @@
 
                 <Button
                     android:id="@+id/acceptProposal"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:layout_marginRight="8dp"
@@ -170,7 +170,7 @@
 
                 <Button
                     android:id="@+id/refuseProposal"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
                     android:layout_weight="0.5"

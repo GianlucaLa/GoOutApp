@@ -12,7 +12,6 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.navigation.Navigation.findNavController
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,6 +23,7 @@ import it.gooutapp.adapter.GroupAdapter
 import it.gooutapp.firebase.FireStore
 import it.gooutapp.model.Group
 import it.gooutapp.model.MyDialog
+import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import kotlinx.android.synthetic.main.group_row.view.*
 
@@ -51,6 +51,7 @@ class HomeFragment : Fragment(), GroupAdapter.ClickListener {
             adminFlagList = adminFlag
             groupAdapter = GroupAdapter(userGroupList, adminFlagList,this)
             recyclerView.adapter = groupAdapter
+            HomePB.visibility = View.INVISIBLE
 
             //swipe a destra recycle view
             val itemSwipe = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
@@ -130,11 +131,14 @@ class HomeFragment : Fragment(), GroupAdapter.ClickListener {
     }
 
     override fun onItemClick(group: Group) {
-        val bundle = bundleOf(
-            "groupName" to group.groupName,
-            "groupId" to group.groupId
-        )
-        activity?.findNavController(R.id.nav_host_fragment)?.navigate(R.id.action_nav_home_to_nav_group, bundle)
+        fs.getUserData(user_email) { userData ->
+            val bundle = bundleOf(
+                "groupName" to group.groupName,
+                "groupId" to group.groupId,
+                "userData" to userData
+            )
+            activity?.findNavController(R.id.nav_host_fragment)?.navigate(R.id.action_nav_home_to_nav_group, bundle)
+        }
     }
 
     private fun getStartContainerRectangle(viewItem: View, iconWidth: Int, topMargin: Int, sideOffset: Int, dx: Float): Rect {

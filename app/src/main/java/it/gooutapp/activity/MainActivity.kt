@@ -1,10 +1,12 @@
 package it.gooutapp.activity
 
-import android.content.ClipboardManager
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -16,24 +18,32 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.PreferenceManager.getDefaultSharedPreferences
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.*
 import com.google.firebase.ktx.Firebase
 import it.gooutapp.R
 import it.gooutapp.firebase.FireStore
 import it.gooutapp.model.MyDialog
-import kotlinx.android.synthetic.main.fragment_new_proposal.*
+import it.gooutapp.model.User
+import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.fragment_new_proposal.*
 import kotlinx.android.synthetic.main.nav_header_main.*
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
-    private lateinit var userData: DocumentSnapshot
-    private val fs = FireStore()
-    private val user_email = Firebase.auth.currentUser?.email.toString()
     private lateinit var editTextPlacePicker: EditText
     private lateinit var codeCurrentGroup: String
+    private lateinit var prefs: SharedPreferences
+    private lateinit var prefsEditor: SharedPreferences.Editor
+    private var thisUserData = User()
+    private val fs = FireStore()
+    private val user_email = Firebase.auth.currentUser?.email.toString()
     private val TAG = "MAIN_ACTIVITY"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,6 +70,39 @@ class MainActivity : AppCompatActivity() {
                     R.id.nav_chat -> {
                         toolbar.title = "Chat: ${arguments?.getString("proposalName")}"
                     }
+                    R.id.nav_settings -> {
+                        supportFragmentManager
+                            .beginTransaction()
+                            .replace(R.id.settings, SettingsFragment())
+                            .commit()
+                        prefs = getDefaultSharedPreferences(this)
+                        prefsEditor = prefs.edit()
+                        prefsEditor.putString("name", thisUserData.name)
+                        prefsEditor.putString("surname", thisUserData.surname)
+                        prefsEditor.putString("nickname", thisUserData.nickname)
+                        prefsEditor.putString("email", thisUserData.email)
+                        prefsEditor.putString("password", "********")
+                        prefsEditor.apply()
+
+                        prefs.registerOnSharedPreferenceChangeListener { _, _ ->
+                            val user = Firebase.auth.currentUser
+                            var newPassword = prefs.getString("password",null).toString()
+
+                            user!!.updatePassword(newPassword)
+                                .addOnCompleteListener { task ->
+                                    Log.d(TAG, "User password updated prima dell'if")
+                                    if (task.isSuccessful) {
+                                        Log.d(TAG, "User password updated.")
+                                    }
+                                }
+                                .addOnFailureListener {
+                                    Log.d(TAG, "User password updated failed")
+                                }
+                                .addOnSuccessListener {
+                                    Log.d(TAG, "User password updated success")
+                                }
+                        }
+                    }
                 }
             }
             //di seguito il contenitore dei nav nel drawer
@@ -71,21 +114,17 @@ class MainActivity : AppCompatActivity() {
                     R.id.nav_history
                 ), drawerLayout
             )
+            fs.getUserData(user_email){ userData ->
+                thisUserData = userData
+                drawerTextViewEmail.text = user_email
+                drawerTextViewUser.text = "${userData.name} ${userData.surname}"
+            }
             setupActionBarWithNavController(navController, appBarConfiguration)
             navView.setupWithNavController(navController)
         }
     }
 
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        //setto dati utente in drawer laterale
-        fs.getUserData(user_email){ document ->
-            userData = document                                 //setto il documentSnapshot della classe con il valore returnato dal getUserData
-            drawerTextViewEmail.text = user_email               //setto email nella textview del DrawerMenu
-            var name = userData.get("name")
-            var surname = userData.get("surname")
-            drawerTextViewUser.text = "$name $surname"          //setto nome e cognome nella textview del DrawerMenu
-        }
         return true
     }
 
@@ -139,5 +178,11 @@ class MainActivity : AppCompatActivity() {
         val invitationCode = codeCurrentGroup
         val title = resources.getString(R.string.group_invitation_code)
         MyDialog(title, invitationCode, this)
+    }
+
+    class SettingsFragment : PreferenceFragmentCompat() {
+        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+            setPreferencesFromResource(R.xml.root_preferences, rootKey)
+        }
     }
 }

@@ -29,4 +29,15 @@
         app:srcCompat="@drawable/ic_menu_group_add"
         tools:ignore="VectorDrawableCompat" />
 
+    <ProgressBar
+        android:id="@+id/HomePB"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/recycleView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

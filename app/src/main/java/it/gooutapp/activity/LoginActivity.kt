@@ -62,6 +62,7 @@ class LoginActivity: AppCompatActivity() {
                     startActivity(Intent(this@LoginActivity, MainActivity::class.java))
                     finish()
                 } else {
+                    hideProgressBar()
                     Log.w(TAG, "signInWithEmail:failure", task.exception)
                     Toast.makeText(baseContext, R.string.login_fail, Toast.LENGTH_SHORT).show()
                 }
@@ -69,6 +70,7 @@ class LoginActivity: AppCompatActivity() {
     }
 
     fun credentialsCheck(view: View) {
+        showProgressBar()
         val email = editTextLEmail.text?.toString()
         val password = editTextLPassword.text?.toString()
         var isEmailValid = false
@@ -106,7 +108,30 @@ class LoginActivity: AppCompatActivity() {
 
         //final check
         if (isEmailValid && isPasswordValid) {
+            showProgressBar()
             login(email, password)
+        }else{
+            hideProgressBar()
         }
+    }
+
+    private fun showProgressBar() {
+        Lpb.visibility = View.VISIBLE
+        btnConfirmL.isEnabled = false
+        editTextLEmailView.isEnabled = false
+        editTextLPasswordView.isEnabled = false
+        GOALogo.setColorFilter(resources.getColor(R.color.quantum_grey400))
+        textViewRegister.setTextColor(resources.getColor(R.color.quantum_grey400))
+        drawerTextViewEmail.setTextColor(resources.getColor(R.color.quantum_grey400))
+    }
+
+    private fun hideProgressBar() {
+        Lpb.visibility = View.INVISIBLE
+        btnConfirmL.isEnabled = true
+        editTextLEmailView.isEnabled = true
+        editTextLPasswordView.isEnabled = true
+        GOALogo.colorFilter = null
+        textViewRegister.setTextColor(resources.getColor(R.color.viewBlue))
+        drawerTextViewEmail.setTextColor(resources.getColor(R.color.quantum_grey600))
     }
 }

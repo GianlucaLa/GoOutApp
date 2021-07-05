@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import it.gooutapp.R
 import it.gooutapp.adapter.ChatAdapter
 import it.gooutapp.firebase.FireStore
+import kotlinx.android.synthetic.main.fragment_chat.*
 import kotlinx.android.synthetic.main.fragment_chat.view.*
 import java.util.ArrayList
 
@@ -40,6 +41,7 @@ class ChatFragment: Fragment() {
             chatAdapter = ChatAdapter(root.context, messageList)
             recyclerView.adapter = chatAdapter
             recyclerView.scrollToPosition(chatAdapter.itemCount -1);
+            ChatPB.visibility = View.INVISIBLE
         }
 
         sendMessageButton.setOnClickListener {
