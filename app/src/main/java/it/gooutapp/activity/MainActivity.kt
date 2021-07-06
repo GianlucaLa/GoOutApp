@@ -95,7 +95,6 @@ class MainActivity : AppCompatActivity() {
                         prefsEditor.putString("email", user_email)
                         prefsEditor.apply()
 
-
                         prefs.registerOnSharedPreferenceChangeListener { _, _ ->
                             val user = Firebase.auth.currentUser
                             var newPassword = prefs.getString("password",null).toString()
@@ -120,7 +119,6 @@ class MainActivity : AppCompatActivity() {
             appBarConfiguration = AppBarConfiguration(
                 setOf(
                     R.id.nav_home,
-                    R.id.nav_userProfile,
                     R.id.nav_settings,
                     R.id.nav_history
                 ), drawerLayout

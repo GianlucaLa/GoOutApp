@@ -26,7 +26,6 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginBottom="8dp"
                 android:text="Nome Proposta"
-                android:textAllCaps="true"
                 android:textColor="@color/defaultBlue"
                 android:textSize="30sp"
                 android:textStyle="bold"
