@@ -68,6 +68,7 @@
                 android:id="@+id/textViewHOraValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
                 android:layout_toRightOf="@id/textViewHOra"
                 android:layout_toEndOf="@id/textViewHOra"
                 android:layout_below="@id/textViewHData"
@@ -75,10 +76,32 @@
                 android:text="TextView" />
 
             <TextView
-                android:id="@+id/textViewHOrganizator"
+                android:id="@+id/textViewHGroupName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textViewHOra"
+                android:layout_marginBottom="8dp"
+                android:text="Nome Gruppo: "
+                android:textSize="17sp"
+                android:textColor="@color/defaultBlue"
+                android:maxLines="1" />
+
+            <TextView
+                android:id="@+id/textViewHGroupNameValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_toRightOf="@id/textViewHGroupName"
+                android:layout_toEndOf="@id/textViewHGroupName"
+                android:layout_below="@id/textViewHOraValue"
+                android:textSize="17sp"
+                android:text="TextView" />
+
+            <TextView
+                android:id="@+id/textViewHOrganizator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textViewHGroupName"
                 android:layout_marginBottom="8dp"
                 android:text="Organizzatore: "
                 android:textSize="17sp"
@@ -91,7 +114,7 @@
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/textViewHOrganizator"
                 android:layout_toEndOf="@id/textViewHOrganizator"
-                android:layout_below="@id/textViewHOra"
+                android:layout_below="@id/textViewHGroupNameValue"
                 android:textSize="17sp"
                 android:text="TextView" />
 
@@ -125,7 +148,6 @@
                 android:text="Stato: "
                 android:textColor="@color/defaultBlue"
                 android:textSize="17sp" />
-
 
             <TextView
                android:id="@+id/textViewHStatoValue"

@@ -40,7 +40,7 @@ class HistoryFragment : Fragment(), HistoryAdapter.ClickListenerHistory {
             historyList = historyListData
             historyAdapter = HistoryAdapter(historyList,this)
             recyclerView.adapter = historyAdapter
-            HistoryPB.visibility = View.INVISIBLE
+            HistoryPB?.visibility = View.INVISIBLE
         }
 
         return root

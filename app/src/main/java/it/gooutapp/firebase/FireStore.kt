@@ -24,12 +24,13 @@ class FireStore {
     private val source: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')   // per generazione randomica di character
 
     //CREATE METHODS
-    fun createUserData(name: String, surname: String, nickname: String, email: String) {
+    fun createUserData(name: String, surname: String, nickname: String, email: String, password: String) {
         val user = hashMapOf(
             "name" to name,
             "surname" to surname,
             "nickname" to nickname,
-            "email" to email
+            "email" to email,
+            "password" to password
         )
         db.collection(userCollection).document(email)
             .set(user)
@@ -55,7 +56,7 @@ class FireStore {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun createProposalData(groupId: String, proposalName: String, dateTime: String, place: String, callback: (Boolean) -> Unit){
+    fun createProposalData(groupId: String, proposalName: String, dateTime: String, place: String, groupName: String, callback: (Boolean) -> Unit){
         val proposalId: String = List(15) { source.random() }.joinToString("")
         currentUserNickname { currNickname ->
             val proposal = hashMapOf(
@@ -64,6 +65,7 @@ class FireStore {
                 "organizator" to currNickname,
                 "organizatorId" to currentUserId(),
                 "place" to place,
+                "groupName" to groupName,
                 "proposalId" to proposalId,
                 "proposalName" to proposalName
             )
@@ -170,25 +172,32 @@ class FireStore {
     @RequiresApi(Build.VERSION_CODES.O)
     fun getUserHistoryProposalData(callback: (ArrayList<Proposal>) -> Unit){
         var proposalArrayList = ArrayList<Proposal>()
-        db.collection(proposalCollection).addSnapshotListener { value, error ->
-            if (error != null) {
-                Log.e("Firestore Error", error.message.toString())
-                return@addSnapshotListener
-            }
-            for (dc: DocumentChange in value?.documentChanges!!) {
-                //cerco e aggiungo i gruppi che contengono l'email dell'utente
-                if (dc.type == DocumentChange.Type.ADDED
-                    && (dc.document.toString().contains("user_${currentUserId()}")
-                            || LocalDateTime.now().isAfter(LocalDateTime.parse(dc.document.get("dateTime").toString()))
-                            || dc.document.contains("canceled"))) {
-                    proposalArrayList?.add(dc?.document?.toObject(Proposal::class.java))
-                } else if (dc.type == DocumentChange.Type.REMOVED){
-                    proposalArrayList.removeIf{ p ->
-                        p.proposalId == dc.document.get("proposalId").toString()
+        getUserGroupData { groupList, _ ->
+            db.collection(proposalCollection).addSnapshotListener { value, error ->
+                if (error != null) {
+                    Log.e("Firestore Error", error.message.toString())
+                    return@addSnapshotListener
+                }
+                for (dc: DocumentChange in value?.documentChanges!!) {
+                    var stringDoc = dc.document.toString()
+                    //cerco e aggiungo i gruppi che contengono l'email dell'utente
+                    for(group in groupList){
+                        if(dc.document.get("groupId") == group.groupId){
+                            if (dc.type == DocumentChange.Type.ADDED
+                                && (stringDoc.contains("user_${currentUserId()}")
+                                        || LocalDateTime.now().isAfter(LocalDateTime.parse(dc.document.get("dateTime").toString()))
+                                        || dc.document.contains("canceled"))) {
+                                proposalArrayList?.add(dc?.document?.toObject(Proposal::class.java))
+                            } else if (dc.type == DocumentChange.Type.REMOVED){
+                                proposalArrayList.removeIf{ p ->
+                                    p.proposalId == dc.document.get("proposalId").toString()
+                                }
+                            }
+                        }
                     }
                 }
+                callback(proposalArrayList)
             }
-            callback(proposalArrayList)
         }
     }
 
@@ -353,7 +362,7 @@ class FireStore {
         }
     }
 
-    fun modifyProposalData(proposalId: String, proposalName: String, dateTime: String, place: String, groupId: String, organizator: String, organizatorId: String, callback: (Boolean) -> Unit){
+    fun modifyProposalData(proposalId: String, proposalName: String, dateTime: String, place: String, groupId: String, organizator: String, organizatorId: String, groupName: String, callback: (Boolean) -> Unit){
         db.collection(proposalCollection).whereEqualTo("proposalId", "$proposalId").get().addOnSuccessListener { documents ->
             val docId = documents.last().id
             val proposal = hashMapOf<String, Any>(
@@ -361,6 +370,7 @@ class FireStore {
                 "place" to place,
                 "proposalName" to proposalName,
                 "groupId" to groupId,
+                "groupName" to groupName,
                 "organizator" to organizator,
                 "organizatorId" to organizatorId,
                 "proposalId" to proposalId

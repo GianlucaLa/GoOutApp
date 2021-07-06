@@ -3,6 +3,7 @@ package it.gooutapp.model
 class Proposal(
     var canceled: String ?= null,
     var groupId: String ?= null,
+    var groupName: String ?= null,
     var proposalId: String ?= null,
     var proposalName: String ?= null,
     var place: String ?= null,

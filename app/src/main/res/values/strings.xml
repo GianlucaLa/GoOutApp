@@ -101,4 +101,6 @@
     <string name="italian">Italian</string>
     <string name="english">English</string>
     <string name="options">Options</string>
+    <string name="menu_member" translatable="false">Member</string>
+    <string name="nomeGruppo">Group Name</string>
 </resources>

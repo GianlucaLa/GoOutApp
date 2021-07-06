@@ -30,6 +30,7 @@ import java.util.*
 
 class NewProposalFragment : Fragment(), DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     private lateinit var groupId: String
+    private lateinit var groupName: String
     private lateinit var proposalId: String
     private var placeString = ""
     private val fs = FireStore()
@@ -58,6 +59,7 @@ class NewProposalFragment : Fragment(), DatePickerDialog.OnDateSetListener, Time
             setProposalText()
         }else {
             groupId = arguments?.getString("groupId").toString()
+            groupName = arguments?.get("groupName").toString()
         }
 
         proposalNameEditText = root.editTextNameProposal
@@ -188,7 +190,7 @@ class NewProposalFragment : Fragment(), DatePickerDialog.OnDateSetListener, Time
         if(!(editTextNameProposalView.isErrorEnabled || editTextPlaceView.isErrorEnabled || editTextDateView.isErrorEnabled || editTextHourView.isErrorEnabled)) {
             val dateTime = "$date"+"T$time"
             if(arguments?.get("place") != null){
-                fs.modifyProposalData(proposalId, proposalName, dateTime, placeString, arguments?.get("groupId").toString(), arguments?.get("organizator").toString(), arguments?.get("organizatorId").toString()) { result ->
+                fs.modifyProposalData(proposalId, proposalName, dateTime, placeString, arguments?.get("groupId").toString(), arguments?.get("organizator").toString(), arguments?.get("organizatorId").toString(), arguments?.get("groupName").toString()) { result ->
                     if (result) {
                         activity?.findNavController(R.id.nav_host_fragment)?.navigateUp()
                         Toast.makeText(root.context, R.string.successfulProposalModified, Toast.LENGTH_SHORT).show()
@@ -197,7 +199,7 @@ class NewProposalFragment : Fragment(), DatePickerDialog.OnDateSetListener, Time
                     }
                 }
             }else{
-                fs.createProposalData(groupId, proposalName, dateTime, placeString) { result ->
+                fs.createProposalData(groupId, proposalName, dateTime, placeString, groupName) { result ->
                     if (result) {
                         activity?.findNavController(R.id.nav_host_fragment)?.navigateUp()
                         Toast.makeText(root.context, R.string.successfulProposalCreation, Toast.LENGTH_SHORT).show()

@@ -51,7 +51,7 @@ class HomeFragment : Fragment(), GroupAdapter.ClickListener {
             adminFlagList = adminFlag
             groupAdapter = GroupAdapter(userGroupList, adminFlagList,this)
             recyclerView.adapter = groupAdapter
-            HomePB.visibility = View.INVISIBLE
+            HomePB?.visibility = View.INVISIBLE
 
             //swipe a destra recycle view
             val itemSwipe = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {

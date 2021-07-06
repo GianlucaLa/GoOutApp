@@ -37,7 +37,6 @@
         android:gravity="center"
         android:hint="@string/proposal_place"
         android:inputType="textPersonName"
-        android:onClick="startAutocompleteActivity"
         app:endIconMode="clear_text"
         android:longClickable="true"
         app:layout_constraintBottom_toTopOf="@+id/editTextDateView"
@@ -48,7 +47,6 @@
         app:startIconDrawable="@drawable/ic_edittext_pin_map">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextPlace"
-            android:onClick="startAutocompleteActivity"
             android:focusableInTouchMode="false"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

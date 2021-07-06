@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -21,7 +20,6 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager.getDefaultSharedPreferences
 import com.google.android.material.navigation.NavigationView
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.*
 import com.google.firebase.ktx.Firebase
@@ -38,7 +36,8 @@ import kotlinx.android.synthetic.main.nav_header_main.*
 class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var editTextPlacePicker: EditText
-    private lateinit var codeCurrentGroup: String
+    private lateinit var idCurrentGroup: String
+    private lateinit var nameCurrentGroup: String
     private lateinit var prefs: SharedPreferences
     private lateinit var prefsEditor: SharedPreferences.Editor
     private var thisUserData = User()
@@ -65,7 +64,8 @@ class MainActivity : AppCompatActivity() {
                 when(destination.id) {
                     R.id.nav_group -> {
                         toolbar.title = arguments?.getString("groupName")
-                        codeCurrentGroup = arguments?.getString("groupId").toString()
+                        idCurrentGroup = arguments?.getString("groupId").toString()
+                        nameCurrentGroup = arguments?.getString("groupName").toString()
                     }
                     R.id.nav_chat -> {
                         toolbar.title = "Chat: ${arguments?.getString("proposalName")}"
@@ -170,12 +170,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun openNewProposal(item: MenuItem){
-        val bundle = bundleOf("groupId" to codeCurrentGroup)
+        val bundle = bundleOf(
+            "groupId" to idCurrentGroup,
+            "groupName" to nameCurrentGroup
+            )
         findNavController(R.id.nav_host_fragment)?.navigate(R.id.action_nav_group_to_nav_newProposal, bundle)
     }
 
     fun popupInvitationCode(item: MenuItem){
-        val invitationCode = codeCurrentGroup
+        val invitationCode = idCurrentGroup
         val title = resources.getString(R.string.group_invitation_code)
         MyDialog(title, invitationCode, this)
     }

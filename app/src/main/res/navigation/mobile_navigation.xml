@@ -25,6 +25,9 @@
         <action
             android:id="@+id/action_nav_group_to_nav_chat"
             app:destination="@id/nav_chat" />
+        <action
+            android:id="@+id/action_nav_group_to_nav_member"
+            app:destination="@id/nav_member" />
     </fragment>
 
     <fragment
@@ -42,6 +45,12 @@
         android:name="it.gooutapp.fragment.NewProposalFragment"
         android:label="@string/menu_new_proposal"
         tools:layout="@layout/fragment_new_proposal" />
+
+    <fragment
+        android:id="@+id/nav_member"
+        android:name="it.gooutapp.fragment.MemberFragment"
+        android:label="@string/menu_member"
+        tools:layout="@layout/fragment_member" />
 
     <fragment
         android:id="@+id/nav_chat"

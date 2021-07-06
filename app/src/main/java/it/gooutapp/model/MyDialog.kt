@@ -25,9 +25,11 @@ class MyDialog {
             editText.hint = message
             setPositiveButton(R.string.ok) { dialog, which ->
                 //rimuovo eventuali spazi vuoti inseriti dall'utente
-                val input = editText.text.toString().replace("\\s+".toRegex(), "")
+                val input = editText.text.toString()
                 if(input != ""){
-                    callback(input)
+                    //elimina gli spazi all'inizio e alla fine
+                    val cleanInput = editText.text.toString().trim()
+                    callback(cleanInput)
                 }else{
                     Toast.makeText(context, R.string.error_empty_value, android.widget.Toast.LENGTH_SHORT).show()
                 }
@@ -74,4 +76,7 @@ class MyDialog {
             show()
         }
     }
+
+    private fun String.trim(): String = (this as CharSequence).trim().toString()
+
 }

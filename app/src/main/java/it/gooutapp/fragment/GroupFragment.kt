@@ -1,11 +1,13 @@
 package it.gooutapp.fragment
 
+import android.app.ActionBar
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.Button
 import androidx.annotation.RequiresApi
+import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
 import androidx.core.view.isEmpty
 import androidx.core.view.size
@@ -40,7 +42,7 @@ class GroupFragment : Fragment(), ProposalAdapter.ClickListenerProposal {
             proposalList = proposalListData
             proposalAdapter = ProposalAdapter(proposalList, this)
             recyclerView.adapter = proposalAdapter
-            GroupPB.visibility = View.INVISIBLE
+            GroupPB?.visibility = View.INVISIBLE
         }
         setHasOptionsMenu(true)
         return root
@@ -66,6 +68,7 @@ class GroupFragment : Fragment(), ProposalAdapter.ClickListenerProposal {
             "place" to proposal.place,
             "dateTime" to proposal.dateTime,
             "groupId" to proposal.groupId,
+            "groupName" to proposal.groupName,
             "organizator" to proposal.organizator,
             "organizatorId" to proposal.organizatorId,
             "modify" to true

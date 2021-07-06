@@ -60,7 +60,7 @@ class RegistrationActivity: AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
-                    fs.createUserData(name, surname, nickname, email)
+                    fs.createUserData(name, surname, nickname, email, password)
                     Log.d(TAG, "createUserWithEmail:success")
                     Toast.makeText(applicationContext, getString(R.string.successful_registration), Toast.LENGTH_SHORT).show()
                     closeActivity()

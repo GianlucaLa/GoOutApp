@@ -41,7 +41,7 @@ class ChatFragment: Fragment() {
             chatAdapter = ChatAdapter(root.context, messageList)
             recyclerView.adapter = chatAdapter
             recyclerView.scrollToPosition(chatAdapter.itemCount -1);
-            ChatPB.visibility = View.INVISIBLE
+            ChatPB?.visibility = View.INVISIBLE
         }
 
         sendMessageButton.setOnClickListener {
