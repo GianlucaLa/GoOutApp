@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.Button
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
@@ -19,6 +20,8 @@ import it.gooutapp.R
 import it.gooutapp.adapter.ProposalAdapter
 import it.gooutapp.firebase.FireStore
 import it.gooutapp.model.Proposal
+import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.app_bar_main.view.*
 import kotlinx.android.synthetic.main.fragment_group.*
 import kotlinx.android.synthetic.main.fragment_group.view.*
 import java.util.*
@@ -47,6 +50,7 @@ class GroupFragment : Fragment(), ProposalAdapter.ClickListenerProposal {
         setHasOptionsMenu(true)
         return root
     }
+
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.group_fragment_menu, menu);

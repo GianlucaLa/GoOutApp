@@ -61,11 +61,26 @@ class MainActivity : AppCompatActivity() {
                 when(destination.id) {
                     R.id.nav_group -> {
                         toolbar.title = arguments?.getString("groupName")
+                        toolbar.setOnClickListener {
+                            val bundle = bundleOf("groupName" to nameCurrentGroup)
+                            findNavController(R.id.nav_host_fragment)?.navigate(R.id.action_nav_group_to_nav_member, bundle)
+                        }
                         idCurrentGroup = arguments?.getString("groupId").toString()
                         nameCurrentGroup = arguments?.getString("groupName").toString()
                     }
+                    R.id.nav_member -> {
+                        toolbar.isClickable = false
+                        toolbar.title = "${arguments?.getString("groupName").toString()}: ${resources.getString(R.string.menu_member)}"
+                    }
+                    R.id.nav_home -> {
+                        toolbar.isClickable = false
+                    }
+                    R.id.nav_newProposal -> {
+                        toolbar.isClickable = false
+                    }
                     R.id.nav_chat -> {
                         toolbar.title = "Chat: ${arguments?.getString("proposalName")}"
+                        toolbar.isClickable = false
                     }
                     R.id.nav_settings -> {
                         supportFragmentManager
@@ -79,6 +94,7 @@ class MainActivity : AppCompatActivity() {
                         prefsEditor.putString("nickname", thisUserData.nickname)
                         prefsEditor.putString("email", user_email)
                         prefsEditor.apply()
+
 
                         prefs.registerOnSharedPreferenceChangeListener { _, _ ->
                             val user = Firebase.auth.currentUser
