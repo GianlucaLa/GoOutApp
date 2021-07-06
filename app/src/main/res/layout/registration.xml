@@ -93,7 +93,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextSurnameView"
-        app:startIconDrawable="@drawable/ic_menu_user_profile">
+        app:startIconDrawable="@drawable/ic_account_circle">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextNickname"
             android:inputType="text"

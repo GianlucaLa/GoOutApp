@@ -3,17 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/new_proposal_menu"
-        android:orderInCategory="100"
-        android:title="@string/menu_new_proposal"
-        app:showAsAction="never"
-        android:onClick="openNewProposal"/>
-
-    <item
-        android:id="@+id/group_code"
-        android:orderInCategory="100"
-        android:title="@string/group_invitation_code"
-        app:showAsAction="never"
-        android:onClick="popupInvitationCode"/>
-
+        android:title=""
+        android:icon="@drawable/ic_baseline_more_vert_24"
+        app:showAsAction="always">
+        <menu>
+            <item
+                android:id="@+id/new_proposal_menu"
+                android:icon="@drawable/ic_calendar_plus"
+                android:title="@string/menu_new_proposal"
+                android:onClick="openNewProposal"/>
+            <item
+                android:id="@+id/group_code"
+                android:icon="@drawable/ic_link"
+                android:title="@string/group_invitation_code"
+                android:onClick="popupInvitationCode"/>
+        </menu>
+    </item>
 </menu>

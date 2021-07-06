@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -32,10 +31,8 @@ import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_new_proposal.*
 import kotlinx.android.synthetic.main.nav_header_main.*
 
-
 class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
-    private lateinit var editTextPlacePicker: EditText
     private lateinit var idCurrentGroup: String
     private lateinit var nameCurrentGroup: String
     private lateinit var prefs: SharedPreferences
@@ -80,14 +77,12 @@ class MainActivity : AppCompatActivity() {
                         prefsEditor.putString("name", thisUserData.name)
                         prefsEditor.putString("surname", thisUserData.surname)
                         prefsEditor.putString("nickname", thisUserData.nickname)
-                        prefsEditor.putString("email", thisUserData.email)
-                        prefsEditor.putString("password", "********")
+                        prefsEditor.putString("email", user_email)
                         prefsEditor.apply()
 
                         prefs.registerOnSharedPreferenceChangeListener { _, _ ->
                             val user = Firebase.auth.currentUser
                             var newPassword = prefs.getString("password",null).toString()
-
                             user!!.updatePassword(newPassword)
                                 .addOnCompleteListener { task ->
                                     Log.d(TAG, "User password updated prima dell'if")

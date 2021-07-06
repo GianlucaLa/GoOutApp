@@ -1,4 +1,5 @@
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+<PreferenceScreen
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory app:title="@string/profile">
@@ -7,33 +8,29 @@
             app:key="name"
             app:title="@string/name"
             app:selectable="false"
-            app:useSimpleSummaryProvider="true" />
+            app:useSimpleSummaryProvider="true"
+            android:icon="@drawable/ic_menu_user_profile" />
 
         <EditTextPreference
             app:key="surname"
             app:title="@string/surname"
             app:selectable="false"
-            app:useSimpleSummaryProvider="true"/>
-
-        <EditTextPreference
-            app:key="email"
-            app:title="@string/email_address"
-            android:selectable="false"
-            app:useSimpleSummaryProvider="true"/>
+            app:useSimpleSummaryProvider="true"
+            android:icon="@drawable/ic_menu_user_profile" />
 
         <EditTextPreference
             app:key="nickname"
             app:title="@string/Nickname"
-            app:useSimpleSummaryProvider="true" />
+            android:selectable="false"
+            app:useSimpleSummaryProvider="true"
+            android:icon="@drawable/ic_account_circle" />
 
-        <EditTextPreference
-            app:key="password"
-            app:singleLine="true"
-            app:title="@string/password"
-            app:enabled="true"
-            app:positiveButtonText="@string/confirm"
-            app:negativeButtonText="@string/cancel"
-            app:useSimpleSummaryProvider="true"/>
+        <ListPreference
+            app:key="email"
+            app:title="@string/email_address"
+            android:selectable="false"
+            app:useSimpleSummaryProvider="true"
+            android:icon="@drawable/ic_edittext_email" />
 
     </PreferenceCategory>
 
@@ -45,7 +42,8 @@
             app:entryValues="@array/reply_values"
             app:key="reply"
             app:title="@string/language"
-            app:useSimpleSummaryProvider="true" />
+            app:useSimpleSummaryProvider="true"
+            android:icon="@drawable/ic_language"/>
 
     </PreferenceCategory>
 
