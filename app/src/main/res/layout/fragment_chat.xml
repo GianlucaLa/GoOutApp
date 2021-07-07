@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/messagesRecycleView"
+        android:id="@+id/messagesRecyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="16dp"
@@ -39,7 +39,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/sendMessageFAB"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/messagesRecycleView"
+        app:layout_constraintTop_toBottomOf="@+id/messagesRecyclerView"
         app:startIconDrawable="@drawable/ic_row_message" >
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextChatMessage"
@@ -63,7 +63,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/editTextChatMessageView"
-        app:layout_constraintTop_toBottomOf="@+id/messagesRecycleView"
+        app:layout_constraintTop_toBottomOf="@+id/messagesRecyclerView"
         app:maxImageSize="29dp"
         app:tint="@android:color/white" />
 

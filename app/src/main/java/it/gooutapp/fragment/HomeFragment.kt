@@ -40,13 +40,13 @@ class HomeFragment : Fragment(), GroupAdapter.ClickListener {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         root = inflater.inflate(R.layout.fragment_home, container, false)
-        recyclerView = root.recycleView
+        recyclerView = root.recyclerView
         recyclerView.layoutManager = LinearLayoutManager(root.context)
         recyclerView.setHasFixedSize(true)
         userGroupList = arrayListOf()
         adminFlagList = arrayListOf()
 
-        fs.getUserGroupData { groupList, adminFlag ->
+        fs.getUserGroupsData { groupList, adminFlag ->
             userGroupList = groupList
             adminFlagList = adminFlag
             groupAdapter = GroupAdapter(userGroupList, adminFlagList,this)

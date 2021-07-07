@@ -33,7 +33,7 @@ class ChatFragment: Fragment() {
         //acquisisco l'id della proposal a cui è associata la chat
         proposalId = arguments?.get("proposalId").toString()
 
-        recyclerView = root.findViewById(R.id.messagesRecycleView)
+        recyclerView = root.findViewById(R.id.messagesRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(root.context)
         messageList = arrayListOf()
         fs.getChatData(proposalId) { chatArray ->

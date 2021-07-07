@@ -8,14 +8,15 @@
         app:showAsAction="always">
         <menu>
             <item
-                android:id="@+id/new_proposal_menu"
+                android:id="@+id/new_proposal_item"
                 android:icon="@drawable/ic_calendar_plus"
                 android:title="@string/menu_new_proposal"
                 android:onClick="openNewProposal"/>
             <item
-                android:id="@+id/group_code"
+                android:id="@+id/group_code_item"
                 android:icon="@drawable/ic_link"
                 android:title="@string/group_invitation_code"
+                android:visible="false"
                 android:onClick="popupInvitationCode"/>
         </menu>
     </item>

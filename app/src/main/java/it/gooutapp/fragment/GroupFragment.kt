@@ -1,33 +1,27 @@
 package it.gooutapp.fragment
 
-import android.app.ActionBar
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.*
-import android.widget.Button
-import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
-import androidx.core.view.isEmpty
-import androidx.core.view.size
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import it.gooutapp.R
 import it.gooutapp.adapter.ProposalAdapter
 import it.gooutapp.firebase.FireStore
 import it.gooutapp.model.Proposal
-import kotlinx.android.synthetic.main.app_bar_main.*
-import kotlinx.android.synthetic.main.app_bar_main.view.*
 import kotlinx.android.synthetic.main.fragment_group.*
 import kotlinx.android.synthetic.main.fragment_group.view.*
 import java.util.*
 
 class GroupFragment : Fragment(), ProposalAdapter.ClickListenerProposal {
     private val TAG = "GROUP_FRAGMENT"
+    private lateinit var groupId: String
     private lateinit var recyclerView: RecyclerView
     private lateinit var proposalList: ArrayList<Proposal>
     private lateinit var proposalAdapter: ProposalAdapter
@@ -36,9 +30,9 @@ class GroupFragment : Fragment(), ProposalAdapter.ClickListenerProposal {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_group, container, false)
-        val groupId = arguments?.get("groupId").toString()
+        groupId = arguments?.get("groupId").toString()
 
-        recyclerView = root.proposalRecycleView
+        recyclerView = root.proposalRecyclerView
         recyclerView.layoutManager = LinearLayoutManager(root.context)
         proposalList = arrayListOf()
         fs.getProposalData(groupId) { proposalListData ->
@@ -53,7 +47,13 @@ class GroupFragment : Fragment(), ProposalAdapter.ClickListenerProposal {
 
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.group_fragment_menu, menu);
+        inflater.inflate(R.menu.group_fragment_menu, menu)
+        fs.getGroupAdmin(groupId){  admin ->
+            if (admin == Firebase.auth.currentUser?.email.toString()) {
+                var groupCodeItem = menu.findItem(R.id.group_code_item)
+                groupCodeItem.isVisible = true
+            }
+        }
         super.onCreateOptionsMenu(menu, inflater)
     }
 

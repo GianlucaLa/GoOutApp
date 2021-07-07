@@ -2,11 +2,9 @@ package it.gooutapp.fragment
 
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -14,7 +12,6 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import it.gooutapp.R
-import it.gooutapp.adapter.ChatAdapter
 import it.gooutapp.adapter.HistoryAdapter
 import it.gooutapp.firebase.FireStore
 import it.gooutapp.model.Proposal
@@ -32,7 +29,7 @@ class HistoryFragment : Fragment(), HistoryAdapter.ClickListenerHistory {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_history, container, false)
 
-        recyclerView = root.messagesRecycleView
+        recyclerView = root.messagesRecyclerView
         recyclerView.layoutManager = LinearLayoutManager(root.context)
         historyList = arrayListOf()
 

@@ -97,4 +97,5 @@
     <string name="options">Opzioni</string>
     <string name="nomeGruppo">Nome Gruppo</string>
     <string name="change_password">Modifica Password</string>
+    <string name="remove">Rimuovi</string>
 </resources>

@@ -43,7 +43,7 @@ class FireStore {
         val group = hashMapOf(
             "groupId" to groupId,
             "groupName" to groupName,
-            "admin_${currentUserId()}" to email
+            "admin" to email
         )
         db.collection(groupCollection).document()
             .set(group)
@@ -112,8 +112,8 @@ class FireStore {
         }
     }
 
-    fun getUserGroupData(callback: (ArrayList<Group>, ArrayList<Boolean>) -> Unit) {
-        val userGroupList = ArrayList<Group>()
+    fun getUserGroupsData(callback: (ArrayList<Group>, ArrayList<Boolean>) -> Unit) {
+        val userGroupsList = ArrayList<Group>()
         val adminFlagList = ArrayList<Boolean>()
         db.collection(groupCollection).addSnapshotListener { value, error ->
             if (error != null) {
@@ -122,22 +122,54 @@ class FireStore {
             }
             for (dc: DocumentChange in value?.documentChanges!!) {
                 //cerco e aggiungo i gruppi che contengono l'email dell'utente
-                if (dc.document.contains("admin_${currentUserId()}")) {
+                if (dc.document.get("admin")=="${currentUserEmail()}") {
                     adminFlagList.add(true)
                     if (dc.type == DocumentChange.Type.ADDED)
-                        userGroupList.add(dc.document.toObject(Group::class.java))
+                        userGroupsList.add(dc.document.toObject(Group::class.java))
                     else if (dc.type == DocumentChange.Type.REMOVED)
-                        userGroupList.remove(dc.document.toObject(Group::class.java))
+                        userGroupsList.remove(dc.document.toObject(Group::class.java))
                 } else if (dc.document.contains("user_${currentUserId()}")) {
                     adminFlagList.add(false)
                     if (dc.type == DocumentChange.Type.ADDED)
-                        userGroupList.add(dc.document.toObject(Group::class.java))
+                        userGroupsList.add(dc.document.toObject(Group::class.java))
                     else if (dc.type == DocumentChange.Type.REMOVED)
-                        userGroupList.remove(dc.document.toObject(Group::class.java))
+                        userGroupsList.remove(dc.document.toObject(Group::class.java))
                 }
             }
-            callback(userGroupList, adminFlagList)
+            callback(userGroupsList, adminFlagList)
         }
+    }
+
+    fun getGroupMembers(groupId: String, callback: (ArrayList<User>) -> Unit){
+        var groupMembers = ArrayList<User>()
+        db.collection(groupCollection).whereEqualTo("groupId", "$groupId").get()
+            .addOnSuccessListener { documents ->
+                var groupDoc = documents.last()
+                db.collection(userCollection).addSnapshotListener{ value, error ->
+                    if (error != null) {
+                        Log.e("Firestore Error", error.message.toString())
+                        return@addSnapshotListener
+                    }
+                    for (dc: DocumentChange in value?.documentChanges!!) {
+                        if(groupDoc.toString().contains(dc.document.id)){
+                            groupMembers.add(dc.document.toObject(User::class.java))
+                        }
+                    }
+                    callback(groupMembers)
+                }
+
+            }
+            .addOnFailureListener {
+
+            }
+    }
+
+    fun getGroupAdmin(groupId: String, callback: (String) -> Unit){
+        db.collection(groupCollection).whereEqualTo("groupId", "$groupId").get()
+            .addOnSuccessListener { documents ->
+                var groupDoc = documents.last()
+                callback(groupDoc.get("admin").toString())
+            }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -154,7 +186,6 @@ class FireStore {
                     val currentDateTime = LocalDateTime.now()
                     val currDocDate = LocalDateTime.parse(dc.document.get("dateTime").toString(), DateTimeFormatter.ISO_DATE_TIME)
                     val canceled = dc.document.contains("canceled")
-                    Log.e("canceled", "$canceled")
                     if (currDocDate.isAfter(currentDateTime))
                         if (dc.type == DocumentChange.Type.ADDED && !(dc.document.contains("user_${currentUserId()}") || canceled))
                             proposalArrayList.add(dc.document.toObject(Proposal::class.java))
@@ -164,7 +195,6 @@ class FireStore {
                             }
                         }
                 }
-                Log.e(TAG, proposalArrayList.toString())
                 callback(proposalArrayList)
             }
     }
@@ -172,7 +202,7 @@ class FireStore {
     @RequiresApi(Build.VERSION_CODES.O)
     fun getUserHistoryProposalData(callback: (ArrayList<Proposal>) -> Unit){
         var proposalArrayList = ArrayList<Proposal>()
-        getUserGroupData { groupList, _ ->
+        getUserGroupsData { groupList, _ ->
             db.collection(proposalCollection).addSnapshotListener { value, error ->
                 if (error != null) {
                     Log.e("Firestore Error", error.message.toString())
@@ -417,7 +447,7 @@ class FireStore {
             .addOnSuccessListener { documents ->
                 if (documents.size() == 0) {
                     callback("ER", "")
-                } else if (documents.last().contains("user_${currentUserId()}") || documents.last().contains("admin_${currentUserId()}")) {
+                } else if (documents.last().contains("user_${currentUserId()}") || documents.last().get("admin")=="${currentUserEmail()}") {
                     callback("AM", "")
                 } else {
                     callback("NM", documents.last().id)

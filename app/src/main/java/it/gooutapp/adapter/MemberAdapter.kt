@@ -9,16 +9,20 @@ import androidx.recyclerview.widget.RecyclerView
 import it.gooutapp.R
 import it.gooutapp.model.Group
 import it.gooutapp.model.Proposal
+import it.gooutapp.model.User
 
-class MemberAdapter(private val memberList : ArrayList<Proposal>, val clickListenerMember: ClickListenerMember) : RecyclerView.Adapter<MemberAdapter.MyViewHolder>() {
+class MemberAdapter(private val memberList : ArrayList<User>, val clickListenerMember: ClickListenerMember) : RecyclerView.Adapter<MemberAdapter.MyViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.member_row, parent, false)
         return MyViewHolder(itemView)
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val memberList: Proposal = memberList[position]
-        //holder.memberName.text = memberList.
+        val users: User = memberList[position]
+        holder.memberName.text = users.nickname
+        holder.btnRemove.setOnClickListener {
+            clickListenerMember.removeMember(memberList[position])
+        }
     }
 
     override fun getItemCount(): Int {
@@ -26,11 +30,11 @@ class MemberAdapter(private val memberList : ArrayList<Proposal>, val clickListe
     }
 
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val memberName: TextView = itemView.findViewById(R.id.textViewNomeMembro)
-        val btnRemove: Button = itemView.findViewById(R.id.buttonRemoveMember)
+        val memberName: TextView = itemView.findViewById(R.id.textViewMemberName)
+        val btnRemove: Button = itemView.findViewById(R.id.btnRemoveMember)
     }
 
     interface ClickListenerMember {
-        //fare se serve clickListener
+        fun removeMember(user: User)
     }
 }

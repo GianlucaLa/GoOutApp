@@ -62,7 +62,10 @@ class MainActivity : AppCompatActivity() {
                     R.id.nav_group -> {
                         toolbar.title = arguments?.getString("groupName")
                         toolbar.setOnClickListener {
-                            val bundle = bundleOf("groupName" to nameCurrentGroup)
+                            val bundle = bundleOf(
+                                "groupName" to nameCurrentGroup,
+                                "groupId" to idCurrentGroup
+                            )
                             findNavController(R.id.nav_host_fragment)?.navigate(R.id.action_nav_group_to_nav_member, bundle)
                         }
                         idCurrentGroup = arguments?.getString("groupId").toString()
