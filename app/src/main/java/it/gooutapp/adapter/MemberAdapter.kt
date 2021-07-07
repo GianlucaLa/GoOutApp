@@ -6,12 +6,15 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import it.gooutapp.R
-import it.gooutapp.model.Group
-import it.gooutapp.model.Proposal
+import it.gooutapp.firebase.FireStore
 import it.gooutapp.model.User
 
-class MemberAdapter(private val memberList : ArrayList<User>, val clickListenerMember: ClickListenerMember) : RecyclerView.Adapter<MemberAdapter.MyViewHolder>() {
+class MemberAdapter(private val memberList : ArrayList<User>, private val admin: String, val clickListenerMember: ClickListenerMember) : RecyclerView.Adapter<MemberAdapter.MyViewHolder>() {
+    private val fs = FireStore()
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.member_row, parent, false)
         return MyViewHolder(itemView)
@@ -20,9 +23,14 @@ class MemberAdapter(private val memberList : ArrayList<User>, val clickListenerM
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val users: User = memberList[position]
         holder.memberName.text = users.nickname
-        holder.btnRemove.setOnClickListener {
-            clickListenerMember.removeMember(memberList[position])
-        }
+            if (admin != Firebase.auth.currentUser?.email.toString()) {
+                holder.btnRemove.visibility = View.GONE
+            } else {
+                holder.btnRemove.setOnClickListener {
+                    clickListenerMember.removeMember(memberList[position], position)
+                }
+            }
+
     }
 
     override fun getItemCount(): Int {
@@ -35,6 +43,6 @@ class MemberAdapter(private val memberList : ArrayList<User>, val clickListenerM
     }
 
     interface ClickListenerMember {
-        fun removeMember(user: User)
+        fun removeMember(user: User,position: Int)
     }
 }

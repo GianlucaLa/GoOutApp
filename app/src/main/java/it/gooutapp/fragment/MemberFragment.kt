@@ -1,10 +1,12 @@
 package it.gooutapp.fragment
 
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -12,6 +14,7 @@ import it.gooutapp.R
 import it.gooutapp.adapter.MemberAdapter
 import it.gooutapp.firebase.FireStore
 import it.gooutapp.model.User
+import kotlinx.android.synthetic.main.fragment_member.*
 import java.util.ArrayList
 
 class MemberFragment: Fragment(), MemberAdapter.ClickListenerMember {
@@ -31,18 +34,19 @@ class MemberFragment: Fragment(), MemberAdapter.ClickListenerMember {
         recyclerView.layoutManager = LinearLayoutManager(root.context)
         memberList = arrayListOf()
         fs.getGroupMembers(groupId) { memberArray ->
-            for ((positon, user) in memberArray.withIndex()) {
-                Log.e(TAG, memberArray[positon].nickname.toString())
+            fs.getGroupAdmin(groupId) { admin ->
+                memberList = memberArray
+                memberAdapter = MemberAdapter(memberList, admin, this)
+                recyclerView.adapter = memberAdapter
+                MemberPB?.visibility = View.INVISIBLE
             }
-            memberList = memberArray
-            memberAdapter = MemberAdapter(memberList, this)
-            recyclerView.adapter = memberAdapter
         }
-
         return root
     }
 
-    override fun removeMember(user: User) {
-        //remove firestore richiamo
+    override fun removeMember(user: User, position: Int) {
+        //TODO funzione su firestore da capire come fare
+        memberList.removeAt(position)
+        memberAdapter.notifyItemRemoved(position)
     }
 }
