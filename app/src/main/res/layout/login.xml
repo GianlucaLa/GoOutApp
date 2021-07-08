@@ -107,7 +107,6 @@
                 android:layout_gravity="center"
                 android:layout_weight="0.5"
                 android:gravity="right"
-                android:textColor="@color/quantum_grey600"
                 android:text="@string/text_sign_hint"
                 android:textSize="16sp" />
 
@@ -121,7 +120,7 @@
                 android:gravity="left"
                 android:onClick="openRegistration"
                 android:text="@string/sign_up"
-                android:textColor="@color/viewBlue"
+                android:textColor="@color/colorPrimary"
                 android:textSize="16sp" />
         </LinearLayout>
 

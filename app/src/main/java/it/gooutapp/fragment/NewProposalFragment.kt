@@ -21,6 +21,7 @@ import com.google.android.libraries.places.api.model.TypeFilter
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.AutocompleteActivity
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
+import com.google.android.material.transition.MaterialFade
 import it.gooutapp.R
 import it.gooutapp.firebase.FireStore
 import kotlinx.android.synthetic.main.fragment_new_proposal.*
@@ -61,7 +62,6 @@ class NewProposalFragment : Fragment(), DatePickerDialog.OnDateSetListener, Time
             groupId = arguments?.getString("groupId").toString()
             groupName = arguments?.get("groupName").toString()
         }
-
         proposalNameEditText = root.editTextNameProposal
         proposalNameEditText.addTextChangedListener {
             if(proposalNameEditText.text.length == 15){ Toast.makeText(root.context, R.string.max15chars, Toast.LENGTH_SHORT).show() }
@@ -124,6 +124,9 @@ class NewProposalFragment : Fragment(), DatePickerDialog.OnDateSetListener, Time
                 var timeDialog = TimePickerDialog(dateEditText.context, this, hour, minute, true)
                 timeDialog.setOnCancelListener {
                     editTextHour.isEnabled = true;
+                }
+                val materialFade = MaterialFade().apply {
+                    duration = 150L
                 }
                 timeDialog.show()
             } else {

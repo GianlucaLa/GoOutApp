@@ -18,6 +18,7 @@
                 android:id="@+id/tvMessage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxWidth="300dp"
                 android:padding="10dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginRight="5dp"

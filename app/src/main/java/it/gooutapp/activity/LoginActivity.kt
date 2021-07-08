@@ -8,6 +8,8 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import it.gooutapp.R
@@ -21,6 +23,7 @@ class LoginActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         // controllo se utente non è loggato (nullo) e aggiorno l'interfaccia di conseguenza
         val currentUser = Firebase.auth.currentUser
+        setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         if(currentUser != null) {
             startActivity(Intent(this@LoginActivity, MainActivity::class.java))
             finish()
@@ -131,7 +134,7 @@ class LoginActivity: AppCompatActivity() {
         editTextLEmailView.isEnabled = true
         editTextLPasswordView.isEnabled = true
         GOALogo.colorFilter = null
-        textViewRegister.setTextColor(resources.getColor(R.color.viewBlue))
+        textViewRegister.setTextColor(resources.getColor(R.color.colorPrimary))
         drawerTextViewEmail.setTextColor(resources.getColor(R.color.quantum_grey600))
     }
 }

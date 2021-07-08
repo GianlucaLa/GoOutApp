@@ -15,7 +15,7 @@
         android:layout_marginRight="16dp"
         android:fontFamily="@font/lilita_one"
         android:text="@string/sign_up"
-        android:textColor="@color/defaultBlue"
+        android:textColor="@color/colorPrimary"
         android:textSize="40sp"
         app:layout_constraintBottom_toTopOf="@+id/editTextNameView"
         app:layout_constraintEnd_toEndOf="parent"
