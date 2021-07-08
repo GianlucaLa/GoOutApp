@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
-    <background android:drawable="@drawable/goouticon_background"/>
+    <background android:drawable="@color/goouticon_background"/>
     <foreground android:drawable="@mipmap/goouticon_foreground"/>
 </adaptive-icon>
