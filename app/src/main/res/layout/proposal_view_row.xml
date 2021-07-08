@@ -28,7 +28,7 @@
                 android:maxLines="1"
                 android:text="Nome Proposta"
                 android:textColor="@color/colorSecondary"
-                android:textSize="28sp"
+                android:textSize="30sp"
                 android:textStyle="bold" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -55,7 +55,7 @@
                 android:layout_marginBottom="8dp"
                 android:text="Data: "
                 android:textSize="17sp"
-                android:textColor="@color/colorSecondaryDark"
+                android:textColor="@color/colorSecondary"
                 android:maxLines="1" />
 
             <TextView
@@ -76,7 +76,7 @@
                 android:layout_marginBottom="8dp"
                 android:text="Orario: "
                 android:textSize="17sp"
-                android:textColor="@color/colorSecondaryDark"
+                android:textColor="@color/colorSecondary"
                 android:maxLines="1" />
 
             <TextView
@@ -97,7 +97,7 @@
                 android:layout_marginBottom="8dp"
                 android:text="Organizzatore: "
                 android:textSize="17sp"
-                android:textColor="@color/colorSecondaryDark"
+                android:textColor="@color/colorSecondary"
                 android:maxLines="1" />
 
             <TextView
@@ -117,7 +117,7 @@
                 android:layout_below="@+id/textViewOrganizator"
                 android:layout_marginBottom="8dp"
                 android:text="Luogo: "
-                android:textColor="@color/colorSecondaryDark"
+                android:textColor="@color/colorSecondary"
                 android:textSize="17sp" />
 
             <TextView

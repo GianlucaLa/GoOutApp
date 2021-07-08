@@ -105,4 +105,7 @@
     <string name="nomeGruppo">Group Name</string>
     <string name="change_password">Change Password</string>
     <string name="remove">Remove</string>
+    <string name="failRemoveMember">An error occurred while removing the user</string>
+    <string name="successfulRemoveMember">The user was successfully removed</string>
+    <string name="you">You</string>
 </resources>

@@ -5,6 +5,7 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
+import android.os.SystemClock
 import android.util.Log
 import android.view.*
 import android.widget.Toast
@@ -33,6 +34,7 @@ class HomeFragment : Fragment(), GroupAdapter.ClickListener {
     private lateinit var userGroupList: ArrayList<Group>
     private lateinit var adminFlagList: ArrayList<Boolean>
     private lateinit var groupAdapter: GroupAdapter
+    private var mLastClickTime: Long = 0
     private var user_email = Firebase.auth.currentUser?.email.toString()
     private val fs = FireStore()
     private val OFFSET_PX = 30
@@ -99,6 +101,8 @@ class HomeFragment : Fragment(), GroupAdapter.ClickListener {
                             }
                             userGroupList.removeAt(position)
                             groupAdapter.notifyItemRemoved(position)
+                        }else{
+                            groupAdapter.notifyDataSetChanged()
                         }
                     }
                 }
@@ -137,6 +141,10 @@ class HomeFragment : Fragment(), GroupAdapter.ClickListener {
                 "groupId" to group.groupId,
                 "userData" to userData
             )
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000){
+                return@getUserData;
+            }
+            mLastClickTime = SystemClock.elapsedRealtime()
             activity?.findNavController(R.id.nav_host_fragment)?.navigate(R.id.action_nav_home_to_nav_group, bundle)
         }
     }

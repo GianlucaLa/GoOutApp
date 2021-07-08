@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity() {
                                 if (SystemClock.elapsedRealtime() - mLastClickTime < 1000){
                                     return@getUserData;
                                 }
-                                mLastClickTime = SystemClock.elapsedRealtime();
+                                mLastClickTime = SystemClock.elapsedRealtime()
                                 findNavController(R.id.nav_host_fragment).navigate(R.id.action_nav_group_to_nav_member, bundle)
                             }
                         }

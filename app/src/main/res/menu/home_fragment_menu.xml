@@ -12,7 +12,7 @@
                 android:title="@string/join_group"
                 android:onClick="joinGroup"
                 android:icon="@drawable/ic_account_arrow_left"
-                app:showAsAction="ifRoom"/>
+                app:showAsAction="ifRoom" />
         </menu>
     </item>
 </menu>

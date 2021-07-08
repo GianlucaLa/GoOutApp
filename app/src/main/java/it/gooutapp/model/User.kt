@@ -7,4 +7,5 @@ class User(
     var surname: String ?= null,
     var nickname: String ?= null,
     var email: String ?= null,
+    var authId: String ?= null
 ): Serializable

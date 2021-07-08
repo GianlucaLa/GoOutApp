@@ -24,13 +24,13 @@ class FireStore {
     private val source: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')   // per generazione randomica di character
 
     //CREATE METHODS
-    fun createUserData(name: String, surname: String, nickname: String, email: String, password: String) {
+    fun createUserData(name: String, surname: String, nickname: String, email: String) {
         val user = hashMapOf(
             "name" to name,
             "surname" to surname,
             "nickname" to nickname,
             "email" to email,
-            "password" to password
+            "authId" to "${currentUserId()}"
         )
         db.collection(userCollection).document(email)
             .set(user)
@@ -151,7 +151,7 @@ class FireStore {
                         return@addSnapshotListener
                     }
                     for (dc: DocumentChange in value?.documentChanges!!) {
-                        if(groupDoc.toString().contains(dc.document.id)){
+                        if (dc.type == DocumentChange.Type.ADDED && groupDoc.toString().contains(dc.document.id)) {
                             groupMembers.add(dc.document.toObject(User::class.java))
                         }
                     }
@@ -371,6 +371,25 @@ class FireStore {
                         db.collection(chatCollection).document(proposalId).delete()
                     }
             }
+        }
+    }
+
+    fun removeMemberGroup(groupId: String, authId: String, callback: (Boolean) -> Unit){
+        Log.e(TAG, "$groupId   $authId")
+        val updates = hashMapOf<String, Any>(
+            "user_$authId" to FieldValue.delete()
+        )
+        getGroupDocumentId(groupId) { groupDoc ->
+            Log.e(TAG, "$groupDoc")
+            db.collection(groupCollection).document(groupDoc).update(updates)
+                .addOnSuccessListener {
+                    Log.d(TAG, "DocumentSnapshot successfully deleted!")
+                    callback(true)
+                }
+                .addOnFailureListener { e ->
+                    Log.w(TAG, "Error deleting document", e)
+                    callback(false)
+                }
         }
     }
 

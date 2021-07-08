@@ -3,7 +3,7 @@
     <item android:state_pressed="true" >
         <shape>
             <corners android:radius="5dp" />
-            <solid android:color="@color/colorPrimaryVariant" />
+            <solid android:color="@color/toolbarFocus" />
         </shape>
     </item>
     <item >

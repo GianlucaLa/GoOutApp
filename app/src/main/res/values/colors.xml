@@ -7,6 +7,8 @@
     <color name="colorSecondary">#7472f2</color>
     <color name="colorSecondaryDark">#4c48cc</color>
 
+    <color name="toolbarFocus">#5b5f7a</color>
+
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="flatGrey">#494949</color>
