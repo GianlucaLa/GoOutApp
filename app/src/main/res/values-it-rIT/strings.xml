@@ -101,4 +101,5 @@
     <string name="failRemoveMember">Si è verificato un errore durante la rimozione dell\'utente</string>
     <string name="successfulRemoveMember">L\'utente è stato rimosso con successo</string>
     <string name="you">Tu</string>
+    <string name="members">Membri</string>
 </resources>

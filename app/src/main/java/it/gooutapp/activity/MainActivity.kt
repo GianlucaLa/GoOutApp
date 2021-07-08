@@ -81,7 +81,7 @@ class MainActivity : AppCompatActivity() {
                     }
                     R.id.nav_member -> {
                         toolbar.isClickable = false
-                        toolbar.title = "${arguments?.getString("groupName").toString()}: ${resources.getString(R.string.menu_member)}"
+                        toolbar.title = "${arguments?.getString("groupName").toString()}: ${resources.getString(R.string.members)}"
                     }
                     R.id.nav_home -> {
                         toolbar.isClickable = false
