@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="defaultBlue">#6699FF</color>
-    <color name="viewBlue">#3971e1</color>
-    <color name="barBlue">#305aae</color>
-    <color name="teal_200">#3971e1</color>
-    <color name="teal_700">#305aae</color>
+    <color name="colorPrimary">#7472f2</color>
+    <color name="colorPrimaryVariant">#2a2d3f</color>
+    <color name="colorPrimaryLight">#f7f7f7</color>
+
+    <color name="colorSecondary">#7472f2</color>
+    <color name="colorSecondaryDark">#4c48cc</color>
+
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="flatGrey">#494949</color>
     <color name="lightGrey">#e8e4e4</color>
-    <color name="editTextColor">#8cb0ed</color>
     <color name="trashGrey">#dce1e8</color>
     <color name="lighRed">#ffff4444</color>
     <color name="gold">#f1c40f</color>
