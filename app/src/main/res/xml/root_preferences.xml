@@ -25,7 +25,7 @@
             app:useSimpleSummaryProvider="true"
             android:icon="@drawable/ic_account_circle" />
 
-        <ListPreference
+        <EditTextPreference
             app:key="email"
             app:title="@string/email_address"
             android:selectable="false"

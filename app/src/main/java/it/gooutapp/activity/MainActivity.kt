@@ -3,6 +3,7 @@ package it.gooutapp.activity
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.SystemClock
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -36,6 +37,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var idCurrentGroup: String
     private lateinit var nameCurrentGroup: String
     private lateinit var prefs: SharedPreferences
+    private var mLastClickTime: Long = 0
     private lateinit var prefsEditor: SharedPreferences.Editor
     private var thisUserData = User()
     private val fs = FireStore()
@@ -67,7 +69,11 @@ class MainActivity : AppCompatActivity() {
                                     "groupName" to nameCurrentGroup,
                                     "groupId" to idCurrentGroup
                                 )
-                                findNavController(R.id.nav_host_fragment)?.navigate(R.id.action_nav_group_to_nav_member, bundle)
+                                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000){
+                                    return@getUserData;
+                                }
+                                mLastClickTime = SystemClock.elapsedRealtime();
+                                findNavController(R.id.nav_host_fragment).navigate(R.id.action_nav_group_to_nav_member, bundle)
                             }
                         }
                         idCurrentGroup = arguments?.getString("groupId").toString()
