@@ -19,7 +19,8 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@drawable/toolbar_drawable"
-            app:popupTheme="@style/Theme.NavigationDrawerProva.PopupOverlay" />
+            app:popupTheme="@style/Theme.NavigationDrawerProva.PopupOverlay"
+            android:theme="@style/App.ToolbarMenuItem"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 

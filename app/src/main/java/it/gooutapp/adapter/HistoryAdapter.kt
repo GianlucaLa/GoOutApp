@@ -39,24 +39,24 @@ class HistoryAdapter(private val historyList : ArrayList<Proposal>, val clickLis
         }
         fs.getUserProposalState(history.proposalId.toString()) { proposalState ->
             if (history.canceled == "canceled") {
-                holder.statoProposta.setTextColor(activityContext.resources.getColor(R.color.quantum_orange600))
                 holder.statoProposta.text = activityContext.resources.getString(R.string.canceled)
-                holder.card.setCardBackgroundColor(activityContext.resources.getColor(R.color.quantum_orange100))
+                holder.statoProposta.setTextColor(activityContext.resources.getColor(R.color.canceled))
+                holder.card.setCardBackgroundColor(activityContext.resources.getColor(R.color.canceledProposal))
                 holder.btnChat.visibility = View.GONE
             } else if(proposalState != "") {
                 if (proposalState == "accepted") {
-                    holder.statoProposta.setTextColor(activityContext.resources.getColor(R.color.green))
+                    holder.statoProposta.setTextColor(activityContext.resources.getColor(R.color.accepted))
                     holder.statoProposta.text = activityContext.resources.getString(R.string.proposal_accepted)
-                    holder.card.setCardBackgroundColor(activityContext.resources.getColor(R.color.greenProposal))
+                    holder.card.setCardBackgroundColor(activityContext.resources.getColor(R.color.acceptProposal))
                 } else {
-                    holder.statoProposta.setTextColor(activityContext.resources.getColor(R.color.lighRed))
+                    holder.statoProposta.setTextColor(activityContext.resources.getColor(R.color.refused))
                     holder.statoProposta.text = activityContext.resources.getString(R.string.proposal_refused)
-                    holder.card.setCardBackgroundColor(activityContext.resources.getColor(R.color.redProposal))
+                    holder.card.setCardBackgroundColor(activityContext.resources.getColor(R.color.refusedProposal))
                 }
             }else{
-                holder.statoProposta.setTextColor(activityContext.resources.getColor(R.color.quantum_grey600))
+                holder.statoProposta.setTextColor(activityContext.resources.getColor(R.color.flatGrey))
                 holder.statoProposta.text = activityContext.resources.getString(R.string.expired_proposal)
-                holder.card.setCardBackgroundColor(activityContext.resources.getColor(R.color.quantum_grey300))
+                holder.card.setCardBackgroundColor(activityContext.resources.getColor(R.color.expiredProposal))
             }
         }
     }

@@ -27,9 +27,9 @@ class MemberAdapter(private val memberList : ArrayList<User>, private val admin:
         Log.e(TAG, thisUser.email.toString())
         holder.memberName.text = thisUser.nickname
         if(admin == thisUser.email && thisUser.email == currentUserEmail)
-            holder.memberName.text = "${thisUser.nickname} (${activityContext.resources.getString(R.string.you)})"
+            holder.you.text = "${activityContext.resources.getString(R.string.you)}"
         else if(thisUser.email == currentUserEmail)
-            holder.memberName.text = "${thisUser.nickname} (${activityContext.resources.getString(R.string.you)})"
+            holder.you.text = "${activityContext.resources.getString(R.string.you)}"
         else
             holder.memberName.text = thisUser.nickname
         if (admin != Firebase.auth.currentUser?.email.toString() || admin == thisUser.email){
@@ -48,6 +48,7 @@ class MemberAdapter(private val memberList : ArrayList<User>, private val admin:
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val memberName: TextView = itemView.findViewById(R.id.textViewMemberName)
         val btnRemove: Button = itemView.findViewById(R.id.btnRemoveMember)
+        val you: TextView = itemView.findViewById(R.id.textViewYou)
     }
 
     interface ClickListenerMember {
