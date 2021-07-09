@@ -11,7 +11,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_alignParentTop="true"
-        android:background="@drawable/blue_circle_textview"
+        android:background="@drawable/group_circle_textview"
         android:gravity="center"
         android:text="A"
         android:textColor="@android:color/white"

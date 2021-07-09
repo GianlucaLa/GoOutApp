@@ -10,10 +10,10 @@
     <color name="toolbarFocus">#5b5f7a</color>
     <color name="acceptProposal">#8cbf94</color>
     <color name="accepted">#1c9428</color>
-    <color name="canceledProposal">#d9bd75</color>   e3e19d
-    <color name="canceled">#a37600</color>
-    <color name="refusedProposal">#d69b90</color>
-    <color name="refused">#b52f10</color>
+    <color name="canceledProposal">#c8b900</color>
+    <color name="canceled">#fbc02d</color>
+    <color name="refusedProposal">#ffa270</color>
+    <color name="refused">#ff7043</color>
     <color name="expiredProposal">#9e9e9e</color>
 
     <color name="black">#FF000000</color>

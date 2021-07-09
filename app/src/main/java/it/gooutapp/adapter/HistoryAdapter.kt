@@ -28,7 +28,6 @@ class HistoryAdapter(private val historyList : ArrayList<Proposal>, val clickLis
         holder.labelTime.text = "${activityContext.resources.getString(R.string.time)}: "
         holder.labelNomeGruppo.text ="${activityContext.resources.getString(R.string.groupName)}: "
         holder.labelOrganizator.text = "${activityContext.resources.getString(R.string.organizator)}: "
-        holder.labelState.text = "${activityContext.resources.getString(R.string.state)}: "
         holder.luogoProposta.text = "${history.place.toString()}"
         holder.dataProposta.text = "${history.dateTime.toString().substring(0,10)}"
         holder.oraProposta.text = "${history.dateTime.toString().substring(11)}"
@@ -40,23 +39,19 @@ class HistoryAdapter(private val historyList : ArrayList<Proposal>, val clickLis
         fs.getUserProposalState(history.proposalId.toString()) { proposalState ->
             if (history.canceled == "canceled") {
                 holder.statoProposta.text = activityContext.resources.getString(R.string.canceled)
-                holder.statoProposta.setTextColor(activityContext.resources.getColor(R.color.canceled))
-                holder.card.setCardBackgroundColor(activityContext.resources.getColor(R.color.canceledProposal))
+                holder.statoProposta.background = activityContext.resources.getDrawable(R.drawable.background_canceled)
                 holder.btnChat.visibility = View.GONE
             } else if(proposalState != "") {
                 if (proposalState == "accepted") {
-                    holder.statoProposta.setTextColor(activityContext.resources.getColor(R.color.accepted))
+                    holder.statoProposta.background = activityContext.resources.getDrawable(R.drawable.background_accepted)
                     holder.statoProposta.text = activityContext.resources.getString(R.string.proposal_accepted)
-                    holder.card.setCardBackgroundColor(activityContext.resources.getColor(R.color.acceptProposal))
                 } else {
-                    holder.statoProposta.setTextColor(activityContext.resources.getColor(R.color.refused))
+                    holder.statoProposta.background = activityContext.resources.getDrawable(R.drawable.background_refused)
                     holder.statoProposta.text = activityContext.resources.getString(R.string.proposal_refused)
-                    holder.card.setCardBackgroundColor(activityContext.resources.getColor(R.color.refusedProposal))
                 }
             }else{
-                holder.statoProposta.setTextColor(activityContext.resources.getColor(R.color.flatGrey))
+                holder.statoProposta.background = activityContext.resources.getDrawable(R.drawable.background_expired)
                 holder.statoProposta.text = activityContext.resources.getString(R.string.expired_proposal)
-                holder.card.setCardBackgroundColor(activityContext.resources.getColor(R.color.expiredProposal))
             }
         }
     }
@@ -76,7 +71,6 @@ class HistoryAdapter(private val historyList : ArrayList<Proposal>, val clickLis
         val labelDate: TextView = itemView.findViewById(R.id.textViewHData)
         val labelTime: TextView = itemView.findViewById(R.id.textViewHOra)
         val labelOrganizator: TextView = itemView.findViewById(R.id.textViewHOrganizator)
-        val labelState: TextView = itemView.findViewById(R.id.textViewHState)
         val card: CardView = itemView.findViewById(R.id.historyCV)
         val btnChat : Button = itemView.findViewById(R.id.entryChatHistory)
         val nomeGruppo: TextView = itemView.findViewById(R.id.textViewHGroupNameValue)

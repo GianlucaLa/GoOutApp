@@ -26,7 +26,8 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginBottom="8dp"
                 android:text="Nome Proposta"
-                android:textColor="@color/colorSecondaryDark"
+                android:paddingRight="5dp"
+                android:textColor="@color/colorPrimary"
                 android:textSize="30sp"
                 android:textStyle="bold"
                 android:maxLines="1" />
@@ -39,7 +40,7 @@
                 android:layout_marginBottom="8dp"
                 android:text="Data: "
                 android:textSize="17sp"
-                android:textColor="@color/colorSecondaryDark"
+                android:textColor="@color/colorPrimary"
                 android:maxLines="1" />
 
             <TextView
@@ -49,7 +50,6 @@
                 android:layout_toRightOf="@id/textViewHData"
                 android:layout_toEndOf="@id/textViewHData"
                 android:layout_below="@id/textViewHProposta"
-                android:textColor="@color/flatGrey"
                 android:textSize="17sp"
                 android:text="TextView" />
 
@@ -61,7 +61,7 @@
                 android:layout_marginBottom="8dp"
                 android:text="Orario: "
                 android:textSize="17sp"
-                android:textColor="@color/colorSecondaryDark"
+                android:textColor="@color/colorPrimary"
                 android:maxLines="1" />
 
             <TextView
@@ -72,7 +72,6 @@
                 android:layout_toRightOf="@id/textViewHOra"
                 android:layout_toEndOf="@id/textViewHOra"
                 android:layout_below="@id/textViewHData"
-                android:textColor="@color/flatGrey"
                 android:textSize="17sp"
                 android:text="TextView" />
 
@@ -84,7 +83,7 @@
                 android:layout_marginBottom="8dp"
                 android:text="Nome Gruppo: "
                 android:textSize="17sp"
-                android:textColor="@color/colorSecondaryDark"
+                android:textColor="@color/colorPrimary"
                 android:maxLines="1" />
 
             <TextView
@@ -95,7 +94,6 @@
                 android:layout_toRightOf="@id/textViewHGroupName"
                 android:layout_toEndOf="@id/textViewHGroupName"
                 android:layout_below="@id/textViewHOraValue"
-                android:textColor="@color/flatGrey"
                 android:textSize="17sp"
                 android:text="TextView" />
 
@@ -107,7 +105,7 @@
                 android:layout_marginBottom="8dp"
                 android:text="Organizzatore: "
                 android:textSize="17sp"
-                android:textColor="@color/colorSecondaryDark"
+                android:textColor="@color/colorPrimary"
                 android:maxLines="1" />
 
             <TextView
@@ -117,7 +115,6 @@
                 android:layout_toRightOf="@id/textViewHOrganizator"
                 android:layout_toEndOf="@id/textViewHOrganizator"
                 android:layout_below="@id/textViewHGroupNameValue"
-                android:textColor="@color/flatGrey"
                 android:textSize="17sp"
                 android:text="TextView" />
 
@@ -128,7 +125,7 @@
                 android:layout_below="@+id/textViewHOrganizator"
                 android:layout_marginBottom="8dp"
                 android:text="Luogo: "
-                android:textColor="@color/colorSecondaryDark"
+                android:textColor="@color/colorPrimary"
                 android:textSize="17sp" />
 
             <TextView
@@ -139,31 +136,22 @@
                 android:layout_toEndOf="@id/textViewHLuogo"
                 android:layout_below="@id/textViewHOrganizator"
                 android:layout_marginBottom="8dp"
-                android:textColor="@color/flatGrey"
                 android:textSize="17sp"
                 android:text="TextView" />
 
             <TextView
-                android:id="@+id/textViewHState"
+                android:id="@+id/textViewHStatoValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/textViewHLuogoValue"
-                android:layout_marginBottom="8dp"
-                android:text="Stato: "
-                android:textColor="@color/colorSecondaryDark"
-                android:textSize="17sp" />
-
-            <TextView
-               android:id="@+id/textViewHStatoValue"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:layout_below="@+id/textViewHLuogoValue"
-               android:layout_toRightOf="@id/textViewHState"
-               android:layout_toEndOf="@id/textViewHState"
-               android:text="TextView"
-               android:textAllCaps="true"
-               android:gravity="center"
-               android:textSize="17sp" />
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:text="TextView"
+                android:textColor="@color/colorPrimaryVariant"
+                android:padding="2dp"
+                android:textAllCaps="true"
+                android:gravity="center"
+                android:textSize="20sp" />
 
             <Button
                 android:id="@+id/entryChatHistory"
@@ -171,7 +159,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentLeft="true"
-                android:layout_below="@id/textViewHStatoValue"
+                android:layout_below="@id/textViewHLuogoValue"
                 android:text="@string/enter_chat"
                 android:textAlignment="center"
                 android:gravity="center"
