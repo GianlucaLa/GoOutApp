@@ -50,8 +50,8 @@ class GroupFragment : Fragment(), ProposalAdapter.ClickListenerProposal {
         inflater.inflate(R.menu.group_fragment_menu, menu)
         fs.getGroupAdmin(groupId){  admin ->
             if (admin == Firebase.auth.currentUser?.email.toString()) {
-                var groupCodeItem = menu.findItem(R.id.group_code_item)
-                groupCodeItem.isVisible = true
+                var groupCodeItem = menu?.findItem(R.id.group_code_item)
+                groupCodeItem?.isVisible = true
             }
         }
         super.onCreateOptionsMenu(menu, inflater)

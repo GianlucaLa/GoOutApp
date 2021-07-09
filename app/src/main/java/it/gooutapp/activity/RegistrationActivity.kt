@@ -14,6 +14,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import it.gooutapp.R
 import it.gooutapp.firebase.FireStore
+import kotlinx.android.synthetic.main.login.*
 import kotlinx.android.synthetic.main.registration.*
 import java.util.regex.Pattern
 
@@ -25,6 +26,7 @@ class RegistrationActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.registration)
+        regPB.visibility = View.INVISIBLE
         editTextName.addTextChangedListener {
             if (editTextName.text?.length == 15) { Toast.makeText(this, R.string.max15chars, Toast.LENGTH_SHORT).show() }
             editTextNameView.isErrorEnabled = false
@@ -66,7 +68,7 @@ class RegistrationActivity: AppCompatActivity() {
                     closeActivity()
                 } else {
                     // If sign in fails, display a message to the user.
-                    progressBar.visibility = View.INVISIBLE
+                    regPB.visibility = View.INVISIBLE
                     Log.w(TAG, "createUserWithEmail:failure", task.exception)
                 }
             }
@@ -76,7 +78,6 @@ class RegistrationActivity: AppCompatActivity() {
     private fun CharSequence?.isValidPassword() = !isNullOrEmpty() && PASSWORD_PATTERN.matcher(this).matches()
 
     fun fieldsCheck(view: View){
-        progressBar.visibility = View.VISIBLE
         val name = editTextName.text.toString()
         val surname = editTextSurname.text.toString()
         val nickname = editTextNickname.text.toString()
@@ -100,23 +101,47 @@ class RegistrationActivity: AppCompatActivity() {
 
         //final check
         if (!(editTextNameView.isErrorEnabled || editTextSurnameView.isErrorEnabled || editTextNicknameView.isErrorEnabled || editTextEmailView.isErrorEnabled || editTextPasswordView.isErrorEnabled)) {
+             showProgressBar()
             //controllo se già presente mail o nickname
             fs.checkForDuplicateUser(email, nickname) { duplicateMail, duplicateNick ->
                 var msg = ""
                 if (!duplicateMail && !duplicateNick){
                     createUser(email, password, name, surname, nickname)
                 }else{
-                    progressBar.visibility = View.INVISIBLE
                     if(duplicateMail)
                         msg = "${resources.getString(R.string.duplicate_mail)}"
                     if(duplicateNick)
                         msg = "$msg\n${resources.getString(R.string.duplicate_nickname)}"
                 }
                 if(msg != ""){
+                    hideProgressBar()
                     Toast.makeText(applicationContext, msg, Toast.LENGTH_SHORT).show()
                 }
             }
         }
-        progressBar.visibility = View.INVISIBLE
+    }
+
+    private fun showProgressBar() {
+        regPB.visibility = View.VISIBLE
+        imageViewRegDoodle.setColorFilter(resources.getColor(R.color.quantum_grey400))
+        textViewTitle.setTextColor(resources.getColor(R.color.quantum_grey400))
+        editTextNameView.isEnabled = false
+        editTextSurnameView.isEnabled = false
+        editTextNicknameView.isEnabled = false
+        editTextEmailView.isEnabled = false
+        editTextPasswordView.isEnabled = false
+        RSignin.isEnabled = false
+    }
+
+    private fun hideProgressBar() {
+        regPB.visibility = View.INVISIBLE
+        imageViewRegDoodle.colorFilter = null
+        textViewTitle.setTextColor(resources.getColor(R.color.colorPrimary))
+        editTextNameView.isEnabled = true
+        editTextSurnameView.isEnabled =  true
+        editTextNicknameView.isEnabled = true
+        editTextEmailView.isEnabled = true
+        editTextPasswordView.isEnabled = true
+        RSignin.isEnabled = true
     }
 }
