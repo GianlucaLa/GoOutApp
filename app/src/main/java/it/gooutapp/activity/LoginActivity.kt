@@ -13,8 +13,7 @@ import androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import it.gooutapp.R
-import kotlinx.android.synthetic.main.login.*
-import kotlinx.android.synthetic.main.registration.*
+import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity: AppCompatActivity() {
     private val TAG = "LOGIN_ACTIVITY"
@@ -28,7 +27,7 @@ class LoginActivity: AppCompatActivity() {
             startActivity(Intent(this@LoginActivity, MainActivity::class.java))
             finish()
         }else {
-            setContentView(R.layout.login)
+            setContentView(R.layout.activity_login)
             editTextLPassword.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {

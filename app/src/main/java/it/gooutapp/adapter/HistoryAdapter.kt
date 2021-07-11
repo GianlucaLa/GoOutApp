@@ -15,7 +15,7 @@ class HistoryAdapter(private val historyList : ArrayList<Proposal>, val clickLis
     private val fs = FireStore()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.history_view_row, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.row_history_view, parent, false)
         return MyViewHolder(itemView)
     }
 

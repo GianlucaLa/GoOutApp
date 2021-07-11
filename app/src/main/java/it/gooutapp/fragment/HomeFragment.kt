@@ -26,7 +26,7 @@ import it.gooutapp.model.Group
 import it.gooutapp.model.MyDialog
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
-import kotlinx.android.synthetic.main.group_row.view.*
+import kotlinx.android.synthetic.main.row_group.view.*
 
 class HomeFragment : Fragment(), GroupAdapter.ClickListener {
     private val TAG = "HOME_FRAGMENT"

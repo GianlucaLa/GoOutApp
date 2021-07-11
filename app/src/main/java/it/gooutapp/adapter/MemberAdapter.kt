@@ -17,7 +17,7 @@ class MemberAdapter(private val memberList : ArrayList<User>, private val admin:
     private var currentUserEmail = Firebase.auth.currentUser?.email.toString()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.member_row, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.row_member, parent, false)
         return MyViewHolder(itemView)
     }
 

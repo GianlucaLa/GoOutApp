@@ -11,7 +11,7 @@ import it.gooutapp.model.Group
 class GroupAdapter(private val userGroupList : ArrayList<Group>, val adminFlagList : ArrayList<Boolean>, val clickListener: ClickListener) : RecyclerView.Adapter<GroupAdapter.MyViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.group_row, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.row_group, parent, false)
         return MyViewHolder(itemView)
     }
 

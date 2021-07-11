@@ -6,12 +6,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
-import android.widget.Toolbar
-import androidx.core.os.bundleOf
-import androidx.core.view.isInvisible
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.appbar.AppBarLayout
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import it.gooutapp.R
@@ -24,7 +19,7 @@ class ProposalAdapter(private val proposalList: ArrayList<Proposal>, val clickLi
     private var user_auth_id = Firebase.auth.currentUser?.uid.toString()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.proposal_view_row, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.row_proposal_view, parent, false)
         return MyViewHolder(itemView)
     }
 
