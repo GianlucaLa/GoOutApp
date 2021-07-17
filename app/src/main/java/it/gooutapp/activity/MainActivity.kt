@@ -157,7 +157,7 @@ class MainActivity : AppCompatActivity() {
         var title = resources.getString(R.string.join_group)
         var message = resources.getString(R.string.enter_group_code)
         MyDialog(title, message, this, layoutInflater) { groupId ->
-            fs.addUserToGroup(user_email, groupId) { result ->
+            fs.addUserToGroup(groupId) { result ->
                 when (result) {
                     "NM" -> {
                         Toast.makeText(applicationContext, R.string.user_successful_added_to_group, Toast.LENGTH_SHORT).show()

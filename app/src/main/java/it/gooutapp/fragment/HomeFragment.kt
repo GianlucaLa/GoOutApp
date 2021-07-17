@@ -75,7 +75,7 @@ class HomeFragment : Fragment(), GroupAdapter.ClickListener {
                     }
                     val icon = ContextCompat.getDrawable(root.context, R.drawable.ic_menu_trash_sliding)
                     val topMargin = calculateTopMargin(icon!!, viewHolder.itemView).toInt()
-                    icon.colorFilter = PorterDuffColorFilter(ContextCompat.getColor(root.context, R.color.lightGrey), PorterDuff.Mode.SRC_IN)
+                    icon.colorFilter = PorterDuffColorFilter(ContextCompat.getColor(root.context, R.color.trashGrey), PorterDuff.Mode.SRC_IN)
                     icon?.bounds  = getStartContainerRectangle(viewHolder.itemView, (icon.intrinsicWidth*1.2).toInt(), topMargin, OFFSET_PX, dX)
                     icon?.draw(c)
                 }
@@ -91,9 +91,7 @@ class HomeFragment : Fragment(), GroupAdapter.ClickListener {
                             var thisPosition = viewHolder.adapterPosition
                             groupAdapter.deleteItemRow(thisPosition)
                             if (userIsAdmin) {
-                                fs.deleteGroupData(userGroupList[thisPosition].groupId.toString()) { result ->
-                                    if (!result) Log.e(TAG, "error during delete of document")
-                                }
+                                fs.deleteGroupData(userGroupList[thisPosition].groupId.toString())
                             } else {
                                 fs.leaveGroup(userGroupList[thisPosition].groupId.toString()) { result ->
                                     if (!result) Log.e(TAG, "error during update of document")

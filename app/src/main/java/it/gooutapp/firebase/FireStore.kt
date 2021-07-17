@@ -30,7 +30,7 @@ class FireStore {
             "surname" to surname,
             "nickname" to nickname,
             "email" to email,
-            "authId" to "${currentUserId()}"
+            "authId" to currentUserId()
         )
         db.collection(userCollection).document(email)
             .set(user)
@@ -122,13 +122,14 @@ class FireStore {
             }
             for (dc: DocumentChange in value?.documentChanges!!) {
                 //cerco e aggiungo i gruppi che contengono l'email dell'utente
-                if (dc.document.get("admin")=="${currentUserEmail()}") {
+                if (dc.document.get("admin")== currentUserEmail()) {
                     adminFlagList.add(true)
                     if (dc.type == DocumentChange.Type.ADDED)
                         userGroupsList.add(dc.document.toObject(Group::class.java))
                     else if (dc.type == DocumentChange.Type.REMOVED)
                         userGroupsList.remove(dc.document.toObject(Group::class.java))
-                } else if (dc.document.contains("user_${currentUserId()}")) {
+                } else if (dc.document.get("users").toString().contains(currentUserEmail())) {
+                    Log.e(TAG, "E VERO")
                     adminFlagList.add(false)
                     if (dc.type == DocumentChange.Type.ADDED)
                         userGroupsList.add(dc.document.toObject(Group::class.java))
@@ -151,16 +152,16 @@ class FireStore {
                         return@addSnapshotListener
                     }
                     for (dc: DocumentChange in value?.documentChanges!!) {
-                        if (dc.type == DocumentChange.Type.ADDED && groupDoc.toString().contains(dc.document.id)) {
+                        if (dc.type == DocumentChange.Type.ADDED &&
+                            (groupDoc.get("users").toString().contains(dc.document.id) || groupDoc.get("admin").toString() == dc.document.id)) {
                             groupMembers.add(dc.document.toObject(User::class.java))
                         }
                     }
                     callback(groupMembers)
                 }
-
             }
-            .addOnFailureListener {
-
+            .addOnFailureListener { exception ->
+                Log.d(TAG, "get failed with ", exception)
             }
     }
 
@@ -187,9 +188,9 @@ class FireStore {
                     val currDocDate = LocalDateTime.parse(dc.document.get("dateTime").toString(), DateTimeFormatter.ISO_DATE_TIME)
                     val canceled = dc.document.contains("canceled")
                     if (currDocDate.isAfter(currentDateTime))
-                        if (dc.type == DocumentChange.Type.ADDED && !(dc.document.contains("user_${currentUserId()}") || canceled))
+                        if (dc.type == DocumentChange.Type.ADDED && !(dc.document.toString().contains(currentUserEmail()) || canceled))
                             proposalArrayList.add(dc.document.toObject(Proposal::class.java))
-                        else if (dc.type == DocumentChange.Type.MODIFIED && (dc.document.contains("user_${currentUserId()}") || canceled)){
+                        else if (dc.type == DocumentChange.Type.MODIFIED && (dc.document.toString().contains(currentUserEmail()) || canceled)){
                             proposalArrayList.removeIf{ p ->
                                 p.proposalId == dc.document.get("proposalId").toString()
                             }
@@ -214,7 +215,7 @@ class FireStore {
                     for(group in groupList){
                         if(dc.document.get("groupId") == group.groupId){
                             if (dc.type == DocumentChange.Type.ADDED
-                                && (stringDoc.contains("user_${currentUserId()}")
+                                && (stringDoc.contains(currentUserEmail())
                                         || LocalDateTime.now().isAfter(LocalDateTime.parse(dc.document.get("dateTime").toString()))
                                         || dc.document.contains("canceled"))) {
                                 proposalArrayList?.add(dc?.document?.toObject(Proposal::class.java))
@@ -234,11 +235,12 @@ class FireStore {
     fun getUserProposalState(proposalId: String, callback: (Any) -> Unit){
         db.collection(proposalCollection).whereEqualTo("proposalId", "$proposalId").get()
             .addOnSuccessListener { proposalDocs ->
-                var state = proposalDocs.documents.last().get("user_${currentUserId()}")?.toString()
-                if(state == null)
-                    callback("")
-                else
-                    callback(state)
+                var doc = proposalDocs.last()
+                when {
+                    doc.get("accepters").toString().contains(currentUserEmail()) -> callback("accepted")
+                    doc.get("decliners").toString().contains(currentUserEmail()) -> callback("refused")
+                    else -> callback("")
+                }
             }
     }
 
@@ -288,29 +290,42 @@ class FireStore {
     fun setProposalState(proposalId: String, state: String, callback: (Boolean) -> Unit){
         getProposalDocumentId(proposalId) { proposalDoc ->
             // Remove the 'user' field from the document
-            val updates = hashMapOf<String, Any>(
-                "user_${currentUserId()}" to "$state"
-            )
-            db.collection(proposalCollection).document(proposalDoc).update(updates)
-                .addOnSuccessListener {
-                    Log.d(TAG, "Proposal state of user ${currentUserId()} setted")
-                    callback(true)}
-                .addOnFailureListener {
-                        e -> Log.w(TAG, "Error setting proposal state", e)
-                    callback(false)}
+            if(state == "accepted") {
+                db.collection(proposalCollection).document(proposalDoc)
+                    .update("accepters", FieldValue.arrayUnion(currentUserEmail()))
+                    .addOnSuccessListener {
+                        Log.d(TAG, "Proposal state of user ${currentUserId()} setted")
+                        callback(true)
+                    }
+                    .addOnFailureListener { e ->
+                        Log.w(TAG, "Error setting proposal state", e)
+                        callback(false)
+                    }
+            }else{
+                db.collection(proposalCollection).document(proposalDoc)
+                    .update("decliners", FieldValue.arrayUnion(currentUserEmail()))
+                    .addOnSuccessListener {
+                        Log.d(TAG, "Proposal state of user ${currentUserId()} setted")
+                        callback(true)
+                    }
+                    .addOnFailureListener { e ->
+                        Log.w(TAG, "Error setting proposal state", e)
+                        callback(false)
+                    }
+            }
         }
     }
 
-    fun addUserToGroup(email: String, groupId: String, callback: (String) -> Unit) {
+    fun addUserToGroup(groupId: String, callback: (String) -> Unit) {
         isAlreadyMemberOf(groupId) { alreadyMember, groupDocId ->
             /*inserisco il nuovo utente al gruppo su FireStore assegnando come id
-            il ritorno della calback di checkForNewUserId
+            il return della callback di checkForNewUserId
             */
             if (alreadyMember == "AM" || alreadyMember == "ER") {
                 callback(alreadyMember)
             } else {
                 db.collection(groupCollection).document(groupDocId)  //nome gruppo
-                    .update("user_${currentUserId()}", email)
+                    .update("users", FieldValue.arrayUnion(currentUserEmail()))
                     .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
                     .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
                 callback(alreadyMember)
@@ -335,10 +350,7 @@ class FireStore {
     fun leaveGroup(groupId: String, callback: (Boolean) -> Unit) {
         getGroupDocumentId(groupId) { groupDoc ->
             // Remove the 'user' field from the document
-            val updates = hashMapOf<String, Any>(
-                "user_${currentUserId()}" to FieldValue.delete()
-            )
-            db.collection(groupCollection).document(groupDoc).update(updates)
+            db.collection(groupCollection).document(groupDoc).update("users", FieldValue.arrayRemove(currentUserEmail()))
             .addOnSuccessListener {
                 Log.d(TAG, "DocumentSnapshot successfully deleted!")
                 callback(true)}
@@ -349,7 +361,7 @@ class FireStore {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun deleteGroupData(groupId: String, callback: (Boolean) -> Unit) {
+    fun deleteGroupData(groupId: String) {
         //solo per ADMINISTRATORS
         getGroupDocumentId(groupId) { documentToDelete ->
             //ELIMINO IL GRUPPO
@@ -374,14 +386,11 @@ class FireStore {
         }
     }
 
-    fun removeMemberGroup(groupId: String, authId: String, callback: (Boolean) -> Unit){
-        Log.e(TAG, "$groupId   $authId")
-        val updates = hashMapOf<String, Any>(
-            "user_$authId" to FieldValue.delete()
-        )
+    fun removeMemberGroup(groupId: String, email: String, callback: (Boolean) -> Unit){
         getGroupDocumentId(groupId) { groupDoc ->
             Log.e(TAG, "$groupDoc")
-            db.collection(groupCollection).document(groupDoc).update(updates)
+            db.collection(groupCollection).document(groupDoc)
+                .update("users", FieldValue.arrayRemove("$email"))
                 .addOnSuccessListener {
                     Log.d(TAG, "DocumentSnapshot successfully deleted!")
                     callback(true)
@@ -464,16 +473,22 @@ class FireStore {
         //RETURN INFO: AM=already member, NM=not member, ER=group code not valid
         db.collection(groupCollection).whereEqualTo("groupId", "$groupId").get()
             .addOnSuccessListener { documents ->
-                if (documents.size() == 0) {
-                    callback("ER", "")
-                } else if (documents.last().contains("user_${currentUserId()}") || documents.last().get("admin")=="${currentUserEmail()}") {
-                    callback("AM", "")
-                } else {
-                    callback("NM", documents.last().id)
+                when {
+                    documents.size() == 0 -> {
+                        callback("ER", "")
+                    }
+                    documents.size() == 1 -> {
+                        when {
+                            documents.last().get("users").toString().contains(currentUserEmail()) ->
+                                callback("AM", "")
+                            documents.last().get("admin").toString() == currentUserEmail() ->
+                                callback("AM", "")
+                            else ->
+                                callback("NM", documents.last().id)
+                        }
+                    }
                 }
-            }.addOnFailureListener { exception ->
-            Log.d(TAG, "get failed with ", exception)
-        }
+            }
     }
 
     private fun currentUserId(): String {

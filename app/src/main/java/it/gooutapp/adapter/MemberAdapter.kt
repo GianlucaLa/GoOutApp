@@ -26,12 +26,16 @@ class MemberAdapter(private val memberList : ArrayList<User>, private val admin:
         var thisUser: User = memberList[position]
         Log.e(TAG, thisUser.email.toString())
         holder.memberName.text = thisUser.nickname
-        if(admin == thisUser.email && thisUser.email == currentUserEmail)
-            holder.you.text = "${activityContext.resources.getString(R.string.you)}"
-        else if(thisUser.email == currentUserEmail)
+
+        if(thisUser.email == currentUserEmail)
             holder.you.text = "${activityContext.resources.getString(R.string.you)}"
         else
             holder.memberName.text = thisUser.nickname
+
+        if(currentUserEmail != admin && thisUser.email == admin) {
+            holder.you.setTextColor(holder.colorAdmin)
+            holder.you.text = "Admin"
+        }
         if (admin != Firebase.auth.currentUser?.email.toString() || admin == thisUser.email){
             holder.btnRemove.visibility = View.GONE
         } else {
@@ -49,6 +53,7 @@ class MemberAdapter(private val memberList : ArrayList<User>, private val admin:
         val memberName: TextView = itemView.findViewById(R.id.textViewMemberName)
         val btnRemove: Button = itemView.findViewById(R.id.btnRemoveMember)
         val you: TextView = itemView.findViewById(R.id.textViewYou)
+        val colorAdmin = itemView.resources.getColor(R.color.gold)
     }
 
     interface ClickListenerMember {

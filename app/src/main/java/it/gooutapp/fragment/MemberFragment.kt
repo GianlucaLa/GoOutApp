@@ -44,7 +44,7 @@ class MemberFragment: Fragment(), MemberAdapter.ClickListenerMember {
     }
 
     override fun removeMember(user: User, position: Int) {
-        fs.removeMemberGroup(groupId, user.authId.toString()){ result ->
+        fs.removeMemberGroup(groupId, user.email.toString()){ result ->
             if (result) {
                 memberList.removeAt(position)
                 memberAdapter.notifyItemRemoved(position)
