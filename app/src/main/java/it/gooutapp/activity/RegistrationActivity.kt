@@ -18,8 +18,10 @@ import java.util.regex.Pattern
 
 class RegistrationActivity: AppCompatActivity() {
     private val TAG = "REGISTRATION_ACTIVITY"
-    private val fs : FireStore = FireStore()
-    private val PASSWORD_PATTERN = Pattern.compile("^" + "(?=.*[@!?#$%^&+=])" + "(?=\\S+$)" + ".{6,}" + "$")
+    private val fs: FireStore = FireStore()
+    private var userAuthCreated: Boolean = false
+    private var userFirestoreCreated: Boolean = false
+    private val PASSWORD_PATTERN = Pattern.compile("^" + "(?=.*[@!?#$%^&+=])" + "(?=.*?[A-Z])" + "(?=\\S+$)" + ".{6,}" + "$")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,21 +56,43 @@ class RegistrationActivity: AppCompatActivity() {
         finish()
     }
 
-    private fun createUser(email: String, password: String, name: String, surname: String, nickname: String) {
-        Firebase.auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    fs.createUserData(name, surname, nickname, email)
-                    Log.d(TAG, "createUserWithEmail:success")
-                    Toast.makeText(applicationContext, getString(R.string.successful_registration), Toast.LENGTH_SHORT).show()
-                    closeActivity()
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Rpb?.visibility = View.INVISIBLE
-                    Log.w(TAG, "createUserWithEmail:failure", task.exception)
-                }
+    private fun checkDuplicateNickname(name: String, surname: String, nickname: String, email: String){
+        fs.checkDuplicateNickname(nickname) { isDuplicate ->
+            if(isDuplicate){
+                Toast.makeText(applicationContext, getString(R.string.duplicate_nickname), Toast.LENGTH_SHORT).show()
+                Rpb?.visibility = View.INVISIBLE
+            }else {
+                fs.createUserData(name, surname, nickname, email)
+                userFirestoreCreated = true
+                Log.d(TAG, "createUserWithEmail:success")
+                Toast.makeText(applicationContext, getString(R.string.successful_registration), Toast.LENGTH_SHORT).show()
+                closeActivity()
             }
+        }
+    }
+
+
+    private fun createUser(email: String, password: String, name: String, surname: String, nickname: String) {
+        if (userAuthCreated){
+            checkDuplicateNickname(name, surname, nickname, email)
+        }else{
+            Firebase.auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        // Sign in success, update UI with the signed-in user's information
+                        userAuthCreated = true
+                        checkDuplicateNickname(name, surname, nickname, email)
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Rpb?.visibility = View.INVISIBLE
+                        Log.w(TAG, "createUserWithEmail:failure", task.exception)
+                    }
+                }
+                .addOnFailureListener { error ->
+                    if(error.message.toString() == "The email address is already in use by another account.")
+                        Toast.makeText(applicationContext, resources.getString(R.string.duplicate_mail), Toast.LENGTH_SHORT).show()
+                }
+        }
     }
 
     private fun CharSequence?.isValidEmail() = !isNullOrEmpty() && Patterns.EMAIL_ADDRESS.matcher(this).matches()
@@ -99,24 +123,21 @@ class RegistrationActivity: AppCompatActivity() {
 
         //final check
         if (!(editTextNameView.isErrorEnabled || editTextSurnameView.isErrorEnabled || editTextNicknameView.isErrorEnabled || editTextEmailView.isErrorEnabled || editTextPasswordView.isErrorEnabled)) {
-            //controllo se già presente mail o nickname
-            fs.checkForDuplicateUser(email, nickname) { duplicateMail, duplicateNick ->
-                var msg = ""
-                if (!duplicateMail && !duplicateNick){
-                    createUser(email, password, name, surname, nickname)
-                }else{
-                    if(duplicateMail)
-                        msg = "${resources.getString(R.string.duplicate_mail)}"
-                    if(duplicateNick)
-                        msg = "$msg\n${resources.getString(R.string.duplicate_nickname)}"
-                }
-                if(msg != ""){
-                    Toast.makeText(applicationContext, msg, Toast.LENGTH_SHORT).show()
-                    Rpb?.visibility = View.INVISIBLE
-                }
-            }
+            createUser(email, password, name, surname, nickname)
         }else{
             Rpb?.visibility = View.INVISIBLE
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if(!userFirestoreCreated) {
+            Firebase.auth.currentUser?.delete()
+                ?.addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Log.d(TAG, "User account deleted.")
+                    }
+                }
         }
     }
 }

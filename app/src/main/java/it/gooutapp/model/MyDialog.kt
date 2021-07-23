@@ -11,15 +11,17 @@ import androidx.core.widget.addTextChangedListener
 import it.gooutapp.R
 
 class MyDialog {
-    constructor(title: String, message: String, context: Context, inflater: LayoutInflater, callback: (String) -> Unit){
+    constructor(title: String, message: String, context: Context, inflater: LayoutInflater, popupMaxLength: Boolean,callback: (String) -> Unit){
         val builder = AlertDialog.Builder(context)
         val dialogLayout = inflater.inflate(R.layout.edittext_my_dialog, null)
         val editText = dialogLayout.findViewById<EditText>(R.id.editTextMyDialog)
         with(builder) {
             setTitle(title)
-            editText.addTextChangedListener {
-                if(editText.text.length > 15){
-                    Toast.makeText(context, R.string.max15chars, Toast.LENGTH_SHORT).show()
+            if(popupMaxLength) {
+                editText.addTextChangedListener {
+                    if (editText.text.length == 15) {
+                        Toast.makeText(context, R.string.max15chars, Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
             editText.hint = message

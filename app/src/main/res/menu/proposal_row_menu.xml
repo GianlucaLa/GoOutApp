@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/modify"
+        android:icon="@drawable/ic_calendar_plus"
+        android:title="@string/menu_new_proposal"
+        android:background="?attr/colorPrimary" />
+    <item
+        android:id="@+id/participants"
+        android:icon="@drawable/ic_link"
+        android:title="@string/group_invitation_code"
+        android:background="?attr/colorPrimary" />
+</menu>

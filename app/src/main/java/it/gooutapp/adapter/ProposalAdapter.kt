@@ -1,9 +1,11 @@
 package it.gooutapp.adapter
 
+import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
@@ -11,8 +13,9 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import it.gooutapp.R
 import it.gooutapp.firebase.FireStore
-import it.gooutapp.model.Proposal
 import it.gooutapp.model.MyDialog
+import it.gooutapp.model.Proposal
+
 
 class ProposalAdapter(private val proposalList: ArrayList<Proposal>, val clickListenerProposal: ClickListenerProposal) : RecyclerView.Adapter<ProposalAdapter.MyViewHolder>() {
     private val fs = FireStore()
@@ -43,7 +46,18 @@ class ProposalAdapter(private val proposalList: ArrayList<Proposal>, val clickLi
             holder.btnRefuse.visibility = View.GONE
         }
         holder.btnModify.setOnClickListener {
-            clickListenerProposal.modifyProposalListener(proposalList[position])
+            val wrapper = ContextThemeWrapper(activityContext, R.style.PopupMenu)
+            val pop= PopupMenu(wrapper,it)
+            pop.inflate(R.menu.proposal_row_menu)
+            pop.setOnMenuItemClickListener {item->
+                when(item.itemId) {
+                    R.id.modify->{clickListenerProposal.modifyProposalListener(proposalList[position])}
+                    R.id.participants->{ }
+                }
+                true
+            }
+            pop.show()
+            true
         }
         holder.btnCancelEvent.setOnClickListener(){
             val title = activityContext.resources.getString(R.string.cancel_event)

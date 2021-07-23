@@ -129,11 +129,13 @@ class FireStore {
                     else if (dc.type == DocumentChange.Type.REMOVED)
                         userGroupsList.remove(dc.document.toObject(Group::class.java))
                 } else if (dc.document.get("users").toString().contains(currentUserEmail())) {
-                    Log.e(TAG, "E VERO")
                     adminFlagList.add(false)
                     if (dc.type == DocumentChange.Type.ADDED)
                         userGroupsList.add(dc.document.toObject(Group::class.java))
                     else if (dc.type == DocumentChange.Type.REMOVED)
+                        userGroupsList.remove(dc.document.toObject(Group::class.java))
+                }else{
+                    if (dc.type == DocumentChange.Type.MODIFIED)
                         userGroupsList.remove(dc.document.toObject(Group::class.java))
                 }
             }
@@ -453,19 +455,14 @@ class FireStore {
     }
 
     //OTHER METHODS
-    fun checkForDuplicateUser(email: String, nickname: String, callback: (Boolean, Boolean) -> Unit){
-        var duplicateMail = false
+    fun checkDuplicateNickname(nickname: String, callback: (Boolean) -> Unit) {
         var duplicateNick = false
         db.collection(userCollection).get().addOnSuccessListener { collectionUser ->
             for(dc in collectionUser){
-                if(dc.id == email)
-                    duplicateMail = true
                 if(dc.get("nickname") == nickname)
                     duplicateNick = true
             }
-            callback(duplicateMail, duplicateNick)
-        }.addOnFailureListener { exception ->
-            Log.d(TAG, "get failed with ", exception)
+            callback(duplicateNick)
         }
     }
 

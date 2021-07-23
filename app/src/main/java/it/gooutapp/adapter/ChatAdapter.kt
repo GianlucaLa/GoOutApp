@@ -25,11 +25,11 @@ class ChatAdapter(private val context: Context, private val messageList: ArrayLi
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         //in base al userId del messaggio, gli assegno il layout destro o sinistro
         return if (viewType == MESSAGE_TYPE_RIGHT) {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.item_right, parent, false)
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.row_item_right, parent, false)
             Log.e(TAG, view.layoutDirection.toString())
             MyViewHolder(view)
         } else {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.item_left, parent, false)
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.row_item_left, parent, false)
             MyViewHolder(view)
         }
     }

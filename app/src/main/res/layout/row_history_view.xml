@@ -27,7 +27,7 @@
                 android:layout_marginBottom="8dp"
                 android:text="Nome Proposta"
                 android:paddingRight="5dp"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/colorSecondary"
                 android:textSize="30sp"
                 android:textStyle="bold"
                 android:maxLines="1" />
@@ -40,7 +40,7 @@
                 android:layout_marginBottom="8dp"
                 android:text="Data: "
                 android:textSize="17sp"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/colorSecondary"
                 android:maxLines="1" />
 
             <TextView
@@ -61,7 +61,7 @@
                 android:layout_marginBottom="8dp"
                 android:text="Orario: "
                 android:textSize="17sp"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/colorSecondary"
                 android:maxLines="1" />
 
             <TextView
@@ -83,7 +83,7 @@
                 android:layout_marginBottom="8dp"
                 android:text="Nome Gruppo: "
                 android:textSize="17sp"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/colorSecondary"
                 android:maxLines="1" />
 
             <TextView
@@ -105,7 +105,7 @@
                 android:layout_marginBottom="8dp"
                 android:text="Organizzatore: "
                 android:textSize="17sp"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/colorSecondary"
                 android:maxLines="1" />
 
             <TextView
@@ -125,7 +125,7 @@
                 android:layout_below="@+id/textViewHOrganizator"
                 android:layout_marginBottom="8dp"
                 android:text="Luogo: "
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/colorSecondary"
                 android:textSize="17sp" />
 
             <TextView

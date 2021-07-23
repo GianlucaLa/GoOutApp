@@ -38,13 +38,18 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentRight="true">
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/modifyProposal"
-                    android:layout_width="wrap_content"
+                    android:layout_width="30dp"
                     android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    app:icon="@drawable/ic_three_points"
+                    app:iconSize="30dp"
+                    app:iconGravity="textEnd"
+                    app:iconPadding="0dp"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:text="@string/modifyBtnString" />
+                    app:layout_constraintTop_toTopOf="parent" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView

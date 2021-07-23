@@ -156,7 +156,7 @@ class MainActivity : AppCompatActivity() {
     fun joinGroup(item: MenuItem) {
         var title = resources.getString(R.string.join_group)
         var message = resources.getString(R.string.enter_group_code)
-        MyDialog(title, message, this, layoutInflater) { groupId ->
+        MyDialog(title, message, this, layoutInflater, false) { groupId ->
             fs.addUserToGroup(groupId) { result ->
                 when (result) {
                     "NM" -> {

@@ -110,10 +110,10 @@ class HomeFragment : Fragment(), GroupAdapter.ClickListener {
         }
 
         //Create Group Listener
-        root.newGroupFab.setOnClickListener { view ->
+        root.newGroupFab.setOnClickListener {
             var title = resources.getString(R.string.create_group)
             var message = resources.getString(R.string.enter_group_name)
-            MyDialog(title, message, root.context, layoutInflater) { groupName ->
+            MyDialog(title, message, root.context, layoutInflater, true) { groupName ->
                 fs.createGroupData(groupName, user_email) { result ->
                     if(result){
                         Toast.makeText(root.context, R.string.group_creation_successful, Toast.LENGTH_SHORT).show()
