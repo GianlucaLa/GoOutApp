@@ -93,7 +93,6 @@
     <string name="text_copied_to_clipboard">Text copied into clipboard</string>
     <string name="successfulProposalModified">The proposal was successfully modified</string>
     <string name="failProposalModify">An error occured during the modify</string>
-    <string name="modifyBtnString">Modify</string>
     <string name="cancel_event">Clear the event</string>
     <string name="cancel_event_message">Are you sure you want to cancel the event?</string>
     <string name="canceled">Canceled</string>
