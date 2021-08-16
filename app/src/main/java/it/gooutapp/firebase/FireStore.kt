@@ -234,6 +234,21 @@ class FireStore {
         }
     }
 
+    fun getProposalPartecipants(proposalId: String, callback: (ArrayList<String>) -> Unit){
+        db.collection(proposalCollection).whereEqualTo("proposalId", "$proposalId").get()
+            .addOnSuccessListener { proposalDocs ->
+                if(proposalDocs.last()?.get("accepters") != null) {
+                    var partecipants: ArrayList<String> = proposalDocs?.last()?.get("accepters")!! as ArrayList<String>
+                    partecipants.add(proposalDocs.last()?.get("organizator") as String)
+                    Log.e(TAG, partecipants.toString())
+                    callback(partecipants)
+                }
+                else{
+                    callback(arrayListOf())
+                }
+            }
+    }
+
     fun getUserProposalState(proposalId: String, callback: (Any) -> Unit){
         db.collection(proposalCollection).whereEqualTo("proposalId", "$proposalId").get()
             .addOnSuccessListener { proposalDocs ->

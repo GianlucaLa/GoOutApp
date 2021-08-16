@@ -101,4 +101,6 @@
     <string name="successfulRemoveMember">L\'utente è stato rimosso con successo</string>
     <string name="you">Tu</string>
     <string name="members">Membri</string>
+    <string name="partecipants">Partecipanti</string>
+    <string name="no_partecipant">Ancora Nessun partecipante</string>
 </resources>

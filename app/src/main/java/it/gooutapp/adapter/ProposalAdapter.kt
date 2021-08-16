@@ -1,5 +1,6 @@
 package it.gooutapp.adapter
 
+import android.util.Log
 import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import it.gooutapp.R
@@ -16,8 +18,8 @@ import it.gooutapp.firebase.FireStore
 import it.gooutapp.model.MyDialog
 import it.gooutapp.model.Proposal
 
-
 class ProposalAdapter(private val proposalList: ArrayList<Proposal>, val clickListenerProposal: ClickListenerProposal) : RecyclerView.Adapter<ProposalAdapter.MyViewHolder>() {
+    private val TAG = "PROPOSAL_ADAPTER"
     private val fs = FireStore()
     private var user_auth_id = Firebase.auth.currentUser?.uid.toString()
 
@@ -39,7 +41,6 @@ class ProposalAdapter(private val proposalList: ArrayList<Proposal>, val clickLi
         holder.oraProposta.text = "${proposal.dateTime.toString().substring(11)}"
         holder.organizzatoreProposta.text = "${proposal.organizator.toString()}"
         if (proposal.organizatorId != user_auth_id) {
-            holder.btnModify.visibility = View.GONE
             holder.btnCancelEvent.visibility = View.GONE
         } else {
             holder.btnAccept.visibility = View.GONE
@@ -52,7 +53,24 @@ class ProposalAdapter(private val proposalList: ArrayList<Proposal>, val clickLi
             pop.setOnMenuItemClickListener {item->
                 when(item.itemId) {
                     R.id.modify->{clickListenerProposal.modifyProposalListener(proposalList[position])}
-                    R.id.participants->{ }
+                    R.id.partecipants->{
+                        fs.getProposalPartecipants(proposal.proposalId.toString()){ participants ->
+                            var items = if(participants.size != 0){
+                                Log.e(TAG, participants.size.toString())
+                                participants.toTypedArray() as Array<CharSequence>
+                            }else{
+                                Log.e(TAG, participants.size.toString())
+                                arrayOf(activityContext.resources.getString(R.string.no_partecipant))
+                            }
+                            MaterialAlertDialogBuilder(activityContext)
+                                .setTitle(activityContext.resources.getString(R.string.partecipants))
+                                .setPositiveButton(R.string.ok){_, _ ->}
+                                .setItems(items){ dialog, which ->
+
+                                }
+                                .show()
+                        }
+                    }
                 }
                 true
             }

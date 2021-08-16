@@ -107,4 +107,6 @@
     <string name="successfulRemoveMember">The user was successfully removed</string>
     <string name="you">You</string>
     <string name="members">Members</string>
+    <string name="partecipants">Partecipants</string>
+    <string name="no_partecipant">Still no participants</string>
 </resources>
