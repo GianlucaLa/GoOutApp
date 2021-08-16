@@ -9,5 +9,7 @@ class Proposal(
     var place: String ?= null,
     var dateTime: String ?= null,
     var organizator: String?= null,
-    var organizatorId: String?= null
+    var organizatorId: String?= null,
+    var accepters: ArrayList<String> ?= null,
+    var decliners: ArrayList<String> ?= null
 )

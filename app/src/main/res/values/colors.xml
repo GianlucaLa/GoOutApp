@@ -11,7 +11,7 @@
 
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="menuBackground">#302c2c</color>
+    <color name="menuBackground">#323232</color>
     <color name="flatGrey">#424242</color>
     <color name="lightGrey">#e8e4e4</color>
     <color name="trashGrey">#dce1e8</color>

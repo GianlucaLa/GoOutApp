@@ -5,14 +5,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import it.gooutapp.R
 import it.gooutapp.firebase.FireStore
 import it.gooutapp.model.Proposal
 
 class HistoryAdapter(private val historyList : ArrayList<Proposal>, val clickListenerHistory: ClickListenerHistory) : RecyclerView.Adapter<HistoryAdapter.MyViewHolder>()  {
-    private val fs = FireStore()
+    private var user_email = Firebase.auth.currentUser?.email.toString()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.row_history_view, parent, false)
@@ -36,23 +37,21 @@ class HistoryAdapter(private val historyList : ArrayList<Proposal>, val clickLis
         holder.btnChat.setOnClickListener {
             clickListenerHistory.enterChatListener(historyList[position])
         }
-        fs.getUserProposalState(history.proposalId.toString()) { proposalState ->
-            if (history.canceled == "canceled") {
-                holder.statoProposta.text = activityContext.resources.getString(R.string.canceled)
-                holder.statoProposta.background = activityContext.resources.getDrawable(R.drawable.background_canceled)
-                holder.btnChat.visibility = View.GONE
-            } else if(proposalState != "") {
-                if (proposalState == "accepted") {
-                    holder.statoProposta.background = activityContext.resources.getDrawable(R.drawable.background_accepted)
-                    holder.statoProposta.text = activityContext.resources.getString(R.string.proposal_accepted)
-                } else {
-                    holder.statoProposta.background = activityContext.resources.getDrawable(R.drawable.background_refused)
-                    holder.statoProposta.text = activityContext.resources.getString(R.string.proposal_refused)
-                }
-            }else{
-                holder.statoProposta.background = activityContext.resources.getDrawable(R.drawable.background_expired)
-                holder.statoProposta.text = activityContext.resources.getString(R.string.expired_proposal)
+        if (history.canceled == "canceled") {
+            holder.statoProposta.text = activityContext.resources.getString(R.string.canceled)
+            holder.statoProposta.background = activityContext.resources.getDrawable(R.drawable.background_canceled)
+            holder.btnChat.visibility = View.GONE
+        } else if(history.accepters?.contains(user_email) == true || history.decliners?.contains(user_email) == true) {
+            if (history.accepters?.contains(user_email) == true) {
+                holder.statoProposta.background = activityContext.resources.getDrawable(R.drawable.background_accepted)
+                holder.statoProposta.text = activityContext.resources.getString(R.string.proposal_accepted)
+            } else {
+                holder.statoProposta.background = activityContext.resources.getDrawable(R.drawable.background_refused)
+                holder.statoProposta.text = activityContext.resources.getString(R.string.proposal_refused)
             }
+        }else{
+            holder.statoProposta.background = activityContext.resources.getDrawable(R.drawable.background_expired)
+            holder.statoProposta.text = activityContext.resources.getString(R.string.expired_proposal)
         }
     }
 
@@ -70,8 +69,7 @@ class HistoryAdapter(private val historyList : ArrayList<Proposal>, val clickLis
         val labelPlace: TextView = itemView.findViewById(R.id.textViewHLuogo)
         val labelDate: TextView = itemView.findViewById(R.id.textViewHData)
         val labelTime: TextView = itemView.findViewById(R.id.textViewHOra)
-        val labelOrganizator: TextView = itemView.findViewById(R.id.textViewHOrganizator)
-        val card: CardView = itemView.findViewById(R.id.historyCV)
+        val labelOrganizator: TextView = itemView.findViewById(R.id.textViewHorganizator)
         val btnChat : Button = itemView.findViewById(R.id.entryChatHistory)
         val nomeGruppo: TextView = itemView.findViewById(R.id.textViewHGroupNameValue)
         val labelNomeGruppo: TextView = itemView.findViewById(R.id.textViewHGroupName)

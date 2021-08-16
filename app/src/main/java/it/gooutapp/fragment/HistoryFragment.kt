@@ -2,6 +2,7 @@ package it.gooutapp.fragment
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,6 +35,7 @@ class HistoryFragment : Fragment(), HistoryAdapter.ClickListenerHistory {
         historyList = arrayListOf()
 
         fs.getUserHistoryProposalData { historyListData ->
+            Log.e("TAG", historyListData.last().accepters.toString())
             historyList = historyListData
             historyAdapter = HistoryAdapter(historyList,this)
             recyclerView.adapter = historyAdapter

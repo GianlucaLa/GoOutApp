@@ -98,7 +98,7 @@
                 android:text="TextView" />
 
             <TextView
-                android:id="@+id/textViewHOrganizator"
+                android:id="@+id/textViewHorganizator"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textViewHGroupName"
@@ -112,8 +112,8 @@
                 android:id="@+id/textViewHOrganizatorValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/textViewHOrganizator"
-                android:layout_toEndOf="@id/textViewHOrganizator"
+                android:layout_toRightOf="@id/textViewHorganizator"
+                android:layout_toEndOf="@id/textViewHorganizator"
                 android:layout_below="@id/textViewHGroupNameValue"
                 android:textSize="17sp"
                 android:text="TextView" />
@@ -122,7 +122,7 @@
                 android:id="@+id/textViewHLuogo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/textViewHOrganizator"
+                android:layout_below="@+id/textViewHorganizator"
                 android:layout_marginBottom="8dp"
                 android:text="Luogo: "
                 android:textColor="@color/colorSecondary"
@@ -134,7 +134,7 @@
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/textViewHLuogo"
                 android:layout_toEndOf="@id/textViewHLuogo"
-                android:layout_below="@id/textViewHOrganizator"
+                android:layout_below="@id/textViewHorganizator"
                 android:layout_marginBottom="8dp"
                 android:textSize="17sp"
                 android:text="TextView" />
