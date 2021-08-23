@@ -56,18 +56,14 @@ class ProposalAdapter(private val proposalList: ArrayList<Proposal>, val clickLi
                     R.id.partecipants->{
                         fs.getProposalPartecipants(proposal.proposalId.toString()){ participants ->
                             var items = if(participants.size != 0){
-                                Log.e(TAG, participants.size.toString())
                                 participants.toTypedArray() as Array<CharSequence>
                             }else{
-                                Log.e(TAG, participants.size.toString())
                                 arrayOf(activityContext.resources.getString(R.string.no_partecipant))
                             }
                             MaterialAlertDialogBuilder(activityContext)
                                 .setTitle(activityContext.resources.getString(R.string.partecipants))
-                                .setPositiveButton(R.string.ok){_, _ ->}
-                                .setItems(items){ dialog, which ->
-
-                                }
+                                .setPositiveButton(R.string.ok){ _, _ ->}
+                                .setItems(items){ _, _ ->}
                                 .show()
                         }
                     }

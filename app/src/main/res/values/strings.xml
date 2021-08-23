@@ -109,4 +109,5 @@
     <string name="members">Members</string>
     <string name="partecipants">Partecipants</string>
     <string name="no_partecipant">Still no participants</string>
+    <string name="modify_proposal">Modify proposal</string>
 </resources>

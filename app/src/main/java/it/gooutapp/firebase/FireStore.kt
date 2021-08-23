@@ -12,6 +12,7 @@ import it.gooutapp.model.Proposal
 import it.gooutapp.model.User
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import kotlin.coroutines.coroutineContext
 
 class FireStore {
     private val TAG = "FIRE_STORE"
@@ -203,7 +204,7 @@ class FireStore {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun getUserHistoryProposalData(callback: (ArrayList<Proposal>) -> Unit){
+    fun getUserHistoryProposalData(callback: (ArrayList<Proposal>) -> Unit) {
         var proposalArrayList = ArrayList<Proposal>()
         getUserGroupsData { groupList, _ ->
             db.collection(proposalCollection).addSnapshotListener { value, error ->
@@ -213,16 +214,20 @@ class FireStore {
                 }
                 for (dc: DocumentChange in value?.documentChanges!!) {
                     var stringDoc = dc.document.toString()
-                    //cerco e aggiungo i gruppi che contengono l'email dell'utente
-                    for(group in groupList){
-                        if(dc.document.get("groupId") == group.groupId){
+                    for (group in groupList) {
+                        if (dc.document.get("groupId") == group.groupId) {
                             if (dc.type == DocumentChange.Type.ADDED
                                 && (stringDoc.contains(currentUserEmail())
-                                        || LocalDateTime.now().isAfter(LocalDateTime.parse(dc.document.get("dateTime").toString()))
-                                        || dc.document.contains("canceled"))) {
+                                        || LocalDateTime.now().isAfter(
+                                    LocalDateTime.parse(
+                                        dc.document.get("dateTime").toString()
+                                    )
+                                )
+                                        || dc.document.contains("canceled"))
+                            ) {
                                 proposalArrayList?.add(dc?.document?.toObject(Proposal::class.java))
-                            } else if (dc.type == DocumentChange.Type.REMOVED){
-                                proposalArrayList.removeIf{ p ->
+                            } else if (dc.type == DocumentChange.Type.REMOVED) {
+                                proposalArrayList.removeIf { p ->
                                     p.proposalId == dc.document.get("proposalId").toString()
                                 }
                             }
@@ -235,36 +240,24 @@ class FireStore {
     }
 
     fun getProposalPartecipants(proposalId: String, callback: (ArrayList<String>) -> Unit){
+        var partecipants = ArrayList<String>()
         db.collection(proposalCollection).whereEqualTo("proposalId", "$proposalId").get()
             .addOnSuccessListener { proposalDocs ->
+                val organizator = proposalDocs.last()?.get("organizator") as String
+                partecipants.add(organizator)
                 if(proposalDocs.last()?.get("accepters") != null) {
                     var partecipants: ArrayList<String> = proposalDocs?.last()?.get("accepters")!! as ArrayList<String>
-                    partecipants.add(proposalDocs.last()?.get("organizator") as String)
+                    partecipants.add(organizator)
                     Log.e(TAG, partecipants.toString())
-                    callback(partecipants)
                 }
-                else{
-                    callback(arrayListOf())
-                }
-            }
-    }
-
-    fun getUserProposalState(proposalId: String, callback: (Any) -> Unit){
-        db.collection(proposalCollection).whereEqualTo("proposalId", "$proposalId").get()
-            .addOnSuccessListener { proposalDocs ->
-                var doc = proposalDocs.last()
-                when {
-                    doc.get("accepters").toString().contains(currentUserEmail()) -> callback("accepted")
-                    doc.get("decliners").toString().contains(currentUserEmail()) -> callback("refused")
-                    else -> callback("")
-                }
+                callback(partecipants)
             }
     }
 
     private fun getGroupDocumentId(groupId: String, callback: (String) -> Unit) {
         db.collection(groupCollection).whereEqualTo("groupId", "$groupId").get()
-            .addOnSuccessListener { foundgroupId ->
-                callback(foundgroupId.last().id)
+            .addOnSuccessListener { foundGroupId ->
+                callback(foundGroupId.last().id)
             }.addOnFailureListener { exception ->
                 Log.d(TAG, "get failed with ", exception)
             }

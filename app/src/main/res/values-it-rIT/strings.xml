@@ -103,4 +103,5 @@
     <string name="members">Membri</string>
     <string name="partecipants">Partecipanti</string>
     <string name="no_partecipant">Ancora Nessun partecipante</string>
+    <string name="modify_proposal">Modifica proposta</string>
 </resources>

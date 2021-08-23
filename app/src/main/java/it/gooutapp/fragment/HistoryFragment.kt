@@ -35,13 +35,11 @@ class HistoryFragment : Fragment(), HistoryAdapter.ClickListenerHistory {
         historyList = arrayListOf()
 
         fs.getUserHistoryProposalData { historyListData ->
-            Log.e("TAG", historyListData.last().accepters.toString())
             historyList = historyListData
             historyAdapter = HistoryAdapter(historyList,this)
             recyclerView.adapter = historyAdapter
             HistoryPB?.visibility = View.INVISIBLE
         }
-
         return root
     }
 

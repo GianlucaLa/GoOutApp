@@ -3,7 +3,7 @@
     <item
         android:id="@+id/modify"
         android:icon="@drawable/ic_calendar_plus"
-        android:title="@string/menu_new_proposal"
+        android:title="@string/modify_proposal"
         android:background="?attr/colorPrimary" />
     <item
         android:id="@+id/partecipants"
