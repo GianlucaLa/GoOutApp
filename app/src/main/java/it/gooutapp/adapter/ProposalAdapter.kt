@@ -1,6 +1,5 @@
 package it.gooutapp.adapter
 
-import android.util.Log
 import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
@@ -54,7 +53,7 @@ class ProposalAdapter(private val proposalList: ArrayList<Proposal>, val clickLi
                 when(item.itemId) {
                     R.id.modify->{clickListenerProposal.modifyProposalListener(proposalList[position])}
                     R.id.partecipants->{
-                        fs.getProposalPartecipants(proposal.proposalId.toString()){ participants ->
+                        fs.getProposalPartecipants(proposal.proposalId.toString(), activityContext){ participants ->
                             var items = if(participants.size != 0){
                                 participants.toTypedArray() as Array<CharSequence>
                             }else{

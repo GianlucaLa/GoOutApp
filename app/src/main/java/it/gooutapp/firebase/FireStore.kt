@@ -1,18 +1,20 @@
 package it.gooutapp.firebase
 
+import android.content.Context
+import android.content.res.Resources
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.*
 import com.google.firebase.ktx.Firebase
+import it.gooutapp.R
 import it.gooutapp.model.Group
 import it.gooutapp.model.Message
 import it.gooutapp.model.Proposal
 import it.gooutapp.model.User
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import kotlin.coroutines.coroutineContext
 
 class FireStore {
     private val TAG = "FIRE_STORE"
@@ -239,15 +241,15 @@ class FireStore {
         }
     }
 
-    fun getProposalPartecipants(proposalId: String, callback: (ArrayList<String>) -> Unit){
+    fun getProposalPartecipants(proposalId: String, context: Context, callback: (ArrayList<String>) -> Unit){
         var partecipants = ArrayList<String>()
         db.collection(proposalCollection).whereEqualTo("proposalId", "$proposalId").get()
             .addOnSuccessListener { proposalDocs ->
                 val organizator = proposalDocs.last()?.get("organizator") as String
-                partecipants.add(organizator)
                 if(proposalDocs.last()?.get("accepters") != null) {
-                    var partecipants: ArrayList<String> = proposalDocs?.last()?.get("accepters")!! as ArrayList<String>
-                    partecipants.add(organizator)
+                    partecipants = proposalDocs?.last()?.get("accepters")!! as ArrayList<String>
+                    var stringOrg = context.resources.getString(R.string.organizator)
+                    partecipants.add("$organizator ($stringOrg)")
                     Log.e(TAG, partecipants.toString())
                 }
                 callback(partecipants)
@@ -398,7 +400,6 @@ class FireStore {
 
     fun removeMemberGroup(groupId: String, email: String, callback: (Boolean) -> Unit){
         getGroupDocumentId(groupId) { groupDoc ->
-            Log.e(TAG, "$groupDoc")
             db.collection(groupCollection).document(groupDoc)
                 .update("users", FieldValue.arrayRemove("$email"))
                 .addOnSuccessListener {

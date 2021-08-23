@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#7472f2</color>
-    <color name="colorPrimaryVariant">#2a2d3f</color>
-    <color name="colorPrimaryLight">#9d9cff</color>
+    <color name="colorPrimary">#2188e7</color>
+    <color name="colorPrimaryVariant">#1d232f</color>
+    <color name="colorPrimaryLight">#62a3fd</color>
 
-    <color name="colorSecondary">#9d9cff</color>
-    <color name="colorSecondaryDark">#4c48cc</color>
+    <color name="colorSecondary">#62a3fd</color>
+    <color name="colorSecondaryDark">#216fdb</color>
 
-    <color name="toolbarFocus">#5b5f7a</color>
+    <color name="toolbarFocus">#4e5972</color>
 
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>

@@ -66,7 +66,7 @@
     <string name="proposal_state_fail">Si è verificato un errore durante l\'aggiornamento della proposta</string>
     <string name="proposal_accepted">Accettata</string>
     <string name="proposal_refused">Rifiutata</string>
-    <string name="compile_date_first">E\' necessario compilare per prima il campo data</string>
+    <string name="compile_date_first">E\' necessario prima compilare il campo data</string>
     <string name="time_not_valid">Non è possibile selezionare un ora nel passato</string>
     <string name="expired_proposal">Scaduta</string>
     <string name="enter_chat">Entra nella chat</string>
