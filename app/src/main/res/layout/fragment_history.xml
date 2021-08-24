@@ -23,7 +23,6 @@
         android:fontFamily="@font/baloo"
         android:textAlignment="center"
         android:padding="24dp"
-        android:text="@string/empty_fragment_message"
         android:textSize="35sp"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"

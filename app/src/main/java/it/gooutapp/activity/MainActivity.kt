@@ -1,4 +1,4 @@
-package it.gooutapp.activity
+ package it.gooutapp.activity
 
 import android.content.Intent
 import android.content.SharedPreferences

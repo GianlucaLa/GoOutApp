@@ -33,7 +33,9 @@ class GroupFragment : Fragment(), ProposalAdapter.ClickListenerProposal {
         recyclerView.layoutManager = LinearLayoutManager(root.context)
 
         fs.getProposalData(groupId) { proposalListData ->
-            proposalAdapter = ProposalAdapter(proposalListData, this, tvEmptyProposalMessage)
+            val emptyProposalMessage = root.tvEmptyProposalMessage
+            emptyProposalMessage.text = context?.resources?.getString(R.string.empty_proposal_message)
+            proposalAdapter = ProposalAdapter(proposalListData, this, emptyProposalMessage)
             recyclerView.adapter = proposalAdapter
             GroupPB?.visibility = View.INVISIBLE
             if(proposalListData.size == 0){

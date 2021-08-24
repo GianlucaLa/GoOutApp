@@ -35,7 +35,9 @@ class ChatFragment: Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(root.context)
 
         fs.getChatData(proposalId) { chatList ->
-            chatAdapter = ChatAdapter(root.context, chatList, tvEmptyChatMessage)
+            val emptyChatMessage = root.tvEmptyChatMessage
+            emptyChatMessage.text = context?.resources?.getString(R.string.empty_chat_message)
+            chatAdapter = ChatAdapter(root.context, chatList, emptyChatMessage)
             recyclerView.adapter = chatAdapter
             recyclerView.scrollToPosition(chatAdapter.itemCount -1);
             ChatPB?.visibility = View.INVISIBLE
