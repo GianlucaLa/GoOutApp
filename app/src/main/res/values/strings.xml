@@ -110,4 +110,6 @@
     <string name="partecipants">Partecipants</string>
     <string name="no_partecipant">Still no participants</string>
     <string name="modify_proposal">Modify proposal</string>
+    <string name="empty_fragment_message">No items to display</string>
+    <string name="empty_chat_message">No messages to display</string>
 </resources>

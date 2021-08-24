@@ -22,23 +22,22 @@ import java.util.*
 
 class HistoryFragment : Fragment(), HistoryAdapter.ClickListenerHistory {
     private lateinit var recyclerView: RecyclerView
-    private lateinit var historyList: ArrayList<Proposal>
     private lateinit var historyAdapter: HistoryAdapter
     private val fs = FireStore()
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_history, container, false)
-
         recyclerView = root.messagesRecyclerView
         recyclerView.layoutManager = LinearLayoutManager(root.context)
-        historyList = arrayListOf()
 
         fs.getUserHistoryProposalData { historyListData ->
-            historyList = historyListData
-            historyAdapter = HistoryAdapter(historyList,this)
+            historyAdapter = HistoryAdapter(historyListData,this)
             recyclerView.adapter = historyAdapter
             HistoryPB?.visibility = View.INVISIBLE
+            if(historyListData.size == 0){
+                tvEmptyHistoryMessage?.visibility = View.VISIBLE
+            }
         }
         return root
     }

@@ -17,13 +17,11 @@ import it.gooutapp.firebase.FireStore
 import it.gooutapp.model.Proposal
 import kotlinx.android.synthetic.main.fragment_group.*
 import kotlinx.android.synthetic.main.fragment_group.view.*
-import java.util.*
 
 class GroupFragment : Fragment(), ProposalAdapter.ClickListenerProposal {
     private val TAG = "GROUP_FRAGMENT"
     private lateinit var groupId: String
     private lateinit var recyclerView: RecyclerView
-    private lateinit var proposalList: ArrayList<Proposal>
     private lateinit var proposalAdapter: ProposalAdapter
     private val fs = FireStore()
 
@@ -31,16 +29,18 @@ class GroupFragment : Fragment(), ProposalAdapter.ClickListenerProposal {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_group, container, false)
         groupId = arguments?.get("groupId").toString()
-
         recyclerView = root.proposalRecyclerView
         recyclerView.layoutManager = LinearLayoutManager(root.context)
-        proposalList = arrayListOf()
+
         fs.getProposalData(groupId) { proposalListData ->
-            proposalList = proposalListData
-            proposalAdapter = ProposalAdapter(proposalList, this)
+            proposalAdapter = ProposalAdapter(proposalListData, this, tvEmptyProposalMessage)
             recyclerView.adapter = proposalAdapter
             GroupPB?.visibility = View.INVISIBLE
+            if(proposalListData.size == 0){
+                tvEmptyProposalMessage?.visibility = View.VISIBLE
+            }
         }
+
         setHasOptionsMenu(true)
         return root
     }

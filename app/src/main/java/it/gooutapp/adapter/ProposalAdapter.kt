@@ -17,7 +17,7 @@ import it.gooutapp.firebase.FireStore
 import it.gooutapp.model.MyDialog
 import it.gooutapp.model.Proposal
 
-class ProposalAdapter(private val proposalList: ArrayList<Proposal>, val clickListenerProposal: ClickListenerProposal) : RecyclerView.Adapter<ProposalAdapter.MyViewHolder>() {
+class ProposalAdapter(private val proposalList: ArrayList<Proposal>, private val clickListenerProposal: ClickListenerProposal, private val tvEmptyProposalMessage: View) : RecyclerView.Adapter<ProposalAdapter.MyViewHolder>() {
     private val TAG = "PROPOSAL_ADAPTER"
     private val fs = FireStore()
     private var user_auth_id = Firebase.auth.currentUser?.uid.toString()
@@ -28,6 +28,7 @@ class ProposalAdapter(private val proposalList: ArrayList<Proposal>, val clickLi
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        tvEmptyProposalMessage?.visibility = View.INVISIBLE
         var activityContext = holder.itemView.context
         val proposal: Proposal = proposalList[position]
         holder.nomeProposta.text = proposal.proposalName

@@ -24,6 +24,7 @@ import it.gooutapp.adapter.GroupAdapter
 import it.gooutapp.firebase.FireStore
 import it.gooutapp.model.Group
 import it.gooutapp.model.MyDialog
+import kotlinx.android.synthetic.main.fragment_history.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import kotlinx.android.synthetic.main.row_group.view.*
@@ -31,8 +32,6 @@ import kotlinx.android.synthetic.main.row_group.view.*
 class HomeFragment : Fragment(), GroupAdapter.ClickListener {
     private val TAG = "HOME_FRAGMENT"
     private lateinit var recyclerView: RecyclerView
-    private lateinit var userGroupList: ArrayList<Group>
-    private lateinit var adminFlagList: ArrayList<Boolean>
     private lateinit var groupAdapter: GroupAdapter
     private var mLastClickTime: Long = 0
     private var user_email = Firebase.auth.currentUser?.email.toString()
@@ -45,15 +44,14 @@ class HomeFragment : Fragment(), GroupAdapter.ClickListener {
         recyclerView = root.recyclerView
         recyclerView.layoutManager = LinearLayoutManager(root.context)
         recyclerView.setHasFixedSize(true)
-        userGroupList = arrayListOf()
-        adminFlagList = arrayListOf()
 
         fs.getUserGroupsData { groupList, adminFlag ->
-            userGroupList = groupList
-            adminFlagList = adminFlag
-            groupAdapter = GroupAdapter(userGroupList, adminFlagList,this)
+            groupAdapter = GroupAdapter(groupList, adminFlag,this, tvEmptyGroupMessage)
             recyclerView.adapter = groupAdapter
             HomePB?.visibility = View.INVISIBLE
+            if(groupList.size == 0){
+                tvEmptyGroupMessage?.visibility = View.VISIBLE
+            }
 
             //swipe a destra recycle view
             val itemSwipe = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
@@ -91,13 +89,13 @@ class HomeFragment : Fragment(), GroupAdapter.ClickListener {
                             var thisPosition = viewHolder.adapterPosition
                             groupAdapter.deleteItemRow(thisPosition)
                             if (userIsAdmin) {
-                                fs.deleteGroupData(userGroupList[thisPosition].groupId.toString())
+                                fs.deleteGroupData(groupList[thisPosition].groupId.toString())
                             } else {
-                                fs.leaveGroup(userGroupList[thisPosition].groupId.toString()) { result ->
+                                fs.leaveGroup(groupList[thisPosition].groupId.toString()) { result ->
                                     if (!result) Log.e(TAG, "error during update of document")
                                 }
                             }
-                            userGroupList.removeAt(position)
+                            groupList.removeAt(position)
                             groupAdapter.notifyItemRemoved(position)
                         }else{
                             groupAdapter.notifyDataSetChanged()

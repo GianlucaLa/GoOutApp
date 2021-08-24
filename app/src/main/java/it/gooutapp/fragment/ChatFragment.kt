@@ -12,13 +12,13 @@ import it.gooutapp.R
 import it.gooutapp.adapter.ChatAdapter
 import it.gooutapp.firebase.FireStore
 import kotlinx.android.synthetic.main.fragment_chat.*
+import kotlinx.android.synthetic.main.fragment_chat.tvEmptyChatMessage
 import kotlinx.android.synthetic.main.fragment_chat.view.*
 import java.util.ArrayList
 
 class ChatFragment: Fragment() {
     private val TAG = "CHAT_FRAGMENT"
     private lateinit var recyclerView: RecyclerView
-    private lateinit var messageList: ArrayList<it.gooutapp.model.Message>
     private lateinit var chatAdapter: ChatAdapter
     private lateinit var proposalId: String
     private val fs = FireStore()
@@ -26,22 +26,22 @@ class ChatFragment: Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_chat, container, false)
-
         val editTextMessage = root.editTextChatMessage
         val sendMessageButton = root.sendMessageFAB
 
         //acquisisco l'id della proposal a cui è associata la chat
         proposalId = arguments?.get("proposalId").toString()
-
         recyclerView = root.findViewById(R.id.messagesRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(root.context)
-        messageList = arrayListOf()
-        fs.getChatData(proposalId) { chatArray ->
-            messageList = chatArray
-            chatAdapter = ChatAdapter(root.context, messageList)
+
+        fs.getChatData(proposalId) { chatList ->
+            chatAdapter = ChatAdapter(root.context, chatList, tvEmptyChatMessage)
             recyclerView.adapter = chatAdapter
             recyclerView.scrollToPosition(chatAdapter.itemCount -1);
             ChatPB?.visibility = View.INVISIBLE
+            if(chatList.size == 0){
+                tvEmptyChatMessage?.visibility = View.VISIBLE
+            }
         }
 
         sendMessageButton.setOnClickListener {

@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import it.gooutapp.R
 import it.gooutapp.model.Group
 
-class GroupAdapter(private val userGroupList : ArrayList<Group>, val adminFlagList : ArrayList<Boolean>, val clickListener: ClickListener) : RecyclerView.Adapter<GroupAdapter.MyViewHolder>() {
+class GroupAdapter(private val userGroupList : ArrayList<Group>, private val adminFlagList : ArrayList<Boolean>, private val clickListener: ClickListener, private val tvEmptyGroupMessage: View) : RecyclerView.Adapter<GroupAdapter.MyViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.row_group, parent, false)
@@ -16,6 +16,7 @@ class GroupAdapter(private val userGroupList : ArrayList<Group>, val adminFlagLi
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        tvEmptyGroupMessage?.visibility = View.INVISIBLE
         val groupList: Group = userGroupList[position]
         holder.groupName.text = groupList.groupName
         val circleTextGroup = groupList.groupName?.get(0)

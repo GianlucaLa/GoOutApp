@@ -29,6 +29,22 @@
         app:srcCompat="@drawable/ic_menu_group_add"
         tools:ignore="VectorDrawableCompat" />
 
+    <TextView
+        android:id="@+id/tvEmptyGroupMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/baloo"
+        android:textAlignment="center"
+        android:padding="24dp"
+        android:text="@string/empty_fragment_message"
+        android:textSize="35sp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:gravity="center_horizontal" />
+
     <ProgressBar
         android:id="@+id/HomePB"
         style="?android:attr/progressBarStyle"

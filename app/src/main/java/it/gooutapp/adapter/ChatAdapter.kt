@@ -15,7 +15,7 @@ import it.gooutapp.R
 import it.gooutapp.model.Message
 import java.util.*
 
-class ChatAdapter(private val context: Context, private val messageList: ArrayList<Message>) : RecyclerView.Adapter<ChatAdapter.MyViewHolder>() {
+class ChatAdapter(private val context: Context, private val messageList: ArrayList<Message>, private val tvEmptyMessage: View) : RecyclerView.Adapter<ChatAdapter.MyViewHolder>() {
     private val TAG = "CHAT_ADAPTER"
     private val MESSAGE_TYPE_LEFT = 0
     private val MESSAGE_TYPE_RIGHT = 1
@@ -39,6 +39,7 @@ class ChatAdapter(private val context: Context, private val messageList: ArrayLi
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        tvEmptyMessage?.visibility = View.INVISIBLE
         val message = messageList[position]
         if(getItemViewType(position) == MESSAGE_TYPE_LEFT) {
             holder.txtUserName.text = Html.fromHtml("<b>${message.ownerNickname}</b><br>${message.text}");

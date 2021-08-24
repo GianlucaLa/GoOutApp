@@ -104,4 +104,6 @@
     <string name="partecipants">Partecipanti</string>
     <string name="no_partecipant">Ancora Nessun partecipante</string>
     <string name="modify_proposal">Modifica proposta</string>
+    <string name="empty_fragment_message">Nessun elemento da visualizzare</string>
+    <string name="empty_chat_message">Non ci sono messaggi</string>
 </resources>
