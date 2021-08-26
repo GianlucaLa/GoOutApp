@@ -21,7 +21,6 @@ class GroupAdapter(private val userGroupList: ArrayList<Group>, private val admi
         val group: Group = userGroupList[position]
         holder.groupName.text = group.groupName
         val circleTextGroup = group.groupName?.get(0)
-        //holder.lastMex.text = lastMessage
         if(adminFlagList[position]) {
             holder.adminFlag.text = "Admin"
         }
@@ -30,6 +29,7 @@ class GroupAdapter(private val userGroupList: ArrayList<Group>, private val admi
         holder.itemView.setOnClickListener{
             clickListener.onItemClick(userGroupList[position])
         }
+//        holder.lastMex.text = lastMessage
         val groupNotification = notificationHM[group.groupId]
         //controllo notifiche
         if(groupNotification?.numNotification != null) {

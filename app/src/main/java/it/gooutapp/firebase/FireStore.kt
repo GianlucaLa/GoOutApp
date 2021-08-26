@@ -152,8 +152,11 @@ class FireStore {
                         notificationHM[proposal.groupId.toString()] = n
                     }
                 }
-                var lastMessage = "${proposalsList.last().organizator} HA PROPOSTO ${proposalsList.last().proposalName}"
-                Log.e(TAG, notificationHM.toString())
+                var lastMessage = ""
+                if (proposalsList != null && proposalsList.size > 0) {
+                    lastMessage = "${proposalsList?.last()?.organizator} HA PROPOSTO ${proposalsList?.last()?.proposalName}"
+                    Log.e(TAG, notificationHM?.toString())
+                }
                 callback(userGroupsList, adminFlagList, notificationHM, lastMessage)
             }
         }
