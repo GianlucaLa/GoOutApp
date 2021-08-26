@@ -1,7 +1,6 @@
 package it.gooutapp.firebase
 
 import android.content.Context
-import android.content.res.Resources
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -9,10 +8,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.*
 import com.google.firebase.ktx.Firebase
 import it.gooutapp.R
-import it.gooutapp.model.Group
-import it.gooutapp.model.Message
-import it.gooutapp.model.Proposal
-import it.gooutapp.model.User
+import it.gooutapp.model.*
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -70,7 +66,8 @@ class FireStore {
                 "place" to place,
                 "groupName" to groupName,
                 "proposalId" to proposalId,
-                "proposalName" to proposalName
+                "proposalName" to proposalName,
+                "read" to FieldValue.arrayUnion(currentUserEmail())
             )
             db.collection(proposalCollection).document("proposal_${LocalDateTime.now()}")
                 .set(proposal)
@@ -115,7 +112,8 @@ class FireStore {
         }
     }
 
-    fun getUserGroupsData(callback: (ArrayList<Group>, ArrayList<Boolean>) -> Unit) {
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getUserGroupsData(callback: (ArrayList<Group>, ArrayList<Boolean>, HashMap<String, Notification>, lastMessage: String) -> Unit) {
         val userGroupsList = ArrayList<Group>()
         val adminFlagList = ArrayList<Boolean>()
         db.collection(groupCollection).addSnapshotListener { value, error ->
@@ -124,25 +122,40 @@ class FireStore {
                 return@addSnapshotListener
             }
             for (dc: DocumentChange in value?.documentChanges!!) {
+                val thisGroup = dc.document.toObject(Group::class.java)
                 //cerco e aggiungo i gruppi che contengono l'email dell'utente
-                if (dc.document.get("admin")== currentUserEmail()) {
+                if (thisGroup.admin == currentUserEmail()) {
                     adminFlagList.add(true)
                     if (dc.type == DocumentChange.Type.ADDED)
-                        userGroupsList.add(dc.document.toObject(Group::class.java))
+                        userGroupsList.add(thisGroup)
                     else if (dc.type == DocumentChange.Type.REMOVED)
-                        userGroupsList.remove(dc.document.toObject(Group::class.java))
-                } else if (dc.document.get("users").toString().contains(currentUserEmail())) {
+                        userGroupsList.remove(thisGroup)
+                } else if (thisGroup.users?.contains(currentUserEmail()) == true) {
                     adminFlagList.add(false)
                     if (dc.type == DocumentChange.Type.ADDED)
-                        userGroupsList.add(dc.document.toObject(Group::class.java))
+                        userGroupsList.add(thisGroup)
                     else if (dc.type == DocumentChange.Type.REMOVED)
-                        userGroupsList.remove(dc.document.toObject(Group::class.java))
+                        userGroupsList.remove(thisGroup)
                 }else{
                     if (dc.type == DocumentChange.Type.MODIFIED)
-                        userGroupsList.remove(dc.document.toObject(Group::class.java))
+                        userGroupsList.remove(thisGroup)
                 }
             }
-            callback(userGroupsList, adminFlagList)
+            getAllUserProposals{ proposalsList ->
+                var notificationHM = HashMap<String, Notification>()
+                var counter = 0
+                var n: Notification
+                for(proposal in proposalsList){
+                    if(proposal.read?.contains(currentUserEmail()) == false){
+                        counter++
+                        n = Notification(proposal.groupId, counter)
+                        notificationHM[proposal.groupId.toString()] = n
+                    }
+                }
+                var lastMessage = "${proposalsList.last().organizator} HA PROPOSTO ${proposalsList.last().proposalName}"
+                Log.e(TAG, notificationHM.toString())
+                callback(userGroupsList, adminFlagList, notificationHM, lastMessage)
+            }
         }
     }
 
@@ -179,7 +192,7 @@ class FireStore {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun getProposalData(groupId: String, callback: (ArrayList<Proposal>) -> Unit) {
+    fun getGroupProposalData(groupId: String, callback: (ArrayList<Proposal>) -> Unit) {
         var proposalArrayList = ArrayList<Proposal>()
         db.collection(proposalCollection).whereEqualTo("groupId", "$groupId")
             .addSnapshotListener { value, error ->
@@ -189,15 +202,47 @@ class FireStore {
                 }
                 for (dc: DocumentChange in value?.documentChanges!!) {
                     //cerco e aggiungo i gruppi che contengono l'email dell'utente
+                    val thisProposal = dc.document.toObject(Proposal::class.java)
                     val currentDateTime = LocalDateTime.now()
-                    val currDocDate = LocalDateTime.parse(dc.document.get("dateTime").toString(), DateTimeFormatter.ISO_DATE_TIME)
-                    val canceled = dc.document.contains("canceled")
+                    val currDocDate = LocalDateTime.parse(thisProposal.dateTime, DateTimeFormatter.ISO_DATE_TIME)
+                    val canceled = thisProposal.canceled == "canceled"
+                    val alreadyAccepted = thisProposal.accepters?.contains(currentUserEmail())
+                    val alreadyDeclined = thisProposal.decliners?.contains(currentUserEmail())
                     if (currDocDate.isAfter(currentDateTime))
-                        if (dc.type == DocumentChange.Type.ADDED && !(dc.document.toString().contains(currentUserEmail()) || canceled))
-                            proposalArrayList.add(dc.document.toObject(Proposal::class.java))
-                        else if (dc.type == DocumentChange.Type.MODIFIED && (dc.document.toString().contains(currentUserEmail()) || canceled)){
+                        if (dc.type == DocumentChange.Type.ADDED && !(alreadyAccepted == true || alreadyDeclined == true || canceled))
+                            proposalArrayList.add(thisProposal)
+                        else if (dc.type == DocumentChange.Type.MODIFIED && (alreadyAccepted == true || alreadyDeclined == true || canceled)){
                             proposalArrayList.removeIf{ p ->
-                                p.proposalId == dc.document.get("proposalId").toString()
+                                p.proposalId == thisProposal.proposalId
+                            }
+                        }
+                }
+                callback(proposalArrayList)
+            }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getAllUserProposals(callback: (ArrayList<Proposal>) -> Unit) {
+        var proposalArrayList = ArrayList<Proposal>()
+        db.collection(proposalCollection).addSnapshotListener { value, error ->
+                if (error != null) {
+                    Log.e("Firestore Error", error.message.toString())
+                    return@addSnapshotListener
+                }
+                for (dc: DocumentChange in value?.documentChanges!!) {
+                    //cerco e aggiungo i gruppi che contengono l'email dell'utente
+                    val thisProposal = dc.document.toObject(Proposal::class.java)
+                    val currentDateTime = LocalDateTime.now()
+                    val currDocDate = LocalDateTime.parse(thisProposal.dateTime, DateTimeFormatter.ISO_DATE_TIME)
+                    val canceled = thisProposal.canceled == "canceled"
+                    val alreadyAccepted = thisProposal.accepters?.contains(currentUserEmail())
+                    val alreadyDeclined = thisProposal.decliners?.contains(currentUserEmail())
+                    if (currDocDate.isAfter(currentDateTime))
+                        if (dc.type == DocumentChange.Type.ADDED && !(alreadyAccepted == true || alreadyDeclined == true || canceled))
+                            proposalArrayList.add(thisProposal)
+                        else if (dc.type == DocumentChange.Type.MODIFIED && (alreadyAccepted == true || alreadyDeclined == true || canceled)){
+                            proposalArrayList.removeIf{ p ->
+                                p.proposalId == thisProposal.proposalId
                             }
                         }
                 }
@@ -208,29 +253,24 @@ class FireStore {
     @RequiresApi(Build.VERSION_CODES.O)
     fun getUserHistoryProposalData(callback: (ArrayList<Proposal>) -> Unit) {
         var proposalArrayList = ArrayList<Proposal>()
-        getUserGroupsData { groupList, _ ->
+        getUserGroupsData { groupList, _, _, _ ->
             db.collection(proposalCollection).addSnapshotListener { value, error ->
                 if (error != null) {
                     Log.e("Firestore Error", error.message.toString())
                     return@addSnapshotListener
                 }
                 for (dc: DocumentChange in value?.documentChanges!!) {
-                    var stringDoc = dc.document.toString()
+                    val thisProposal = dc.document.toObject(Proposal::class.java)
+                    val canceled = thisProposal.canceled == "canceled"
+                    val alreadyAccepted = thisProposal.accepters?.contains(currentUserEmail())
+                    val alreadyDeclined = thisProposal.decliners?.contains(currentUserEmail())
                     for (group in groupList) {
-                        if (dc.document.get("groupId") == group.groupId) {
-                            if (dc.type == DocumentChange.Type.ADDED
-                                && (stringDoc.contains(currentUserEmail())
-                                        || LocalDateTime.now().isAfter(
-                                    LocalDateTime.parse(
-                                        dc.document.get("dateTime").toString()
-                                    )
-                                )
-                                        || dc.document.contains("canceled"))
-                            ) {
-                                proposalArrayList?.add(dc?.document?.toObject(Proposal::class.java))
+                        if (thisProposal.groupId == group.groupId) {
+                            if (dc.type == DocumentChange.Type.ADDED && (alreadyAccepted == true || alreadyDeclined == true || LocalDateTime.now().isAfter(LocalDateTime.parse(thisProposal.dateTime))) || canceled) {
+                                proposalArrayList?.add(thisProposal)
                             } else if (dc.type == DocumentChange.Type.REMOVED) {
                                 proposalArrayList.removeIf { p ->
-                                    p.proposalId == dc.document.get("proposalId").toString()
+                                    p.proposalId == thisProposal.proposalId
                                 }
                             }
                         }

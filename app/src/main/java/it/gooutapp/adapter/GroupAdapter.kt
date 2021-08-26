@@ -7,8 +7,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import it.gooutapp.R
 import it.gooutapp.model.Group
+import it.gooutapp.model.Notification
 
-class GroupAdapter(private val userGroupList : ArrayList<Group>, private val adminFlagList : ArrayList<Boolean>, private val clickListener: ClickListener, private val tvEmptyGroupMessage: View) : RecyclerView.Adapter<GroupAdapter.MyViewHolder>() {
+class GroupAdapter(private val userGroupList: ArrayList<Group>, private val adminFlagList: ArrayList<Boolean>, private val notificationHM: HashMap<String, Notification>, private val lastMessage: String, private val clickListener: ClickListener, private val tvEmptyGroupMessage: View) : RecyclerView.Adapter<GroupAdapter.MyViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.row_group, parent, false)
@@ -17,9 +18,10 @@ class GroupAdapter(private val userGroupList : ArrayList<Group>, private val adm
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         tvEmptyGroupMessage?.visibility = View.INVISIBLE
-        val groupList: Group = userGroupList[position]
-        holder.groupName.text = groupList.groupName
-        val circleTextGroup = groupList.groupName?.get(0)
+        val group: Group = userGroupList[position]
+        holder.groupName.text = group.groupName
+        val circleTextGroup = group.groupName?.get(0)
+        //holder.lastMex.text = lastMessage
         if(adminFlagList[position]) {
             holder.adminFlag.text = "Admin"
         }
@@ -27,6 +29,14 @@ class GroupAdapter(private val userGroupList : ArrayList<Group>, private val adm
         holder.icon.text = circleTextGroup.toString().toUpperCase()
         holder.itemView.setOnClickListener{
             clickListener.onItemClick(userGroupList[position])
+        }
+        val groupNotification = notificationHM[group.groupId]
+        //controllo notifiche
+        if(groupNotification?.numNotification != null) {
+            if(groupNotification?.numNotification!! > 0){
+                holder.notificationCounter.text = groupNotification.numNotification.toString()
+                holder.notificationCounter.visibility = View.VISIBLE
+            }
         }
     }
 
@@ -40,10 +50,11 @@ class GroupAdapter(private val userGroupList : ArrayList<Group>, private val adm
 
      class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         //nome della textView dove inserire dato
-        val groupName : TextView = itemView.findViewById(R.id.textViewNomeGruppo)
-        val adminFlag : TextView = itemView.findViewById(R.id.textViewAdminFlag)
-        val groupPosition : TextView = itemView.findViewById(R.id.textViewOrario)
-        val icon : TextView = itemView.findViewById(R.id.textViewDrawable)
+        val groupName: TextView = itemView.findViewById(R.id.textViewNomeGruppo)
+        val adminFlag: TextView = itemView.findViewById(R.id.textViewAdminFlag)
+        val icon: TextView = itemView.findViewById(R.id.textViewDrawable)
+        val notificationCounter: TextView = itemView.findViewById(R.id.tvNotificationCounter)
+        val lastMex: TextView = itemView.findViewById(R.id.tvMessagePreview)
     }
 
     interface ClickListener {

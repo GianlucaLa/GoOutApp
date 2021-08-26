@@ -32,7 +32,7 @@ class GroupFragment : Fragment(), ProposalAdapter.ClickListenerProposal {
         recyclerView = root.proposalRecyclerView
         recyclerView.layoutManager = LinearLayoutManager(root.context)
 
-        fs.getProposalData(groupId) { proposalListData ->
+        fs.getGroupProposalData(groupId) { proposalListData ->
             val emptyProposalMessage = root.tvEmptyProposalMessage
             emptyProposalMessage.text = context?.resources?.getString(R.string.empty_proposal_message)
             proposalAdapter = ProposalAdapter(proposalListData, this, emptyProposalMessage)

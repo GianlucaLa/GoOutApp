@@ -1,6 +1,6 @@
 package it.gooutapp.model
 
-class Proposal(
+data class Proposal(
     var canceled: String ?= null,
     var groupId: String ?= null,
     var groupName: String ?= null,
@@ -11,5 +11,6 @@ class Proposal(
     var organizator: String?= null,
     var organizatorId: String?= null,
     var accepters: ArrayList<String> ?= null,
-    var decliners: ArrayList<String> ?= null
+    var decliners: ArrayList<String> ?= null,
+    var read: ArrayList<String> ?= null
 )

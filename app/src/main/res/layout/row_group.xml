@@ -46,7 +46,7 @@
 
 
     <TextView
-        android:id="@+id/tvEmailDetails"
+        android:id="@+id/tvMessagePreview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textViewNomeGruppo"
@@ -55,8 +55,8 @@
         android:layout_marginTop="3dp"
         android:layout_marginEnd="25dp"
         android:layout_marginRight="25dp"
-        android:layout_toStartOf="@+id/textView"
-        android:layout_toLeftOf="@+id/textView"
+        android:layout_toStartOf="@+id/tvNotificationCounter"
+        android:layout_toLeftOf="@+id/tvNotificationCounter"
         android:layout_toEndOf="@+id/textViewDrawable"
         android:layout_toRightOf="@+id/textViewDrawable"
         android:ellipsize="end"
@@ -74,10 +74,10 @@
         android:text="12:46" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/tvNotificationCounter"
         android:layout_width="22dp"
         android:layout_height="22dp"
-        android:layout_alignBaseline="@id/tvEmailDetails"
+        android:layout_alignBaseline="@id/tvMessagePreview"
         android:layout_alignParentRight="true"
         android:layout_marginTop="3dp"
         android:background="@drawable/red_circle_text_view"
@@ -85,6 +85,7 @@
         android:text="1"
         android:textSize="15sp"
         android:textStyle="bold"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"
+        android:visibility="invisible" />
 
 </RelativeLayout>

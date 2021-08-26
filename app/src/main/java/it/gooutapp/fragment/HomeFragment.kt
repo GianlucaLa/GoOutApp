@@ -39,16 +39,17 @@ class HomeFragment : Fragment(), GroupAdapter.ClickListener {
     private val OFFSET_PX = 30
     private lateinit var root: View
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         root = inflater.inflate(R.layout.fragment_home, container, false)
         recyclerView = root.recyclerView
         recyclerView.layoutManager = LinearLayoutManager(root.context)
         recyclerView.setHasFixedSize(true)
 
-        fs.getUserGroupsData { groupList, adminFlag ->
+        fs.getUserGroupsData{ groupList, adminFlag, notificationHM, lastMessage ->
             val emptyHomeMessage = root.tvEmptyGroupMessage
             emptyHomeMessage.text = context?.resources?.getString(R.string.empty_home_message)
-            groupAdapter = GroupAdapter(groupList, adminFlag,this, emptyHomeMessage)
+            groupAdapter = GroupAdapter(groupList, adminFlag, notificationHM, lastMessage,this, emptyHomeMessage)
             recyclerView.adapter = groupAdapter
             HomePB?.visibility = View.INVISIBLE
             if(groupList.size == 0){
