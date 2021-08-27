@@ -115,7 +115,7 @@ class FireStore {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun getUserHomeData(context: Context, callback: (ArrayList<Group>, ArrayList<Boolean>, HashMap<String, Notification>, HashMap<String, String>) -> Unit) {
+    fun getUserHomeData(context: Context, callback: (ArrayList<Group>, ArrayList<Boolean>, HashMap<String, Notification>, HashMap<String, MessagePreview>) -> Unit) {
         val userGroupsList = ArrayList<Group>()
         val adminFlagList = ArrayList<Boolean>()
         db.collection(groupCollection).addSnapshotListener { value, error ->
@@ -145,7 +145,7 @@ class FireStore {
             }
             getAllUserProposals{ proposalsList ->
                 var notificationHM = HashMap<String, Notification>()
-                var lastMessageHM = HashMap<String, String>()
+                var lastMessageHM = HashMap<String, MessagePreview>()
                 var n: Notification
                 var counter = 0
                 for(proposal in proposalsList){
@@ -156,13 +156,13 @@ class FireStore {
                         }else {
                             counter = 1
                         }
-                        n = Notification(proposal.groupId, counter, proposal.creationDate)
+                        n = Notification(proposal.groupId, counter)
                         notificationHM[proposal.groupId.toString()] = n
                     }
                     if (currentUserId() == proposal.organizatorId)
-                        lastMessageHM[proposal.groupId.toString()] = "${context.resources.getString(R.string.you)}: ${context.resources.getString(R.string.menu_new_proposal)} '${proposal.proposalName}'"
+                        lastMessageHM[proposal.groupId.toString()] = MessagePreview("${context.resources.getString(R.string.you)}: ${context.resources.getString(R.string.menu_new_proposal)} '${proposal.proposalName}'", proposal.creationDate)
                     else
-                        lastMessageHM[proposal.groupId.toString()] = "${proposal.organizator}: ${context.resources.getString(R.string.menu_new_proposal)} '${proposal.proposalName}'"
+                        lastMessageHM[proposal.groupId.toString()] = MessagePreview("${proposal.organizator}: ${context.resources.getString(R.string.menu_new_proposal)} '${proposal.proposalName}'", proposal.creationDate)
                 }
                 callback(userGroupsList, adminFlagList, notificationHM, lastMessageHM)
             }
@@ -268,7 +268,6 @@ class FireStore {
                     return@addSnapshotListener
                 }
                 for (dc: DocumentChange in value?.documentChanges!!) {
-                    //cerco e aggiungo i gruppi che contengono l'email dell'utente
                     val thisProposal = dc.document.toObject(Proposal::class.java)
                     val currentDateTime = LocalDateTime.now()
                     val currDocDate = LocalDateTime.parse(thisProposal.dateTime, DateTimeFormatter.ISO_DATE_TIME)
@@ -407,6 +406,15 @@ class FireStore {
                         callback(false)
                     }
             }
+        }
+    }
+
+    fun setReadProposal(proposalToRead: ArrayList<Proposal>){
+        for(proposal in proposalToRead) {
+            db.collection(proposalCollection).document("proposal_${proposal.creationDate}")  //nome gruppo
+                .update("read", FieldValue.arrayUnion(currentUserEmail()))
+                .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
+                .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
         }
     }
 

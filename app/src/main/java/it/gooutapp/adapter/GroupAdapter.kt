@@ -9,10 +9,10 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import it.gooutapp.R
 import it.gooutapp.model.Group
+import it.gooutapp.model.MessagePreview
 import it.gooutapp.model.Notification
-import java.time.LocalTime
 
-class GroupAdapter(private val userGroupList: ArrayList<Group>, private val adminFlagList: ArrayList<Boolean>, private val notificationHM: HashMap<String, Notification>, private val lastMessageHM: HashMap<String, String>, private val clickListener: ClickListener, private val tvEmptyGroupMessage: View) : RecyclerView.Adapter<GroupAdapter.MyViewHolder>() {
+class GroupAdapter(private val userGroupList: ArrayList<Group>, private val adminFlagList: ArrayList<Boolean>, private val notificationHM: HashMap<String, Notification>, private val lastMessageHM: HashMap<String, MessagePreview>, private val clickListener: ClickListener, private val tvEmptyGroupMessage: View) : RecyclerView.Adapter<GroupAdapter.MyViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.row_group, parent, false)
@@ -33,13 +33,12 @@ class GroupAdapter(private val userGroupList: ArrayList<Group>, private val admi
         holder.itemView.setOnClickListener{
             clickListener.onItemClick(userGroupList[position])
         }
-        holder.lastMex.text = lastMessageHM[group.groupId]
-        val groupNotification = notificationHM[group.groupId]
+        holder.lastMex.text = lastMessageHM[group.groupId]?.lastMessage
+        holder.time.text = lastMessageHM[group.groupId]?.time?.substring(11, 16)
         //controllo notifiche
+        val groupNotification = notificationHM[group.groupId]
         if(groupNotification?.numNotification != null) {
             if(groupNotification?.numNotification!! > 0){
-                val time = groupNotification.time?.substring(11, 16)
-                holder.time.text = time
                 holder.notificationCounter.text = groupNotification.numNotification.toString()
                 holder.notificationCounter.visibility = View.VISIBLE
             }

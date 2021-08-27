@@ -3,6 +3,7 @@ package it.gooutapp.fragment
 import android.os.Build
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -20,6 +21,7 @@ import kotlinx.android.synthetic.main.fragment_group.view.*
 
 class GroupFragment : Fragment(), ProposalAdapter.ClickListenerProposal {
     private val TAG = "GROUP_FRAGMENT"
+    private var curr_user_email = Firebase.auth.currentUser?.email.toString()
     private lateinit var groupId: String
     private lateinit var recyclerView: RecyclerView
     private lateinit var proposalAdapter: ProposalAdapter
@@ -33,6 +35,13 @@ class GroupFragment : Fragment(), ProposalAdapter.ClickListenerProposal {
         recyclerView.layoutManager = LinearLayoutManager(root.context)
 
         fs.getGroupProposalData(groupId) { proposalListData ->
+            var proposalToRead = ArrayList<Proposal>()
+            for(proposal in proposalListData){
+                if(proposal.read?.contains(curr_user_email) != true)
+                    proposalToRead.add(proposal)
+            }
+            if(proposalToRead != null && proposalToRead.size > 0)
+                fs.setReadProposal(proposalToRead)
             val emptyProposalMessage = root.tvEmptyProposalMessage
             emptyProposalMessage.text = context?.resources?.getString(R.string.empty_proposal_message)
             proposalAdapter = ProposalAdapter(proposalListData, this, emptyProposalMessage)

@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var prefsEditor: SharedPreferences.Editor
     private var thisUserData = User()
     private val fs = FireStore()
-    private val user_email = Firebase.auth.currentUser?.email.toString()
+    private val curr_user_email = Firebase.auth.currentUser?.email.toString()
     private val TAG = "MAIN_ACTIVITY"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity() {
                     R.id.nav_group -> {
                         toolbar.title = arguments?.getString("groupName")
                         toolbar.setOnClickListener {
-                            fs.getUserData(user_email) { userData ->
+                            fs.getUserData(curr_user_email) { userData ->
                                 val bundle = bundleOf(
                                     "groupName" to nameCurrentGroup,
                                     "groupId" to idCurrentGroup
@@ -103,7 +103,7 @@ class MainActivity : AppCompatActivity() {
                         prefsEditor.putString("name", thisUserData.name)
                         prefsEditor.putString("surname", thisUserData.surname)
                         prefsEditor.putString("nickname", thisUserData.nickname)
-                        prefsEditor.putString("email", user_email)
+                        prefsEditor.putString("email", curr_user_email)
                         prefsEditor.apply()
 
                         prefs.registerOnSharedPreferenceChangeListener { _, _ ->
@@ -134,9 +134,9 @@ class MainActivity : AppCompatActivity() {
                     R.id.nav_history
                 ), drawerLayout
             )
-            fs.getUserData(user_email){ userData ->
+            fs.getUserData(curr_user_email){ userData ->
                 thisUserData = userData
-                drawerTextViewEmail.text = user_email
+                drawerTextViewEmail.text = curr_user_email
                 drawerTextViewUser.text = "${userData.name} ${userData.surname}"
             }
             setupActionBarWithNavController(navController, appBarConfiguration)

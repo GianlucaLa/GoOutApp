@@ -9,11 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import it.gooutapp.R
-import it.gooutapp.firebase.FireStore
 import it.gooutapp.model.Proposal
 
 class HistoryAdapter(private val historyList : ArrayList<Proposal>, val clickListenerHistory: ClickListenerHistory) : RecyclerView.Adapter<HistoryAdapter.MyViewHolder>()  {
-    private var user_email = Firebase.auth.currentUser?.email.toString()
+    private var curr_user_email = Firebase.auth.currentUser?.email.toString()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.row_history_view, parent, false)
@@ -41,8 +40,8 @@ class HistoryAdapter(private val historyList : ArrayList<Proposal>, val clickLis
             holder.statoProposta.text = activityContext.resources.getString(R.string.canceled)
             holder.statoProposta.background = activityContext.resources.getDrawable(R.drawable.background_canceled)
             holder.btnChat.visibility = View.GONE
-        } else if(history.accepters?.contains(user_email) == true || history.decliners?.contains(user_email) == true) {
-            if (history.accepters?.contains(user_email) == true) {
+        } else if(history.accepters?.contains(curr_user_email) == true || history.decliners?.contains(curr_user_email) == true) {
+            if (history.accepters?.contains(curr_user_email) == true) {
                 holder.statoProposta.background = activityContext.resources.getDrawable(R.drawable.background_accepted)
                 holder.statoProposta.text = activityContext.resources.getString(R.string.proposal_accepted)
             } else {

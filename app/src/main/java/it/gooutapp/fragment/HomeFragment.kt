@@ -31,10 +31,10 @@ import kotlinx.android.synthetic.main.row_group.view.*
 
 class HomeFragment : Fragment(), GroupAdapter.ClickListener {
     private val TAG = "HOME_FRAGMENT"
+    private var curr_user_email = Firebase.auth.currentUser?.email.toString()
     private lateinit var recyclerView: RecyclerView
     private lateinit var groupAdapter: GroupAdapter
     private var mLastClickTime: Long = 0
-    private var user_email = Firebase.auth.currentUser?.email.toString()
     private val fs = FireStore()
     private val OFFSET_PX = 30
     private lateinit var root: View
@@ -115,7 +115,7 @@ class HomeFragment : Fragment(), GroupAdapter.ClickListener {
             var title = resources.getString(R.string.create_group)
             var message = resources.getString(R.string.enter_group_name)
             MyDialog(title, message, root.context, layoutInflater, true) { groupName ->
-                fs.createGroupData(groupName, user_email) { result ->
+                fs.createGroupData(groupName, curr_user_email) { result ->
                     if(result){
                         Toast.makeText(root.context, R.string.group_creation_successful, Toast.LENGTH_SHORT).show()
                     }else{
@@ -134,7 +134,7 @@ class HomeFragment : Fragment(), GroupAdapter.ClickListener {
     }
 
     override fun onItemClick(group: Group) {
-        fs.getUserData(user_email) { userData ->
+        fs.getUserData(curr_user_email) { userData ->
             val bundle = bundleOf(
                 "groupName" to group.groupName,
                 "groupId" to group.groupId,
