@@ -57,7 +57,7 @@ class FireStore {
     @RequiresApi(Build.VERSION_CODES.O)
     fun createProposalData(groupId: String, proposalName: String, dateTime: String, place: String, groupName: String, callback: (Boolean) -> Unit){
         val proposalId: String = List(15) { source.random() }.joinToString("")
-        val dateTime = LocalDateTime.now()
+        val creationDate = LocalDateTime.now() as String
         currentUserNickname { currNickname ->
             val proposal = hashMapOf(
                 "groupId" to groupId,
@@ -69,9 +69,9 @@ class FireStore {
                 "proposalId" to proposalId,
                 "proposalName" to proposalName,
                 "read" to FieldValue.arrayUnion(currentUserEmail()),
-                "creationDate" to dateTime
+                "creationDate" to creationDate
             )
-            db.collection(proposalCollection).document("proposal_$dateTime")
+            db.collection(proposalCollection).document("proposal_$creationDate")
                 .set(proposal)
                 .addOnSuccessListener {
                     Log.d(TAG, "DocumentSnapshot successfully written!")
