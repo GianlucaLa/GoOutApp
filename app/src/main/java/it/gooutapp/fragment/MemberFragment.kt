@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import it.gooutapp.R
 import it.gooutapp.adapter.MemberAdapter
 import it.gooutapp.firebase.FireStore
+import it.gooutapp.model.MyDialog
 import it.gooutapp.model.User
 import kotlinx.android.synthetic.main.fragment_member.*
 import java.util.ArrayList
@@ -44,15 +45,25 @@ class MemberFragment: Fragment(), MemberAdapter.ClickListenerMember {
     }
 
     override fun removeMember(user: User, position: Int) {
-        fs.removeMemberGroup(groupId, user.email.toString()){ result ->
-            if (result) {
-                memberList.removeAt(position)
-                memberAdapter.notifyItemRemoved(position)
-                Toast.makeText(root.context, R.string.successfulRemoveMember, Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(root.context, R.string.failRemoveMember, Toast.LENGTH_SHORT).show()
+        val message = resources.getString(R.string.remove_member_message)
+        val title = resources.getString(R.string.remove_member)
+        MyDialog(title, message, root.context) { confirm ->
+            if (confirm) {
+                fs.removeMemberGroup(groupId, user.email.toString()) { result ->
+                    if (result) {
+                        memberList.removeAt(position)
+                        memberAdapter.notifyItemRemoved(position)
+                        Toast.makeText(
+                            root.context,
+                            R.string.successfulRemoveMember,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        Toast.makeText(root.context, R.string.failRemoveMember, Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
             }
         }
-
     }
 }

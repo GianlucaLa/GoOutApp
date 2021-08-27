@@ -114,4 +114,6 @@
     <string name="empty_home_message">There are no groups to display</string>
     <string name="empty_history_message">The history is empty</string>
     <string name="empty_proposal_message">There are no proposals to display</string>
+    <string name="remove_member_message">Are you sure you want to remove this user?</string>
+    <string name="remove_member">Remove the member</string>
 </resources>

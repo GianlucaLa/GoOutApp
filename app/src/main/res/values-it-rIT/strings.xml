@@ -108,4 +108,6 @@
     <string name="empty_home_message">Non ci sono gruppi da visualizzare</string>
     <string name="empty_history_message">La cronologia è vuota</string>
     <string name="empty_proposal_message">Non ci sono proposte da visualizzare</string>
+    <string name="remove_member_message">Sei sicuro di voler rimuovere quest\'utente?</string>
+    <string name="remove_member">Rimuovi l\'utente</string>
 </resources>
