@@ -46,10 +46,10 @@ class HomeFragment : Fragment(), GroupAdapter.ClickListener {
         recyclerView.layoutManager = LinearLayoutManager(root.context)
         recyclerView.setHasFixedSize(true)
 
-        fs.getUserGroupsData{ groupList, adminFlag, notificationHM ->
+        fs.getUserHomeData(root.context){ groupList, adminFlag, notificationHM, lastMessageHM ->
             val emptyHomeMessage = root.tvEmptyGroupMessage
             emptyHomeMessage.text = context?.resources?.getString(R.string.empty_home_message)
-            groupAdapter = GroupAdapter(groupList, adminFlag, notificationHM,this, emptyHomeMessage)
+            groupAdapter = GroupAdapter(groupList, adminFlag, notificationHM, lastMessageHM,this, emptyHomeMessage)
             recyclerView.adapter = groupAdapter
             HomePB?.visibility = View.INVISIBLE
             if(groupList.size == 0){

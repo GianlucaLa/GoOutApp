@@ -57,7 +57,7 @@ class FireStore {
     @RequiresApi(Build.VERSION_CODES.O)
     fun createProposalData(groupId: String, proposalName: String, dateTime: String, place: String, groupName: String, callback: (Boolean) -> Unit){
         val proposalId: String = List(15) { source.random() }.joinToString("")
-        val creationDate = LocalDateTime.now() as String
+        val creationDate = LocalDateTime.now().toString()
         currentUserNickname { currNickname ->
             val proposal = hashMapOf(
                 "groupId" to groupId,
@@ -115,7 +115,7 @@ class FireStore {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun getUserGroupsData(callback: (ArrayList<Group>, ArrayList<Boolean>, HashMap<String, Notification>) -> Unit) {
+    fun getUserHomeData(context: Context, callback: (ArrayList<Group>, ArrayList<Boolean>, HashMap<String, Notification>, HashMap<String, String>) -> Unit) {
         val userGroupsList = ArrayList<Group>()
         val adminFlagList = ArrayList<Boolean>()
         db.collection(groupCollection).addSnapshotListener { value, error ->
@@ -145,6 +145,7 @@ class FireStore {
             }
             getAllUserProposals{ proposalsList ->
                 var notificationHM = HashMap<String, Notification>()
+                var lastMessageHM = HashMap<String, String>()
                 var n: Notification
                 var counter = 0
                 for(proposal in proposalsList){
@@ -155,13 +156,45 @@ class FireStore {
                         }else {
                             counter = 1
                         }
-                        n = Notification(proposal.groupId, counter,"${proposal.organizator}: new proposal '${proposal.proposalName}'", proposal.creationDate)
+                        n = Notification(proposal.groupId, counter, proposal.creationDate)
                         notificationHM[proposal.groupId.toString()] = n
                     }
+                    if (currentUserId() == proposal.organizatorId)
+                        lastMessageHM[proposal.groupId.toString()] = "${context.resources.getString(R.string.you)}: ${context.resources.getString(R.string.menu_new_proposal)} '${proposal.proposalName}'"
+                    else
+                        lastMessageHM[proposal.groupId.toString()] = "${proposal.organizator}: ${context.resources.getString(R.string.menu_new_proposal)} '${proposal.proposalName}'"
                 }
-                callback(userGroupsList, adminFlagList, notificationHM)
+                callback(userGroupsList, adminFlagList, notificationHM, lastMessageHM)
             }
         }
+    }
+
+    fun getUserGroupData(callback: (ArrayList<Group>) -> Unit) {
+        val userGroupsList = ArrayList<Group>()
+        db.collection(groupCollection).addSnapshotListener { value, error ->
+            if (error != null) {
+                Log.e("Firestore Error", error.message.toString())
+                return@addSnapshotListener
+            }
+            for (dc: DocumentChange in value?.documentChanges!!) {
+                val thisGroup = dc.document.toObject(Group::class.java)
+                //cerco e aggiungo i gruppi che contengono l'email dell'utente
+                if (dc.type == DocumentChange.Type.ADDED)
+                    userGroupsList.add(thisGroup)
+                else if (dc.type == DocumentChange.Type.REMOVED)
+                    userGroupsList.remove(thisGroup)
+                else if (thisGroup.users?.contains(currentUserEmail()) == true) {
+                    if (dc.type == DocumentChange.Type.ADDED)
+                        userGroupsList.add(thisGroup)
+                    else if (dc.type == DocumentChange.Type.REMOVED)
+                        userGroupsList.remove(thisGroup)
+                }else{
+                    if (dc.type == DocumentChange.Type.MODIFIED)
+                        userGroupsList.remove(thisGroup)
+                }
+            }
+        }
+        callback(userGroupsList)
     }
 
     fun getGroupMembers(groupId: String, callback: (ArrayList<User>) -> Unit){
@@ -262,7 +295,7 @@ class FireStore {
     @RequiresApi(Build.VERSION_CODES.O)
     fun getUserHistoryProposalData(callback: (ArrayList<Proposal>) -> Unit) {
         var proposalArrayList = ArrayList<Proposal>()
-        getUserGroupsData { groupList, _, _->
+        getUserGroupData{ groupList ->
             db.collection(proposalCollection).addSnapshotListener { value, error ->
                 if (error != null) {
                     Log.e("Firestore Error", error.message.toString())
