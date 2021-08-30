@@ -281,13 +281,13 @@ class FireStore {
                     val alreadyAccepted = thisProposal.accepters?.contains(currentUserEmail())
                     val alreadyDeclined = thisProposal.decliners?.contains(currentUserEmail())
                     if (currDocDate.isAfter(currentDateTime))
-                        if (dc.type == DocumentChange.Type.ADDED && !(alreadyAccepted == true || alreadyDeclined == true || canceled))
+                        if (dc.type == DocumentChange.Type.ADDED && !canceled)
                             proposalArrayList.add(thisProposal)
-                        else if (dc.type == DocumentChange.Type.MODIFIED && (alreadyAccepted == true || alreadyDeclined == true || canceled)){
+                        else if (dc.type == DocumentChange.Type.MODIFIED && canceled){
                             proposalArrayList.removeIf{ p ->
                                 p.proposalId == thisProposal.proposalId
                             }
-                        } else if(dc.type == DocumentChange.Type.REMOVED && (alreadyAccepted == true || alreadyDeclined == true || canceled)){
+                        } else if(dc.type == DocumentChange.Type.REMOVED && canceled){
                             proposalArrayList.removeIf{ p ->
                                 p.proposalId == thisProposal.proposalId
                             }

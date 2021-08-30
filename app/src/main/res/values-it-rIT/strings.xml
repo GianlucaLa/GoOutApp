@@ -114,4 +114,5 @@
     <string name="proposal_archived">La proposta è stata archiviata con successo</string>
     <string name="proposal_archived_fail">Si è verificato un errore durante l\'operazione</string>
     <string name="archive_fail">La proposta deve essere rifiutata prima</string>
+    <string name="archive_fail_organizator">L\'organizzatore non può archiviare la proposta</string>
 </resources>

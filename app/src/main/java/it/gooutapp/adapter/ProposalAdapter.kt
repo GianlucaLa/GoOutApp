@@ -56,7 +56,7 @@ class ProposalAdapter(private val proposalList: ArrayList<Proposal>, private val
             val wrapper = ContextThemeWrapper(activityContext, R.style.PopupMenu)
             val pop= PopupMenu(wrapper,it)
             pop.inflate(R.menu.proposal_row_menu)
-            pop.setOnMenuItemClickListener {item->
+            pop.setOnMenuItemClickListener {item ->
                 when(item.itemId) {
                     R.id.modify->{clickListenerProposal.modifyProposalListener(proposalList[position])}
                     R.id.partecipants->{
@@ -74,7 +74,9 @@ class ProposalAdapter(private val proposalList: ArrayList<Proposal>, private val
                         }
                     }
                     R.id.archives->{
-                        if(proposal.decliners?.contains(curr_user_email) != true){
+                        if(proposal.organizatorId == user_auth_id){
+                            Toast.makeText(activityContext, R.string.archive_fail_organizator, Toast.LENGTH_SHORT).show()
+                        }else if(proposal.decliners?.contains(curr_user_email) != true){
                             Toast.makeText(activityContext, R.string.archive_fail, Toast.LENGTH_SHORT).show()
                         }else{
                             fs.setProposalArchived(proposal.proposalId.toString()){ result ->
