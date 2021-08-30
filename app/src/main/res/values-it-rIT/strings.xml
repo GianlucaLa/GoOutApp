@@ -110,4 +110,8 @@
     <string name="empty_proposal_message">Non ci sono proposte da visualizzare</string>
     <string name="remove_member_message">Sei sicuro di voler rimuovere quest\'utente?</string>
     <string name="remove_member">Rimuovi l\'utente</string>
+    <string name="archives">Archivia</string>
+    <string name="proposal_archived">La proposta è stata archiviata con successo</string>
+    <string name="proposal_archived_fail">Si è verificato un errore durante l\'operazione</string>
+    <string name="archive_fail">La proposta deve essere rifiutata prima</string>
 </resources>

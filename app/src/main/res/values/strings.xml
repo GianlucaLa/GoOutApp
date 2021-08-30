@@ -116,4 +116,8 @@
     <string name="empty_proposal_message">There are no proposals to display</string>
     <string name="remove_member_message">Are you sure you want to remove this user?</string>
     <string name="remove_member">Remove the member</string>
+    <string name="archives">Archives</string>
+    <string name="proposal_archived">The proposal was successfully archived</string>
+    <string name="proposal_archived_fail">An error occurred during the operation</string>
+    <string name="archive_fail">The proposal must be declined first</string>
 </resources>

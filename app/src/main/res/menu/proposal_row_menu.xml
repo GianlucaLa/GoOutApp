@@ -10,4 +10,9 @@
         android:icon="@drawable/ic_link"
         android:title="@string/partecipants"
         android:background="?attr/colorPrimary" />
+    <item
+        android:id="@+id/archives"
+        android:icon="@drawable/ic_link"
+        android:title="@string/archives"
+        android:background="?attr/colorPrimary" />
 </menu>

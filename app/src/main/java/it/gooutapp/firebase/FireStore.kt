@@ -8,6 +8,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.*
 import com.google.firebase.ktx.Firebase
 import it.gooutapp.R
+import it.gooutapp.adapter.ProposalAdapter
 import it.gooutapp.model.*
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -169,7 +170,7 @@ class FireStore {
         }
     }
 
-    fun getUserGroupData(callback: (ArrayList<Group>) -> Unit) {
+    private fun getUserGroupData(callback: (ArrayList<Group>) -> Unit) {
         val userGroupsList = ArrayList<Group>()
         db.collection(groupCollection).addSnapshotListener { value, error ->
             if (error != null) {
@@ -244,13 +245,18 @@ class FireStore {
                     val currentDateTime = LocalDateTime.now()
                     val currDocDate = LocalDateTime.parse(thisProposal.dateTime, DateTimeFormatter.ISO_DATE_TIME)
                     val canceled = thisProposal.canceled == "canceled"
-                    val alreadyAccepted = thisProposal.accepters?.contains(currentUserEmail())
-                    val alreadyDeclined = thisProposal.decliners?.contains(currentUserEmail())
+                    val isAccepted = thisProposal.accepters?.contains(currentUserEmail())
+                    val isDeclined = thisProposal.decliners?.contains(currentUserEmail())
+                    val isArchived = thisProposal.archived?.contains(currentUserEmail())
                     if (currDocDate.isAfter(currentDateTime))
-                        if (dc.type == DocumentChange.Type.ADDED && !(alreadyAccepted == true || alreadyDeclined == true || canceled))
+                        if (dc.type == DocumentChange.Type.ADDED && !(isArchived == true || canceled))
                             proposalArrayList.add(thisProposal)
-                        else if (dc.type == DocumentChange.Type.MODIFIED && (alreadyAccepted == true || alreadyDeclined == true || canceled)){
+                        else if (dc.type == DocumentChange.Type.MODIFIED && (isArchived == true || canceled)){
                             proposalArrayList.removeIf{ p ->
+                                p.proposalId == thisProposal.proposalId
+                            }
+                        }else if (dc.type == DocumentChange.Type.REMOVED){
+                            proposalArrayList.removeIf { p ->
                                 p.proposalId == thisProposal.proposalId
                             }
                         }
@@ -303,12 +309,15 @@ class FireStore {
                 for (dc: DocumentChange in value?.documentChanges!!) {
                     val thisProposal = dc.document.toObject(Proposal::class.java)
                     val canceled = thisProposal.canceled == "canceled"
-                    val alreadyAccepted = thisProposal.accepters?.contains(currentUserEmail())
-                    val alreadyDeclined = thisProposal.decliners?.contains(currentUserEmail())
+                    val isArchived = thisProposal.archived?.contains(currentUserEmail())
                     for (group in groupList) {
                         if (thisProposal.groupId == group.groupId) {
-                            if (dc.type == DocumentChange.Type.ADDED && (alreadyAccepted == true || alreadyDeclined == true || LocalDateTime.now().isAfter(LocalDateTime.parse(thisProposal.dateTime))) || canceled) {
+                            if (dc.type == DocumentChange.Type.ADDED && (LocalDateTime.now().isAfter(LocalDateTime.parse(thisProposal.dateTime))) || isArchived == true || canceled) {
                                 proposalArrayList?.add(thisProposal)
+                            } else if (dc.type == DocumentChange.Type.MODIFIED && !(LocalDateTime.now().isAfter(LocalDateTime.parse(thisProposal.dateTime))) || isArchived == true || canceled) {
+                                proposalArrayList.removeIf { p ->
+                                    p.proposalId == thisProposal.proposalId
+                                }
                             } else if (dc.type == DocumentChange.Type.REMOVED) {
                                 proposalArrayList.removeIf { p ->
                                     p.proposalId == thisProposal.proposalId
@@ -326,14 +335,27 @@ class FireStore {
         var partecipants = ArrayList<String>()
         db.collection(proposalCollection).whereEqualTo("proposalId", "$proposalId").get()
             .addOnSuccessListener { proposalDocs ->
-                val organizator = proposalDocs.last()?.get("organizator") as String
-                if(proposalDocs.last()?.get("accepters") != null) {
-                    partecipants = proposalDocs?.last()?.get("accepters")!! as ArrayList<String>
-                    var stringOrg = context.resources.getString(R.string.organizator)
+                var proposalDoc = proposalDocs.last()
+                var accepters = if(proposalDoc?.get("accepters") != null)
+                                    proposalDoc?.get("accepters") as ArrayList<String>
+                                else null
+
+                val organizator = proposalDoc?.get("organizator") as String
+                var stringOrg = if (proposalDoc?.get("organizatorId") == currentUserId())
+                                    context.resources.getString(R.string.you)
+                                else
+                                    context.resources.getString(R.string.organizator)
+
+                if (accepters != null && accepters.size > 0) {
+                    getUsersNickname(accepters) { nicksArray ->
+                        partecipants = nicksArray
+                        partecipants.add("$organizator ($stringOrg)")
+                        callback(partecipants)
+                    }
+                } else {
                     partecipants.add("$organizator ($stringOrg)")
-                    Log.e(TAG, partecipants.toString())
+                    callback(partecipants)
                 }
-                callback(partecipants)
             }
     }
 
@@ -380,9 +402,23 @@ class FireStore {
         }
     }
 
+    fun setProposalArchived(proposalId: String, callback: (Boolean) -> Unit){
+        getProposalDocumentId(proposalId) { proposalDoc ->
+            db.collection(proposalCollection).document(proposalDoc)
+                .update("archived", FieldValue.arrayUnion(currentUserEmail()))
+                .addOnSuccessListener {
+                    Log.d(TAG, "Proposal archived for user ${currentUserId()}")
+                    callback(true)
+                }
+                .addOnFailureListener { e ->
+                    Log.w(TAG, "Error setting proposal as archived", e)
+                    callback(false)
+                }
+        }
+    }
+
     fun setProposalState(proposalId: String, state: String, callback: (Boolean) -> Unit){
         getProposalDocumentId(proposalId) { proposalDoc ->
-            // Remove the 'user' field from the document
             if(state == "accepted") {
                 db.collection(proposalCollection).document(proposalDoc)
                     .update("accepters", FieldValue.arrayUnion(currentUserEmail()))
@@ -394,6 +430,8 @@ class FireStore {
                         Log.w(TAG, "Error setting proposal state", e)
                         callback(false)
                     }
+                db.collection(proposalCollection).document(proposalDoc)
+                    .update("decliners", FieldValue.arrayRemove(currentUserEmail()))
             }else{
                 db.collection(proposalCollection).document(proposalDoc)
                     .update("decliners", FieldValue.arrayUnion(currentUserEmail()))
@@ -405,6 +443,8 @@ class FireStore {
                         Log.w(TAG, "Error setting proposal state", e)
                         callback(false)
                     }
+                db.collection(proposalCollection).document(proposalDoc)
+                    .update("accepters", FieldValue.arrayRemove(currentUserEmail()))
             }
         }
     }
@@ -593,6 +633,18 @@ class FireStore {
 
     private fun currentUserEmail(): String {
         return Firebase.auth.currentUser?.email.toString()
+    }
+
+    private fun getUsersNickname(emailArray: ArrayList<String>, callback: (ArrayList<String>) -> Unit){
+        val nicksArray = ArrayList<String>()
+        for(email in emailArray) {
+            db.collection(userCollection).document(email).get().addOnSuccessListener { document ->
+                nicksArray.add(document.get("nickname").toString())
+                callback(nicksArray)
+            }.addOnFailureListener { exception ->
+                Log.d(TAG, "get failed with ", exception)
+            }
+        }
     }
 
     private fun currentUserNickname(callback: (String) -> Unit) {

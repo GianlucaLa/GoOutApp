@@ -51,7 +51,6 @@ class GroupFragment : Fragment(), ProposalAdapter.ClickListenerProposal {
                 tvEmptyProposalMessage?.visibility = View.VISIBLE
             }
         }
-
         setHasOptionsMenu(true)
         return root
     }

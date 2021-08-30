@@ -1,9 +1,6 @@
 package it.gooutapp.adapter
 
-import android.view.ContextThemeWrapper
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Button
 import android.widget.PopupMenu
 import android.widget.TextView
@@ -20,7 +17,9 @@ import it.gooutapp.model.Proposal
 class ProposalAdapter(private val proposalList: ArrayList<Proposal>, private val clickListenerProposal: ClickListenerProposal, private val tvEmptyProposalMessage: View) : RecyclerView.Adapter<ProposalAdapter.MyViewHolder>() {
     private val TAG = "PROPOSAL_ADAPTER"
     private val fs = FireStore()
+    private var curr_user_email = Firebase.auth.currentUser?.email.toString()
     private var user_auth_id = Firebase.auth.currentUser?.uid.toString()
+    private lateinit var itemViewClass: View
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.row_proposal_view, parent, false)
@@ -46,6 +45,13 @@ class ProposalAdapter(private val proposalList: ArrayList<Proposal>, private val
             holder.btnAccept.visibility = View.GONE
             holder.btnRefuse.visibility = View.GONE
         }
+        if(proposal.accepters?.contains(curr_user_email) == true){
+            holder.btnAccept.isEnabled = false
+        }
+        if(proposal.decliners?.contains(curr_user_email) == true){
+            holder.btnRefuse.isEnabled = false
+        }
+        //listeners
         holder.btnModify.setOnClickListener {
             val wrapper = ContextThemeWrapper(activityContext, R.style.PopupMenu)
             val pop= PopupMenu(wrapper,it)
@@ -65,6 +71,19 @@ class ProposalAdapter(private val proposalList: ArrayList<Proposal>, private val
                                 .setPositiveButton(R.string.ok){ _, _ ->}
                                 .setItems(items){ _, _ ->}
                                 .show()
+                        }
+                    }
+                    R.id.archives->{
+                        if(proposal.decliners?.contains(curr_user_email) != true){
+                            Toast.makeText(activityContext, R.string.archive_fail, Toast.LENGTH_SHORT).show()
+                        }else{
+                            fs.setProposalArchived(proposal.proposalId.toString()){ result ->
+                                if(result){
+                                    Toast.makeText(activityContext, R.string.proposal_archived, Toast.LENGTH_SHORT).show()
+                                }else{
+                                    Toast.makeText(activityContext, R.string.proposal_archived_fail, Toast.LENGTH_SHORT).show()
+                                }
+                            }
                         }
                     }
                 }
@@ -95,6 +114,7 @@ class ProposalAdapter(private val proposalList: ArrayList<Proposal>, private val
                 if(confirm){
                     fs.setProposalState(proposal.proposalId.toString(), "accepted"){ result->
                         if(result){
+                            holder.btnAccept.isEnabled = false
                             Toast.makeText(activityContext, R.string.proposal_state_successful, Toast.LENGTH_SHORT).show()
                         }else {
                             Toast.makeText(activityContext, R.string.proposal_state_fail, Toast.LENGTH_SHORT).show()
@@ -110,6 +130,7 @@ class ProposalAdapter(private val proposalList: ArrayList<Proposal>, private val
                 if(confirm){
                     fs.setProposalState(proposal.proposalId.toString(), "refused"){ result->
                         if(result){
+                            holder.btnRefuse.isEnabled = false
                             Toast.makeText(activityContext, R.string.proposal_state_successful, Toast.LENGTH_SHORT).show()
                         }else{
                             Toast.makeText(activityContext, R.string.proposal_state_fail, Toast.LENGTH_SHORT).show()

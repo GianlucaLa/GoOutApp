@@ -12,6 +12,7 @@ data class Proposal(
     var organizatorId: String?= null,
     var accepters: ArrayList<String> ?= null,
     var decliners: ArrayList<String> ?= null,
+    var archived: ArrayList<String> ?= null,
     var read: ArrayList<String> ?= null,
     var creationDate: String ?= null
 )
