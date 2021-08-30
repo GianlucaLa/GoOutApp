@@ -19,7 +19,6 @@ class ProposalAdapter(private val proposalList: ArrayList<Proposal>, private val
     private val fs = FireStore()
     private var curr_user_email = Firebase.auth.currentUser?.email.toString()
     private var user_auth_id = Firebase.auth.currentUser?.uid.toString()
-    private lateinit var itemViewClass: View
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.row_proposal_view, parent, false)
