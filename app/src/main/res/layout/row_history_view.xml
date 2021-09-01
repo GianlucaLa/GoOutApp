@@ -23,14 +23,20 @@
                 android:id="@+id/textViewHProposta"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
                 android:layout_marginBottom="8dp"
-                android:text="Nome Proposta"
+                android:layout_toStartOf="@+id/textViewHStatoValue"
+                android:layout_toLeftOf="@+id/textViewHStatoValue"
+                android:maxLines="1"
                 android:paddingRight="5dp"
+                android:text="Nome Proposta"
                 android:textColor="@color/colorSecondary"
                 android:textSize="30sp"
                 android:textStyle="bold"
-                android:maxLines="1" />
+                android:layout_alignParentLeft="true" />
 
             <TextView
                 android:id="@+id/textViewHData"
@@ -144,13 +150,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
-                android:text="TextView"
-                android:textColor="@color/colorPrimaryVariant"
-                android:padding="2dp"
-                android:textAllCaps="true"
+                android:layout_alignParentRight="true"
                 android:gravity="center"
+                android:padding="2dp"
+                android:text="TextView"
+                android:textAllCaps="true"
+                android:textColor="@color/colorPrimaryVariant"
                 android:textSize="20sp" />
 
             <Button

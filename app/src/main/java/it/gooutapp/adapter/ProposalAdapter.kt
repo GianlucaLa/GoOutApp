@@ -1,10 +1,12 @@
 package it.gooutapp.adapter
 
+import android.os.Build
 import android.view.*
 import android.widget.Button
 import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.ktx.auth
@@ -25,6 +27,7 @@ class ProposalAdapter(private val proposalList: ArrayList<Proposal>, private val
         return MyViewHolder(itemView)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         tvEmptyProposalMessage?.visibility = View.INVISIBLE
         var activityContext = holder.itemView.context
@@ -115,6 +118,7 @@ class ProposalAdapter(private val proposalList: ArrayList<Proposal>, private val
                 if(confirm){
                     fs.setProposalState(proposal.proposalId.toString(), "accepted"){ result->
                         if(result){
+                            fs.addMessageToChat("accettato", proposal.proposalId.toString())
                             holder.btnAccept.isEnabled = false
                             Toast.makeText(activityContext, R.string.proposal_state_successful, Toast.LENGTH_SHORT).show()
                         }else {
@@ -131,6 +135,7 @@ class ProposalAdapter(private val proposalList: ArrayList<Proposal>, private val
                 if(confirm){
                     fs.setProposalState(proposal.proposalId.toString(), "refused"){ result->
                         if(result){
+                            fs.addMessageToChat("rifiutato", proposal.proposalId.toString())
                             holder.btnRefuse.isEnabled = false
                             Toast.makeText(activityContext, R.string.proposal_state_successful, Toast.LENGTH_SHORT).show()
                         }else{
