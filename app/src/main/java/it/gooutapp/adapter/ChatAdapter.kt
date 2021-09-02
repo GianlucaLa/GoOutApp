@@ -3,7 +3,6 @@ package it.gooutapp.adapter
 import android.annotation.SuppressLint
 import android.content.Context
 import android.text.Html
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,7 +23,6 @@ class ChatAdapter(private val context: Context, private val messageList: ArrayLi
 
     @SuppressLint("NewApi")
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        //in base al userId del messaggio, gli assegno il layout destro o sinistro
         if (viewType == MESSAGE_TYPE_RIGHT) {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.row_item_right, parent, false)
             return MyViewHolder(view)

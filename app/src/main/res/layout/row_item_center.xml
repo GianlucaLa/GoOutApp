@@ -21,7 +21,7 @@
             android:maxWidth="300dp"
             android:background="@drawable/item_center_background"
             android:padding="10dp"
-            android:textSize="16sp"
+            android:textSize="15sp"
             android:textColor="@color/colorPrimaryVariant"
             tools:text="Testo altri utenti" />
     </LinearLayout>

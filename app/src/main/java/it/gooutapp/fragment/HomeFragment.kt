@@ -70,7 +70,7 @@ class HomeFragment : Fragment(), GroupAdapter.ClickListener {
                         background.setBounds((viewHolder.itemView.right + dX).toInt(), viewHolder.itemView.top, viewHolder.itemView.right, viewHolder.itemView.bottom)
                         background.draw(c)
                     }else{
-                        val background = ColorDrawable(ContextCompat.getColor(root.context, R.color.lighRed))
+                        val background = ColorDrawable(ContextCompat.getColor(root.context, R.color.lightRed))
                         background.setBounds((viewHolder.itemView.right + dX).toInt(), viewHolder.itemView.top, viewHolder.itemView.right, viewHolder.itemView.bottom)
                         background.draw(c)
                     }

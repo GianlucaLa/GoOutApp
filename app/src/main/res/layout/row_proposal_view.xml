@@ -175,7 +175,7 @@
                     android:layout_marginLeft="8dp"
                     android:layout_weight="0.5"
                     android:drawableRight="@drawable/ic_deny"
-                    android:drawableTint="@color/lighRed"
+                    android:drawableTint="@color/lightRed"
                     android:text="@string/decline" />
 
             </LinearLayout>

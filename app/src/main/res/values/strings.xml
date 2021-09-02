@@ -121,6 +121,6 @@
     <string name="proposal_archived_fail">An error occurred during the operation</string>
     <string name="archive_fail">The proposal must be declined first</string>
     <string name="archive_fail_organizator">The organizer cannot archive the proposal</string>
-    <string name="chat_accepted_message">accepted</string>
-    <string name="chat_refused_message">refused</string>
+    <string name="chat_accepted_message">accepted ✅</string>
+    <string name="chat_refused_message">refused ❌</string>
 </resources>
