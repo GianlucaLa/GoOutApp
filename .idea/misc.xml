@@ -3,13 +3,24 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/Luca/StudioProjects/GoOutApp/app/src/main/res/drawable/item_center_background.xml" value="0.3828125" />
-        <entry key="..\:/Users/Luca/StudioProjects/GoOutApp/app/src/main/res/drawable/item_left_side_background.xml" value="0.3828125" />
-        <entry key="..\:/Users/Luca/StudioProjects/GoOutApp/app/src/main/res/layout/row_history_view.xml" value="0.5" />
-        <entry key="..\:/Users/Luca/StudioProjects/GoOutApp/app/src/main/res/layout/row_item_center.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/Luca/StudioProjects/GoOutApp/app/src/main/res/layout/row_item_left.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Luca/StudioProjects/GoOutApp/app/src/main/res/layout/row_history_view.xml" value="0.20520833333333333" />
         <entry key="..\:/Users/Luca/StudioProjects/GoOutApp/app/src/main/res/layout/row_proposal_view.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Luca/StudioProjects/GoOutApp/app/src/main/res/menu/proposal_row_menu.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/kuka6/StudioProjects/GoOutApp/app/src/main/res/drawable/item_left_side_background.xml" value="0.2703125" />
+        <entry key="..\:/Users/kuka6/StudioProjects/GoOutApp/app/src/main/res/layout/activity_login.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/kuka6/StudioProjects/GoOutApp/app/src/main/res/layout/activity_main.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/kuka6/StudioProjects/GoOutApp/app/src/main/res/layout/app_bar_main.xml" value="0.21014492753623187" />
+        <entry key="..\:/Users/kuka6/StudioProjects/GoOutApp/app/src/main/res/layout/content_main.xml" value="0.21014492753623187" />
+        <entry key="..\:/Users/kuka6/StudioProjects/GoOutApp/app/src/main/res/layout/nav_header_main.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/kuka6/StudioProjects/GoOutApp/app/src/main/res/layout/row_group.xml" value="0.2115036231884058" />
+        <entry key="..\:/Users/kuka6/StudioProjects/GoOutApp/app/src/main/res/layout/row_history_view.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/kuka6/StudioProjects/GoOutApp/app/src/main/res/layout/row_item_center.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/kuka6/StudioProjects/GoOutApp/app/src/main/res/layout/row_item_left.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/kuka6/StudioProjects/GoOutApp/app/src/main/res/layout/row_proposal_view.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/kuka6/StudioProjects/GoOutApp/app/src/main/res/menu/activity_main_drawer.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/kuka6/StudioProjects/GoOutApp/app/src/main/res/menu/group_fragment_menu.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/kuka6/StudioProjects/GoOutApp/app/src/main/res/menu/home_fragment_menu.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/kuka6/StudioProjects/GoOutApp/app/src/main/res/menu/proposal_row_menu.xml" value="0.25416666666666665" />
       </map>
     </option>
   </component>

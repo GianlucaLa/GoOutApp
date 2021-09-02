@@ -1,3 +1,3 @@
 package it.gooutapp.model
 
-data class Message(var owner: String ?= null, var ownerNickname: String ?= null, var text: String ?= null)
+data class Message(var system: String ?= null, var systemNickname: String ?= null, var text: String ?= null)

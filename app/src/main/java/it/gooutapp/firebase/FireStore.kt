@@ -479,8 +479,8 @@ class FireStore {
     fun addMessageToChat(msgText: String, proposalId: String){
         currentUserNickname { nickname ->
             val message = hashMapOf(
-                "owner" to currentUserId(),
-                "ownerNickname" to nickname,
+                "system" to currentUserId(),
+                "systemNickname" to nickname,
                 "text" to msgText
             )
             db.collection(chatCollection).document(proposalId).collection(messageSubCollection)

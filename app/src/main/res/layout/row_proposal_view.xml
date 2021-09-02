@@ -140,14 +140,14 @@
                 android:id="@+id/entryChat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentLeft="true"
                 android:layout_below="@id/textViewRLuogoValue"
-                android:text="@string/enter_chat"
-                android:textAlignment="center"
-                android:gravity="center"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
                 android:drawableRight="@drawable/ic_row_message"
-                android:drawableTint="@color/white" />
+                android:drawableTint="@color/white"
+                android:gravity="center"
+                android:text="@string/enter_chat"
+                android:textAlignment="center" />
 
             <LinearLayout
                 android:id="@+id/layoutButton"

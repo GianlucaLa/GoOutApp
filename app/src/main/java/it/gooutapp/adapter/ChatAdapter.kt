@@ -19,6 +19,7 @@ class ChatAdapter(private val context: Context, private val messageList: ArrayLi
     private val TAG = "CHAT_ADAPTER"
     private val MESSAGE_TYPE_LEFT = 0
     private val MESSAGE_TYPE_RIGHT = 1
+    private val MESSAGE_TYPE_CENTER = 2
     var firebaseUser: FirebaseUser? = null
 
     @SuppressLint("NewApi")
@@ -26,7 +27,6 @@ class ChatAdapter(private val context: Context, private val messageList: ArrayLi
         //in base al userId del messaggio, gli assegno il layout destro o sinistro
         if (viewType == MESSAGE_TYPE_RIGHT) {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.row_item_right, parent, false)
-            Log.e(TAG, view.layoutDirection.toString())
             return MyViewHolder(view)
         } else if (viewType == MESSAGE_TYPE_LEFT){
             val view = LayoutInflater.from(parent.context).inflate(R.layout.row_item_left, parent, false)
@@ -45,9 +45,14 @@ class ChatAdapter(private val context: Context, private val messageList: ArrayLi
         tvEmptyMessage?.visibility = View.INVISIBLE
         val message = messageList[position]
         if(getItemViewType(position) == MESSAGE_TYPE_LEFT) {
-            holder.txtUserName.text = Html.fromHtml("<b>${message.ownerNickname}</b><br>${message.text}");
-        } else {
+            holder.txtUserName.text = Html.fromHtml("<b>${message.systemNickname}</b><br>${message.text}");
+        } else if (getItemViewType(position) == MESSAGE_TYPE_RIGHT){
             holder.txtUserName.text = "${message.text}"
+        } else {
+            if (message.text == "accettato")
+                holder.txtUserName.text = "${message.systemNickname } ${context.resources.getString(R.string.chat_accepted_message)}"
+            else
+                holder.txtUserName.text = "${message.systemNickname } ${context.resources.getString(R.string.chat_refused_message)}"
         }
     }
 
@@ -57,10 +62,12 @@ class ChatAdapter(private val context: Context, private val messageList: ArrayLi
 
     override fun getItemViewType(position: Int): Int {
         firebaseUser = FirebaseAuth.getInstance().currentUser
-        return if (messageList[position].owner == firebaseUser!!.uid) {
-            MESSAGE_TYPE_RIGHT
-        } else {
-            MESSAGE_TYPE_LEFT
+        if (messageList[position].system == firebaseUser!!.uid && !(messageList[position].text == "accettato" || messageList[position].text == "rifiutato")) {
+            return MESSAGE_TYPE_RIGHT
+        } else if (messageList[position].system != firebaseUser!!.uid && !(messageList[position].text == "accettato" || messageList[position].text == "rifiutato")){
+            return MESSAGE_TYPE_LEFT
+        } else{
+            return MESSAGE_TYPE_CENTER
         }
     }
 }
