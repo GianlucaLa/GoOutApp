@@ -1,7 +1,11 @@
  package it.gooutapp.activity
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
 import android.util.Log
@@ -10,6 +14,8 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.os.bundleOf
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
@@ -27,6 +33,7 @@ import it.gooutapp.R
 import it.gooutapp.firebase.FireStore
 import it.gooutapp.model.MyDialog
 import it.gooutapp.model.User
+import it.gooutapp.service.NotificationService
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_new_proposal.*
@@ -37,16 +44,20 @@ class MainActivity : AppCompatActivity() {
     private lateinit var idCurrentGroup: String
     private lateinit var nameCurrentGroup: String
     private lateinit var prefs: SharedPreferences
+    private lateinit var notificationServiceIntent: Intent
     private var mLastClickTime: Long = 0
     private lateinit var prefsEditor: SharedPreferences.Editor
     private var thisUserData = User()
     private val fs = FireStore()
     private val curr_user_email = Firebase.auth.currentUser?.email.toString()
     private val TAG = "MAIN_ACTIVITY"
+    private val CHANNEL_ID = "GoOutApp_Channel"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val currentUser = Firebase.auth.currentUser                      //controllo se utente è loggato (non nullo) e aggiorno l'interfaccia di conseguenza
+        createNotificationChannel()     //NotificationChannel
+
+        val currentUser = Firebase.auth.currentUser
         if(currentUser == null) {
             startActivity(Intent(this@MainActivity, LoginActivity::class.java))
             finish()
@@ -153,6 +164,25 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
+    override fun onStart() {
+        super.onStart()
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        if (this != null) {
+            this.stopService(notificationServiceIntent)
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        notificationServiceIntent = Intent(this, NotificationService::class.java)
+        if (this != null) {
+            this.startService(notificationServiceIntent)
+        }
+    }
+
     fun joinGroup(item: MenuItem) {
         var title = resources.getString(R.string.join_group)
         var message = resources.getString(R.string.enter_group_code)
@@ -180,11 +210,6 @@ class MainActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun closeDrawer(){
-        var mDrawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
-        mDrawerLayout.closeDrawers();
-    }
-
     fun refreshHome(){
         findNavController(R.id.nav_host_fragment)?.navigate(R.id.nav_home)
     }
@@ -208,4 +233,23 @@ class MainActivity : AppCompatActivity() {
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
         }
     }
+
+    private fun createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = "GoOutAppChannel"
+            val descriptionText = "channel_description"
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+                description = descriptionText
+            }
+            // Register the channel with the system
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+            Log.e(TAG, "channel registered")
+        }
+    }
+
 }

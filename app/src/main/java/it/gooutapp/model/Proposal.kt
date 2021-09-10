@@ -13,6 +13,7 @@ data class Proposal(
     var accepters: ArrayList<String> ?= null,
     var decliners: ArrayList<String> ?= null,
     var archived: ArrayList<String> ?= null,
+    var sendedNotification: ArrayList<String> ?= null,
     var read: ArrayList<String> ?= null,
     var creationDate: String ?= null
 )

@@ -43,7 +43,7 @@ class ChatAdapter(private val context: Context, private val messageList: ArrayLi
         tvEmptyMessage?.visibility = View.INVISIBLE
         val message = messageList[position]
         if(getItemViewType(position) == MESSAGE_TYPE_LEFT) {
-            holder.txtUserName.text = Html.fromHtml("<b>${message.systemNickname}</b><br>${message.text}");
+            holder.txtUserName.text = Html.fromHtml("<b>${message.systemNickname}</b><br>${message.text}")
         } else if (getItemViewType(position) == MESSAGE_TYPE_RIGHT){
             holder.txtUserName.text = "${message.text}"
         } else {

@@ -8,10 +8,10 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.*
 import com.google.firebase.ktx.Firebase
 import it.gooutapp.R
-import it.gooutapp.adapter.ProposalAdapter
 import it.gooutapp.model.*
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import kotlin.random.Random
 
 class FireStore {
     private val TAG = "FIRE_STORE"
@@ -116,7 +116,7 @@ class FireStore {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun getUserHomeData(context: Context, callback: (ArrayList<Group>, ArrayList<Boolean>, HashMap<String, Notification>, HashMap<String, MessagePreview>) -> Unit) {
+    fun getUserHomeData(context: Context, callback: (ArrayList<Group>, ArrayList<Boolean>, HashMap<String, NotificationCounter>, HashMap<String, MessagePreview>) -> Unit) {
         val userGroupsList = ArrayList<Group>()
         val adminFlagList = ArrayList<Boolean>()
         db.collection(groupCollection).addSnapshotListener { value, error ->
@@ -145,9 +145,9 @@ class FireStore {
                 }
             }
             getAllUserProposals{ proposalsList ->
-                var notificationHM = HashMap<String, Notification>()
+                var notificationHM = HashMap<String, NotificationCounter>()
                 var lastMessageHM = HashMap<String, MessagePreview>()
-                var n: Notification
+                var n: NotificationCounter
                 var counter = 0
                 for(proposal in proposalsList){
                     if(proposal.read?.contains(currentUserEmail()) == false){
@@ -157,7 +157,7 @@ class FireStore {
                         }else {
                             counter = 1
                         }
-                        n = Notification(proposal.groupId, counter)
+                        n = NotificationCounter(proposal.groupId, counter)
                         notificationHM[proposal.groupId.toString()] = n
                     }
                     if (currentUserId() == proposal.organizatorId)
@@ -265,36 +265,38 @@ class FireStore {
             }
     }
 
+
     @RequiresApi(Build.VERSION_CODES.O)
     fun getAllUserProposals(callback: (ArrayList<Proposal>) -> Unit) {
         var proposalArrayList = ArrayList<Proposal>()
         db.collection(proposalCollection).addSnapshotListener { value, error ->
-                if (error != null) {
-                    Log.e("Firestore Error", error.message.toString())
-                    return@addSnapshotListener
-                }
-                for (dc: DocumentChange in value?.documentChanges!!) {
-                    val thisProposal = dc.document.toObject(Proposal::class.java)
-                    val currentDateTime = LocalDateTime.now()
-                    val currDocDate = LocalDateTime.parse(thisProposal.dateTime, DateTimeFormatter.ISO_DATE_TIME)
-                    val canceled = thisProposal.canceled == "canceled"
-                    val alreadyAccepted = thisProposal.accepters?.contains(currentUserEmail())
-                    val alreadyDeclined = thisProposal.decliners?.contains(currentUserEmail())
-                    if (currDocDate.isAfter(currentDateTime))
-                        if (dc.type == DocumentChange.Type.ADDED && !canceled)
-                            proposalArrayList.add(thisProposal)
-                        else if (dc.type == DocumentChange.Type.MODIFIED && canceled){
-                            proposalArrayList.removeIf{ p ->
-                                p.proposalId == thisProposal.proposalId
-                            }
-                        } else if(dc.type == DocumentChange.Type.REMOVED && canceled){
-                            proposalArrayList.removeIf{ p ->
-                                p.proposalId == thisProposal.proposalId
-                            }
-                        }
-                }
-                callback(proposalArrayList)
+            Log.e("STAMP DI VALUE ", value?.documentChanges.toString())
+            if (error != null) {
+                Log.e("Firestore Error", error.message.toString())
+                return@addSnapshotListener
             }
+            for (dc: DocumentChange in value?.documentChanges!!) {
+                val thisProposal = dc.document.toObject(Proposal::class.java)
+                val currentDateTime = LocalDateTime.now()
+                val currDocDate = LocalDateTime.parse(thisProposal.dateTime, DateTimeFormatter.ISO_DATE_TIME)
+                val canceled = thisProposal.canceled == "canceled"
+                val alreadyAccepted = thisProposal.accepters?.contains(currentUserEmail())
+                val alreadyDeclined = thisProposal.decliners?.contains(currentUserEmail())
+                if (currDocDate.isAfter(currentDateTime))
+                    if (dc.type == DocumentChange.Type.ADDED && !canceled)
+                        proposalArrayList.add(thisProposal)
+                    else if (dc.type == DocumentChange.Type.MODIFIED && canceled){
+                        proposalArrayList.removeIf{ p ->
+                            p.proposalId == thisProposal.proposalId
+                        }
+                    } else if(dc.type == DocumentChange.Type.REMOVED && canceled){
+                        proposalArrayList.removeIf{ p ->
+                            p.proposalId == thisProposal.proposalId
+                        }
+                    }
+            }
+            callback(proposalArrayList)
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -656,6 +658,39 @@ class FireStore {
             }
         }.addOnFailureListener { exception ->
             Log.d(TAG, "get failed with ", exception)
+        }
+    }
+
+    fun setSendedNotification(proposalCreationDate: String, callback: (Boolean) -> Unit){
+        db.collection(proposalCollection).document("proposal_${proposalCreationDate}")
+            .update("sendedNotification", FieldValue.arrayUnion(currentUserEmail()))
+            .addOnSuccessListener {
+                Log.d(TAG, "Proposal archived for user ${currentUserId()}")
+                callback(true)
+            }
+            .addOnFailureListener { e ->
+                Log.w(TAG, "Error setting proposal as archived", e)
+                callback(false)
+            }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getNotification(context: Context, callback: (ArrayList<Notification>) -> Unit){
+        getAllUserProposals{ proposalsList ->
+            val messageList = ArrayList<Notification>()
+            for(proposal in proposalsList){
+                if(proposal.read?.contains(currentUserEmail()) != true) {
+                    if(proposal.sendedNotification?.contains(currentUserEmail()) != true) {
+                        val n = Notification(
+                            proposal.groupName,
+                            "${proposal.organizator}: ${context.resources.getString(R.string.menu_new_proposal)} '${proposal.proposalName}'",
+                            proposal.creationDate
+                        )
+                        messageList?.add(n)
+                    }
+                }
+            }
+            callback(messageList)
         }
     }
 }
