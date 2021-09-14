@@ -123,4 +123,5 @@
     <string name="archive_fail_organizator">The organizer cannot archive the proposal</string>
     <string name="chat_accepted_message">accepted ✅</string>
     <string name="chat_refused_message">refused ❌</string>
+    <string name="account" translatable="false">Account</string>
 </resources>

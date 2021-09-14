@@ -1,6 +1,7 @@
 package it.gooutapp.adapter
 
 import android.os.Build
+import android.util.Log
 import android.view.*
 import android.widget.Button
 import android.widget.PopupMenu
@@ -27,6 +28,12 @@ class ProposalAdapter(private val proposalList: ArrayList<Proposal>, private val
         return MyViewHolder(itemView)
     }
 
+    override fun onViewRecycled(holder: MyViewHolder) {
+        super.onViewRecycled(holder)
+        Log.e("viewRecycled attivata", "ora")
+
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         tvEmptyProposalMessage?.visibility = View.INVISIBLE
@@ -43,15 +50,24 @@ class ProposalAdapter(private val proposalList: ArrayList<Proposal>, private val
         holder.organizzatoreProposta.text = "${proposal.organizator.toString()}"
         if (proposal.organizatorId != user_auth_id) {
             holder.btnCancelEvent.visibility = View.GONE
+            holder.btnAccept.visibility = View.VISIBLE
+            holder.btnRefuse.visibility = View.VISIBLE
         } else {
+            holder.btnCancelEvent.visibility = View.VISIBLE
             holder.btnAccept.visibility = View.GONE
             holder.btnRefuse.visibility = View.GONE
         }
-        if(proposal.accepters?.contains(curr_user_email) == true){
-            holder.btnAccept.isEnabled = false
-        }
-        if(proposal.decliners?.contains(curr_user_email) == true){
-            holder.btnRefuse.isEnabled = false
+        when {
+            proposal.accepters?.contains(curr_user_email) == true -> {
+                holder.btnAccept.isEnabled = false
+            }
+            proposal.decliners?.contains(curr_user_email) == true -> {
+                holder.btnRefuse.isEnabled = false
+            }
+            else -> {
+                holder.btnAccept.isEnabled = true
+                holder.btnRefuse.isEnabled = true
+            }
         }
         //listeners
         holder.btnModify.setOnClickListener {
@@ -114,12 +130,14 @@ class ProposalAdapter(private val proposalList: ArrayList<Proposal>, private val
         holder.btnAccept.setOnClickListener(){
             val title = activityContext.resources.getString(R.string.proposal_accept_title_popup)
             val message = activityContext.resources.getString(R.string.proposal_accept_message_popup)
+            var counter = 0
             MyDialog(title, message, activityContext){ confirm ->
                 if(confirm){
                     fs.setProposalState(proposal.proposalId.toString(), "accepted"){ result->
                         if(result){
                             fs.addMessageToChat("accettato", proposal.proposalId.toString())
                             holder.btnAccept.isEnabled = false
+                            holder.btnRefuse.isEnabled = true
                             Toast.makeText(activityContext, R.string.proposal_state_successful, Toast.LENGTH_SHORT).show()
                         }else {
                             Toast.makeText(activityContext, R.string.proposal_state_fail, Toast.LENGTH_SHORT).show()
@@ -137,6 +155,7 @@ class ProposalAdapter(private val proposalList: ArrayList<Proposal>, private val
                         if(result){
                             fs.addMessageToChat("rifiutato", proposal.proposalId.toString())
                             holder.btnRefuse.isEnabled = false
+                            holder.btnAccept.isEnabled = true
                             Toast.makeText(activityContext, R.string.proposal_state_successful, Toast.LENGTH_SHORT).show()
                         }else{
                             Toast.makeText(activityContext, R.string.proposal_state_fail, Toast.LENGTH_SHORT).show()

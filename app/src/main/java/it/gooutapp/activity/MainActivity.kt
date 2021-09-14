@@ -1,10 +1,12 @@
  package it.gooutapp.activity
 
+import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
@@ -14,8 +16,6 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.core.os.bundleOf
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
@@ -38,21 +38,22 @@ import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_new_proposal.*
 import kotlinx.android.synthetic.main.nav_header_main.*
+import java.util.*
 
-class MainActivity : AppCompatActivity() {
+ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var idCurrentGroup: String
     private lateinit var nameCurrentGroup: String
     private lateinit var prefs: SharedPreferences
-    private lateinit var notificationServiceIntent: Intent
-    private var mLastClickTime: Long = 0
     private lateinit var prefsEditor: SharedPreferences.Editor
+    private var mLastClickTime: Long = 0
     private var thisUserData = User()
     private val fs = FireStore()
     private val curr_user_email = Firebase.auth.currentUser?.email.toString()
     private val TAG = "MAIN_ACTIVITY"
     private val CHANNEL_ID = "GoOutApp_Channel"
 
+    @SuppressLint("NewApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         createNotificationChannel()     //NotificationChannel
@@ -62,6 +63,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this@MainActivity, LoginActivity::class.java))
             finish()
         }else {
+            FirebaseFirestore.getInstance().enableNetwork()
             //Carico il layout
             setContentView(R.layout.activity_main)
             val toolbar: Toolbar = findViewById(R.id.toolbar)
@@ -70,7 +72,7 @@ class MainActivity : AppCompatActivity() {
             val navView: NavigationView = findViewById(R.id.nav_view)
             val navController = findNavController(R.id.nav_host_fragment)
             navController.addOnDestinationChangedListener {
-                    controller, destination, arguments ->
+                    _, destination, arguments ->
                 when(destination.id) {
                     R.id.nav_group -> {
                         toolbar.title = arguments?.getString("groupName")
@@ -97,42 +99,30 @@ class MainActivity : AppCompatActivity() {
                     R.id.nav_home -> {
                         toolbar.isClickable = false
                     }
-                    R.id.nav_newProposal -> {
-                        toolbar.isClickable = false
-                    }
                     R.id.nav_chat -> {
                         toolbar.title = "Chat: ${arguments?.getString("proposalName")}"
                         toolbar.isClickable = false
                     }
-                    R.id.nav_settings -> {
+                    R.id.nav_profile -> {
                         supportFragmentManager
                             .beginTransaction()
                             .replace(R.id.settings, SettingsFragment())
                             .commit()
                         prefs = getDefaultSharedPreferences(this)
                         prefsEditor = prefs.edit()
+                        prefsEditor.putString("appLanguage", Locale.getDefault().language)
                         prefsEditor.putString("name", thisUserData.name)
                         prefsEditor.putString("surname", thisUserData.surname)
                         prefsEditor.putString("nickname", thisUserData.nickname)
                         prefsEditor.putString("email", curr_user_email)
                         prefsEditor.apply()
-
-                        prefs.registerOnSharedPreferenceChangeListener { _, _ ->
-                            val user = Firebase.auth.currentUser
-                            var newPassword = prefs.getString("password",null).toString()
-                            user!!.updatePassword(newPassword)
-                                .addOnCompleteListener { task ->
-                                    Log.d(TAG, "User password updated prima dell'if")
-                                    if (task.isSuccessful) {
-                                        Log.d(TAG, "User password updated.")
-                                    }
-                                }
-                                .addOnFailureListener {
-                                    Log.d(TAG, "User password updated failed")
-                                }
-                                .addOnSuccessListener {
-                                    Log.d(TAG, "User password updated success")
-                                }
+                        prefs.registerOnSharedPreferenceChangeListener {sp , _ ->
+                            Log.i(TAG, "PREF   ----> ${sp.all["appLanguage"]}")
+                            val loc = Locale(sp.all["appLanguage"] as String)
+                            Locale.setDefault(Locale.ITALIAN)
+                            val config = Configuration()
+                            config.setLocale(Locale.ITALIAN)
+                            baseContext.resources.updateConfiguration(config, baseContext.resources.displayMetrics)
                         }
                     }
                 }
@@ -141,7 +131,7 @@ class MainActivity : AppCompatActivity() {
             appBarConfiguration = AppBarConfiguration(
                 setOf(
                     R.id.nav_home,
-                    R.id.nav_settings,
+                    R.id.nav_profile,
                     R.id.nav_history
                 ), drawerLayout
             )
@@ -164,23 +154,16 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
-    override fun onStart() {
-        super.onStart()
-    }
-
     override fun onRestart() {
         super.onRestart()
-        if (this != null) {
-            this.stopService(notificationServiceIntent)
-        }
+        val intent = Intent(this, NotificationService::class.java)
+        this.stopService(intent)
     }
 
     override fun onStop() {
         super.onStop()
-        notificationServiceIntent = Intent(this, NotificationService::class.java)
-        if (this != null) {
-            this.startService(notificationServiceIntent)
-        }
+        val intent = Intent(this, NotificationService::class.java)
+        this.startService(intent)
     }
 
     fun joinGroup(item: MenuItem) {
@@ -206,6 +189,7 @@ class MainActivity : AppCompatActivity() {
 
     fun logout(item: MenuItem) {
         Firebase.auth.signOut()
+        FirebaseFirestore.getInstance().disableNetwork()
         startActivity(Intent(this@MainActivity, LoginActivity::class.java))
         finish()
     }
@@ -235,8 +219,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun createNotificationChannel() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = "GoOutAppChannel"
             val descriptionText = "channel_description"
@@ -244,7 +226,6 @@ class MainActivity : AppCompatActivity() {
             val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
                 description = descriptionText
             }
-            // Register the channel with the system
             val notificationManager: NotificationManager =
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)

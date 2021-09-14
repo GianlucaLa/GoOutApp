@@ -2,6 +2,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <PreferenceCategory app:title="@string/account">
+
+        <ListPreference
+            app:key="appLanguage"
+            app:title="@string/language"
+            app:useSimpleSummaryProvider="true"
+            android:icon="@drawable/ic_language"/>
+
+    </PreferenceCategory>
+
     <PreferenceCategory app:title="@string/profile">
 
         <EditTextPreference
@@ -31,19 +41,6 @@
             android:selectable="false"
             app:useSimpleSummaryProvider="true"
             android:icon="@drawable/ic_edittext_email" />
-
-    </PreferenceCategory>
-
-    <PreferenceCategory app:title="@string/options">
-
-        <ListPreference
-            app:defaultValue="mettere lingua dispositivo"
-            app:entries="@array/reply_entries"
-            app:entryValues="@array/reply_values"
-            app:key="reply"
-            app:title="@string/language"
-            app:useSimpleSummaryProvider="true"
-            android:icon="@drawable/ic_language"/>
 
     </PreferenceCategory>
 

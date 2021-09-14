@@ -11,10 +11,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import it.gooutapp.R
+import it.gooutapp.firebase.FireStore
 import it.gooutapp.model.Message
 import java.util.*
 
-class ChatAdapter(private val context: Context, private val messageList: ArrayList<Message>, private val tvEmptyMessage: View) : RecyclerView.Adapter<ChatAdapter.MyViewHolder>() {
+class ChatAdapter(private val context: Context, private val messageList: ArrayList<Message>, private val tvEmptyMessage: View, private val proposalId: String) : RecyclerView.Adapter<ChatAdapter.MyViewHolder>() {
     private val TAG = "CHAT_ADAPTER"
     private val MESSAGE_TYPE_LEFT = 0
     private val MESSAGE_TYPE_RIGHT = 1
@@ -23,15 +24,19 @@ class ChatAdapter(private val context: Context, private val messageList: ArrayLi
 
     @SuppressLint("NewApi")
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        if (viewType == MESSAGE_TYPE_RIGHT) {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.row_item_right, parent, false)
-            return MyViewHolder(view)
-        } else if (viewType == MESSAGE_TYPE_LEFT){
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.row_item_left, parent, false)
-            return MyViewHolder(view)
-        } else {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.row_item_center, parent, false)
-            return MyViewHolder(view)
+        return when (viewType) {
+            MESSAGE_TYPE_RIGHT -> {
+                val view = LayoutInflater.from(parent.context).inflate(R.layout.row_item_right, parent, false)
+                MyViewHolder(view)
+            }
+            MESSAGE_TYPE_LEFT -> {
+                val view = LayoutInflater.from(parent.context).inflate(R.layout.row_item_left, parent, false)
+                MyViewHolder(view)
+            }
+            else -> {
+                val view = LayoutInflater.from(parent.context).inflate(R.layout.row_item_center, parent, false)
+                MyViewHolder(view)
+            }
         }
     }
 
@@ -60,12 +65,12 @@ class ChatAdapter(private val context: Context, private val messageList: ArrayLi
 
     override fun getItemViewType(position: Int): Int {
         firebaseUser = FirebaseAuth.getInstance().currentUser
-        if (messageList[position].system == firebaseUser!!.uid && !(messageList[position].text == "accettato" || messageList[position].text == "rifiutato")) {
-            return MESSAGE_TYPE_RIGHT
+        return if (messageList[position].system == firebaseUser!!.uid && !(messageList[position].text == "accettato" || messageList[position].text == "rifiutato")) {
+            MESSAGE_TYPE_RIGHT
         } else if (messageList[position].system != firebaseUser!!.uid && !(messageList[position].text == "accettato" || messageList[position].text == "rifiutato")){
-            return MESSAGE_TYPE_LEFT
+            MESSAGE_TYPE_LEFT
         } else{
-            return MESSAGE_TYPE_CENTER
+            MESSAGE_TYPE_CENTER
         }
     }
 }

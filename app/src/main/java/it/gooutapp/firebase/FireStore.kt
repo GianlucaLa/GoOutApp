@@ -8,6 +8,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.*
 import com.google.firebase.ktx.Firebase
 import it.gooutapp.R
+import it.gooutapp.activity.MainActivity
 import it.gooutapp.model.*
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -233,29 +234,19 @@ class FireStore {
     @RequiresApi(Build.VERSION_CODES.O)
     fun getGroupProposalData(groupId: String, callback: (ArrayList<Proposal>) -> Unit) {
         var proposalArrayList = ArrayList<Proposal>()
-        db.collection(proposalCollection).whereEqualTo("groupId", "$groupId")
-            .addSnapshotListener { value, error ->
-                if (error != null) {
-                    Log.e("Firestore Error", error.message.toString())
-                    return@addSnapshotListener
-                }
-                for (dc: DocumentChange in value?.documentChanges!!) {
+        db.collection(proposalCollection).whereEqualTo("groupId", "$groupId").get()
+            .addOnSuccessListener { documents ->
+                for (dc in documents) {
                     //cerco e aggiungo i gruppi che contengono l'email dell'utente
-                    val thisProposal = dc.document.toObject(Proposal::class.java)
+                    val thisProposal = dc.toObject(Proposal::class.java)
                     val currentDateTime = LocalDateTime.now()
                     val currDocDate = LocalDateTime.parse(thisProposal.dateTime, DateTimeFormatter.ISO_DATE_TIME)
                     val canceled = thisProposal.canceled == "canceled"
-                    val isAccepted = thisProposal.accepters?.contains(currentUserEmail())
-                    val isDeclined = thisProposal.decliners?.contains(currentUserEmail())
                     val isArchived = thisProposal.archived?.contains(currentUserEmail())
                     if (currDocDate.isAfter(currentDateTime))
-                        if (dc.type == DocumentChange.Type.ADDED && !(isArchived == true || canceled))
+                        if (!(isArchived == true || canceled))
                             proposalArrayList.add(thisProposal)
-                        else if (dc.type == DocumentChange.Type.MODIFIED && (isArchived == true || canceled)){
-                            proposalArrayList.removeIf{ p ->
-                                p.proposalId == thisProposal.proposalId
-                            }
-                        }else if (dc.type == DocumentChange.Type.REMOVED){
+                        else if ((isArchived == true || canceled)) {
                             proposalArrayList.removeIf { p ->
                                 p.proposalId == thisProposal.proposalId
                             }
@@ -270,7 +261,6 @@ class FireStore {
     fun getAllUserProposals(callback: (ArrayList<Proposal>) -> Unit) {
         var proposalArrayList = ArrayList<Proposal>()
         db.collection(proposalCollection).addSnapshotListener { value, error ->
-            Log.e("STAMP DI VALUE ", value?.documentChanges.toString())
             if (error != null) {
                 Log.e("Firestore Error", error.message.toString())
                 return@addSnapshotListener
@@ -278,19 +268,18 @@ class FireStore {
             for (dc: DocumentChange in value?.documentChanges!!) {
                 val thisProposal = dc.document.toObject(Proposal::class.java)
                 val currentDateTime = LocalDateTime.now()
-                val currDocDate = LocalDateTime.parse(thisProposal.dateTime, DateTimeFormatter.ISO_DATE_TIME)
+                val currDocDate =
+                    LocalDateTime.parse(thisProposal.dateTime, DateTimeFormatter.ISO_DATE_TIME)
                 val canceled = thisProposal.canceled == "canceled"
-                val alreadyAccepted = thisProposal.accepters?.contains(currentUserEmail())
-                val alreadyDeclined = thisProposal.decliners?.contains(currentUserEmail())
                 if (currDocDate.isAfter(currentDateTime))
                     if (dc.type == DocumentChange.Type.ADDED && !canceled)
                         proposalArrayList.add(thisProposal)
-                    else if (dc.type == DocumentChange.Type.MODIFIED && canceled){
-                        proposalArrayList.removeIf{ p ->
+                    else if (dc.type == DocumentChange.Type.MODIFIED && canceled) {
+                        proposalArrayList.removeIf { p ->
                             p.proposalId == thisProposal.proposalId
                         }
-                    } else if(dc.type == DocumentChange.Type.REMOVED && canceled){
-                        proposalArrayList.removeIf{ p ->
+                    } else if (dc.type == DocumentChange.Type.REMOVED && canceled) {
+                        proposalArrayList.removeIf { p ->
                             p.proposalId == thisProposal.proposalId
                         }
                     }
@@ -303,24 +292,16 @@ class FireStore {
     fun getUserHistoryProposalData(callback: (ArrayList<Proposal>) -> Unit) {
         var proposalArrayList = ArrayList<Proposal>()
         getUserGroupData{ groupList ->
-            db.collection(proposalCollection).addSnapshotListener { value, error ->
-                if (error != null) {
-                    Log.e("Firestore Error", error.message.toString())
-                    return@addSnapshotListener
-                }
-                for (dc: DocumentChange in value?.documentChanges!!) {
-                    val thisProposal = dc.document.toObject(Proposal::class.java)
+            db.collection(proposalCollection).get().addOnSuccessListener { documents ->
+                for (dc in documents) {
+                    val thisProposal = dc.toObject(Proposal::class.java)
                     val canceled = thisProposal.canceled == "canceled"
                     val isArchived = thisProposal.archived?.contains(currentUserEmail())
                     for (group in groupList) {
                         if (thisProposal.groupId == group.groupId) {
-                            if (dc.type == DocumentChange.Type.ADDED && (LocalDateTime.now().isAfter(LocalDateTime.parse(thisProposal.dateTime))) || isArchived == true || canceled) {
+                            if ((LocalDateTime.now().isAfter(LocalDateTime.parse(thisProposal.dateTime))) || isArchived == true || canceled) {
                                 proposalArrayList?.add(thisProposal)
-                            } else if (dc.type == DocumentChange.Type.MODIFIED && !(LocalDateTime.now().isAfter(LocalDateTime.parse(thisProposal.dateTime))) || isArchived == true || canceled) {
-                                proposalArrayList.removeIf { p ->
-                                    p.proposalId == thisProposal.proposalId
-                                }
-                            } else if (dc.type == DocumentChange.Type.REMOVED) {
+                            } else if (!(LocalDateTime.now().isAfter(LocalDateTime.parse(thisProposal.dateTime))) || isArchived == true || canceled) {
                                 proposalArrayList.removeIf { p ->
                                     p.proposalId == thisProposal.proposalId
                                 }
@@ -336,7 +317,7 @@ class FireStore {
     fun getProposalPartecipants(proposalId: String, context: Context, callback: (ArrayList<String>) -> Unit){
         var partecipants = ArrayList<String>()
         db.collection(proposalCollection).whereEqualTo("proposalId", "$proposalId").get()
-            .addOnSuccessListener { proposalDocs ->
+            .addOnSuccessListener{ proposalDocs ->
                 var proposalDoc = proposalDocs.last()
                 var accepters = if(proposalDoc?.get("accepters") != null)
                                     proposalDoc?.get("accepters") as ArrayList<String>
@@ -485,8 +466,6 @@ class FireStore {
                 "systemNickname" to nickname,
                 "text" to msgText
             )
-            db.collection(chatCollection).document(proposalId).collection(messageSubCollection)
-                .document("message_${LocalDateTime.now()}").set(message)
         }
     }
 
@@ -686,7 +665,7 @@ class FireStore {
                             "${proposal.organizator}: ${context.resources.getString(R.string.menu_new_proposal)} '${proposal.proposalName}'",
                             proposal.creationDate
                         )
-                        messageList?.add(n)
+                        messageList.add(n)
                     }
                 }
             }

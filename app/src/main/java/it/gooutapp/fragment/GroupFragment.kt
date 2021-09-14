@@ -2,14 +2,15 @@ package it.gooutapp.fragment
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.*
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import it.gooutapp.R
@@ -25,6 +26,7 @@ class GroupFragment : Fragment(), ProposalAdapter.ClickListenerProposal {
     private lateinit var groupId: String
     private lateinit var recyclerView: RecyclerView
     private lateinit var proposalAdapter: ProposalAdapter
+    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private val fs = FireStore()
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -33,7 +35,20 @@ class GroupFragment : Fragment(), ProposalAdapter.ClickListenerProposal {
         groupId = arguments?.get("groupId").toString()
         recyclerView = root.proposalRecyclerView
         recyclerView.layoutManager = LinearLayoutManager(root.context)
+        swipeRefreshLayout = root.findViewById(R.id.swipeRefreshLayout)
+        swipeRefreshLayout.setColorSchemeColors(resources.getColor(R.color.colorPrimary))
+        loadRecyclerData(root)
 
+        swipeRefreshLayout.setOnRefreshListener {
+            swipeRefreshLayout.isRefreshing = false
+            loadRecyclerData(root)
+        }
+        setHasOptionsMenu(true)
+        return root
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun loadRecyclerData(root: View){
         fs.getGroupProposalData(groupId) { proposalListData ->
             var proposalToRead = ArrayList<Proposal>()
             for(proposal in proposalListData){
@@ -47,14 +62,11 @@ class GroupFragment : Fragment(), ProposalAdapter.ClickListenerProposal {
             proposalAdapter = ProposalAdapter(proposalListData, this, emptyProposalMessage)
             recyclerView.adapter = proposalAdapter
             GroupPB?.visibility = View.INVISIBLE
-            if(proposalListData.size == 0){
+            if(proposalListData.isEmpty()){
                 tvEmptyProposalMessage?.visibility = View.VISIBLE
             }
         }
-        setHasOptionsMenu(true)
-        return root
     }
-
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.group_fragment_menu, menu)

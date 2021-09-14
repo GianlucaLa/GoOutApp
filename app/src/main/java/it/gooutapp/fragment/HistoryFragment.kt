@@ -2,7 +2,6 @@ package it.gooutapp.fragment
 
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,19 +11,19 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import it.gooutapp.R
 import it.gooutapp.adapter.HistoryAdapter
 import it.gooutapp.firebase.FireStore
 import it.gooutapp.model.Proposal
-import kotlinx.android.synthetic.main.fragment_chat.view.*
 import kotlinx.android.synthetic.main.fragment_chat.view.messagesRecyclerView
 import kotlinx.android.synthetic.main.fragment_history.*
 import kotlinx.android.synthetic.main.fragment_history.view.*
-import java.util.*
 
 class HistoryFragment : Fragment(), HistoryAdapter.ClickListenerHistory {
     private lateinit var recyclerView: RecyclerView
     private lateinit var historyAdapter: HistoryAdapter
+    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private val fs = FireStore()
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -32,7 +31,20 @@ class HistoryFragment : Fragment(), HistoryAdapter.ClickListenerHistory {
         val root = inflater.inflate(R.layout.fragment_history, container, false)
         recyclerView = root.messagesRecyclerView
         recyclerView.layoutManager = LinearLayoutManager(root.context)
+        swipeRefreshLayout = root.findViewById(R.id.swipeRefreshLayoutH)
+        swipeRefreshLayout.setColorSchemeColors(resources.getColor(R.color.colorPrimary))
+        loadRecyclerData(root)
 
+        swipeRefreshLayout.setOnRefreshListener {
+            swipeRefreshLayout.isRefreshing = false
+            loadRecyclerData(root)
+        }
+
+        return root
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun loadRecyclerData(root: View){
         fs.getUserHistoryProposalData { historyListData ->
             historyAdapter = HistoryAdapter(historyListData,this)
             recyclerView.adapter = historyAdapter
@@ -43,7 +55,6 @@ class HistoryFragment : Fragment(), HistoryAdapter.ClickListenerHistory {
                 historyMessage?.visibility = View.VISIBLE
             }
         }
-        return root
     }
 
     override fun enterChatListener(proposal: Proposal) {
