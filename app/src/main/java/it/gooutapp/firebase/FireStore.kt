@@ -466,6 +466,8 @@ class FireStore {
                 "systemNickname" to nickname,
                 "text" to msgText
             )
+            db.collection(chatCollection).document(proposalId).collection(messageSubCollection)
+                .document("message_${LocalDateTime.now()}").set(message)
         }
     }
 
