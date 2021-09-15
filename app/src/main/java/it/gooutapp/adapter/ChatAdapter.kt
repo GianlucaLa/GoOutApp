@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import it.gooutapp.R
-import it.gooutapp.firebase.FireStore
 import it.gooutapp.model.Message
 import java.util.*
 
@@ -48,14 +47,14 @@ class ChatAdapter(private val context: Context, private val messageList: ArrayLi
         tvEmptyMessage?.visibility = View.INVISIBLE
         val message = messageList[position]
         if(getItemViewType(position) == MESSAGE_TYPE_LEFT) {
-            holder.txtUserName.text = Html.fromHtml("<b>${message.systemNickname}</b><br>${message.text}")
+            holder.txtUserName.text = Html.fromHtml("<b>${message.nickname}</b><br>${message.text}")
         } else if (getItemViewType(position) == MESSAGE_TYPE_RIGHT){
             holder.txtUserName.text = "${message.text}"
         } else {
             if (message.text == "accettato")
-                holder.txtUserName.text = "${message.systemNickname } ${context.resources.getString(R.string.chat_accepted_message)}"
+                holder.txtUserName.text = "${message.nickname } ${context.resources.getString(R.string.chat_accepted_message)}"
             else
-                holder.txtUserName.text = "${message.systemNickname } ${context.resources.getString(R.string.chat_refused_message)}"
+                holder.txtUserName.text = "${message.nickname } ${context.resources.getString(R.string.chat_refused_message)}"
         }
     }
 
@@ -65,9 +64,9 @@ class ChatAdapter(private val context: Context, private val messageList: ArrayLi
 
     override fun getItemViewType(position: Int): Int {
         firebaseUser = FirebaseAuth.getInstance().currentUser
-        return if (messageList[position].system == firebaseUser!!.uid && !(messageList[position].text == "accettato" || messageList[position].text == "rifiutato")) {
+        return if (messageList[position].user_id == firebaseUser!!.uid && !(messageList[position].text == "accettato" || messageList[position].text == "rifiutato")) {
             MESSAGE_TYPE_RIGHT
-        } else if (messageList[position].system != firebaseUser!!.uid && !(messageList[position].text == "accettato" || messageList[position].text == "rifiutato")){
+        } else if (messageList[position].user_id != firebaseUser!!.uid && !(messageList[position].text == "accettato" || messageList[position].text == "rifiutato")){
             MESSAGE_TYPE_LEFT
         } else{
             MESSAGE_TYPE_CENTER

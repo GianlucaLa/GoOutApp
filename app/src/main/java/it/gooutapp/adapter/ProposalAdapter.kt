@@ -1,5 +1,6 @@
 package it.gooutapp.adapter
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.util.Log
 import android.view.*
@@ -28,12 +29,7 @@ class ProposalAdapter(private val proposalList: ArrayList<Proposal>, private val
         return MyViewHolder(itemView)
     }
 
-    override fun onViewRecycled(holder: MyViewHolder) {
-        super.onViewRecycled(holder)
-        Log.e("viewRecycled attivata", "ora")
-
-    }
-
+    @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         tvEmptyProposalMessage?.visibility = View.INVISIBLE
@@ -44,10 +40,10 @@ class ProposalAdapter(private val proposalList: ArrayList<Proposal>, private val
         holder.labelDate.text = "${activityContext.resources.getString(R.string.date)}: "
         holder.labelTime.text = "${activityContext.resources.getString(R.string.time)}: "
         holder.labelOrganizator.text = "${activityContext.resources.getString(R.string.organizator)}: "
-        holder.luogoProposta.text = "${proposal.place.toString()}"
-        holder.dataProposta.text = "${proposal.dateTime.toString().substring(0,10)}"
-        holder.oraProposta.text = "${proposal.dateTime.toString().substring(11)}"
-        holder.organizzatoreProposta.text = "${proposal.organizator.toString()}"
+        holder.luogoProposta.text = proposal.place.toString()
+        holder.dataProposta.text = proposal.dateTime.toString().substring(0,10)
+        holder.oraProposta.text = proposal.dateTime.toString().substring(11)
+        holder.organizzatoreProposta.text = proposal.organizator.toString()
         if (proposal.organizatorId != user_auth_id) {
             holder.btnCancelEvent.visibility = View.GONE
             holder.btnAccept.visibility = View.VISIBLE
@@ -74,13 +70,22 @@ class ProposalAdapter(private val proposalList: ArrayList<Proposal>, private val
             val wrapper = ContextThemeWrapper(activityContext, R.style.PopupMenu)
             val pop= PopupMenu(wrapper,it)
             pop.inflate(R.menu.proposal_row_menu)
+            if(proposal.organizatorId != user_auth_id){
+                pop.menu.findItem(R.id.modify).isVisible = false
+                pop.menu.findItem(R.id.archives).isVisible = true
+            }else{
+                pop.menu.findItem(R.id.modify).isVisible = true
+                pop.menu.findItem(R.id.archives).isVisible = false
+            }
             pop.setOnMenuItemClickListener {item ->
                 when(item.itemId) {
-                    R.id.modify->{clickListenerProposal.modifyProposalListener(proposalList[position])}
+                    R.id.modify->{
+                        clickListenerProposal.modifyProposalListener(proposalList[position])
+                    }
                     R.id.partecipants->{
                         fs.getProposalPartecipants(proposal.proposalId.toString(), activityContext){ participants ->
                             var items = if(participants.size != 0){
-                                participants.toTypedArray() as Array<CharSequence>
+                                participants.toTypedArray()
                             }else{
                                 arrayOf(activityContext.resources.getString(R.string.no_partecipant))
                             }
@@ -92,16 +97,19 @@ class ProposalAdapter(private val proposalList: ArrayList<Proposal>, private val
                         }
                     }
                     R.id.archives->{
-                        if(proposal.organizatorId == user_auth_id){
-                            Toast.makeText(activityContext, R.string.archive_fail_organizator, Toast.LENGTH_SHORT).show()
-                        }else if(proposal.decliners?.contains(curr_user_email) != true){
-                            Toast.makeText(activityContext, R.string.archive_fail, Toast.LENGTH_SHORT).show()
-                        }else{
-                            fs.setProposalArchived(proposal.proposalId.toString()){ result ->
-                                if(result){
-                                    Toast.makeText(activityContext, R.string.proposal_archived, Toast.LENGTH_SHORT).show()
-                                }else{
-                                    Toast.makeText(activityContext, R.string.proposal_archived_fail, Toast.LENGTH_SHORT).show()
+                        when {
+                            holder.btnRefuse.isEnabled -> {
+                                Toast.makeText(activityContext, R.string.archive_fail, Toast.LENGTH_SHORT).show()
+                            }
+                            else -> {
+                                fs.setProposalArchived(proposal.proposalId.toString()){ result ->
+                                    if(result){
+                                        proposalList.removeAt(position)
+                                        notifyItemRemoved(position)
+                                        Toast.makeText(activityContext, R.string.proposal_archived, Toast.LENGTH_SHORT).show()
+                                    }else{
+                                        Toast.makeText(activityContext, R.string.proposal_archived_fail, Toast.LENGTH_SHORT).show()
+                                    }
                                 }
                             }
                         }
@@ -119,6 +127,8 @@ class ProposalAdapter(private val proposalList: ArrayList<Proposal>, private val
                 if(confirm){
                     fs.cancelProposal(proposal.proposalId.toString()){ result->
                         if(result){
+                            proposalList.removeAt(position)
+                            notifyItemRemoved(position)
                             Toast.makeText(activityContext, R.string.proposal_state_successful, Toast.LENGTH_SHORT).show()
                         }else {
                             Toast.makeText(activityContext, R.string.proposal_state_fail, Toast.LENGTH_SHORT).show()
@@ -130,7 +140,6 @@ class ProposalAdapter(private val proposalList: ArrayList<Proposal>, private val
         holder.btnAccept.setOnClickListener(){
             val title = activityContext.resources.getString(R.string.proposal_accept_title_popup)
             val message = activityContext.resources.getString(R.string.proposal_accept_message_popup)
-            var counter = 0
             MyDialog(title, message, activityContext){ confirm ->
                 if(confirm){
                     fs.setProposalState(proposal.proposalId.toString(), "accepted"){ result->
@@ -138,6 +147,7 @@ class ProposalAdapter(private val proposalList: ArrayList<Proposal>, private val
                             fs.addMessageToChat("accettato", proposal.proposalId.toString())
                             holder.btnAccept.isEnabled = false
                             holder.btnRefuse.isEnabled = true
+                            proposalList[position].accepters?.add(curr_user_email)
                             Toast.makeText(activityContext, R.string.proposal_state_successful, Toast.LENGTH_SHORT).show()
                         }else {
                             Toast.makeText(activityContext, R.string.proposal_state_fail, Toast.LENGTH_SHORT).show()
@@ -156,6 +166,7 @@ class ProposalAdapter(private val proposalList: ArrayList<Proposal>, private val
                             fs.addMessageToChat("rifiutato", proposal.proposalId.toString())
                             holder.btnRefuse.isEnabled = false
                             holder.btnAccept.isEnabled = true
+                            proposalList[position].decliners?.add(curr_user_email)
                             Toast.makeText(activityContext, R.string.proposal_state_successful, Toast.LENGTH_SHORT).show()
                         }else{
                             Toast.makeText(activityContext, R.string.proposal_state_fail, Toast.LENGTH_SHORT).show()

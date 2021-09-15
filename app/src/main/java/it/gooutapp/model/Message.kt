@@ -1,3 +1,3 @@
 package it.gooutapp.model
 
-data class Message(var system: String ?= null, var systemNickname: String ?= null, var text: String ?= null)
+data class Message(var user_id: String ?= null, var nickname: String ?= null, var text: String ?= null)

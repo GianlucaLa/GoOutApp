@@ -185,6 +185,8 @@ class NewProposalFragment : Fragment(), DatePickerDialog.OnDateSetListener, Time
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun proposalConfirm(){
+        NewProposalPB.visibility = View.VISIBLE
+        confirmProposalButton.isEnabled = false
         var proposalName = proposalNameEditText.text.toString()
         if(proposalName.isEmpty()) editTextNameProposalView.error = resources.getString(R.string.name_empty_error)
         if(editTextPlace.text.toString() == "") editTextPlaceView.error = resources.getString(R.string.place_empty_error)
@@ -195,22 +197,29 @@ class NewProposalFragment : Fragment(), DatePickerDialog.OnDateSetListener, Time
             if(arguments?.get("place") != null){
                 fs.modifyProposalData(proposalId, proposalName, dateTime, placeString, arguments?.get("groupId").toString(), arguments?.get("organizator").toString(), arguments?.get("organizatorId").toString(), arguments?.get("groupName").toString()) { result ->
                     if (result) {
+                        NewProposalPB.visibility = View.INVISIBLE
                         activity?.findNavController(R.id.nav_host_fragment)?.navigateUp()
                         Toast.makeText(root.context, R.string.successfulProposalModified, Toast.LENGTH_SHORT).show()
                     } else {
+                        confirmProposalButton.isEnabled = true
                         Toast.makeText(root.context, R.string.failProposalModify, Toast.LENGTH_SHORT).show()
                     }
                 }
             }else{
                 fs.createProposalData(groupId, proposalName, dateTime, placeString, groupName) { result ->
                     if (result) {
+                        NewProposalPB.visibility = View.INVISIBLE
                         activity?.findNavController(R.id.nav_host_fragment)?.navigateUp()
                         Toast.makeText(root.context, R.string.successfulProposalCreation, Toast.LENGTH_SHORT).show()
                     } else {
+                        confirmProposalButton.isEnabled = true
                         Toast.makeText(root.context, R.string.failProposalCreation, Toast.LENGTH_SHORT).show()
                     }
                 }
             }
+        }else{
+            NewProposalPB.visibility = View.INVISIBLE
+            confirmProposalButton.isEnabled = true
         }
     }
 

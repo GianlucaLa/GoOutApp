@@ -165,6 +165,10 @@ class FireStore {
                         lastMessageHM[proposal.groupId.toString()] = MessagePreview("${context.resources.getString(R.string.you)}: ${context.resources.getString(R.string.menu_new_proposal)} '${proposal.proposalName}'", proposal.creationDate)
                     else
                         lastMessageHM[proposal.groupId.toString()] = MessagePreview("${proposal.organizator}: ${context.resources.getString(R.string.menu_new_proposal)} '${proposal.proposalName}'", proposal.creationDate)
+
+                    if(proposal.sendedNotification?.contains(currentUserEmail()) != true){
+                        setSendedNotification(proposal.creationDate.toString()){}
+                    }
                 }
                 callback(userGroupsList, adminFlagList, notificationHM, lastMessageHM)
             }
@@ -462,8 +466,8 @@ class FireStore {
     fun addMessageToChat(msgText: String, proposalId: String){
         currentUserNickname { nickname ->
             val message = hashMapOf(
-                "system" to currentUserId(),
-                "systemNickname" to nickname,
+                "user_id" to currentUserId(),
+                "nickname" to nickname,
                 "text" to msgText
             )
             db.collection(chatCollection).document(proposalId).collection(messageSubCollection)

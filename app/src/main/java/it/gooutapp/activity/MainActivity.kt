@@ -14,6 +14,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
@@ -55,8 +56,8 @@ import java.util.*
 
     @SuppressLint("NewApi")
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.e(TAG, "onCreate")
         super.onCreate(savedInstanceState)
-        createNotificationChannel()     //NotificationChannel
 
         val currentUser = Firebase.auth.currentUser
         if(currentUser == null) {
@@ -154,16 +155,26 @@ import java.util.*
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onRestart() {
+        Log.e(TAG, "onRestart")
         super.onRestart()
+        FirebaseFirestore.getInstance().disableNetwork()
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.deleteNotificationChannel(CHANNEL_ID)
+        FirebaseFirestore.getInstance().enableNetwork()
         val intent = Intent(this, NotificationService::class.java)
-        this.stopService(intent)
+        stopService(intent)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onStop() {
+        Log.e(TAG, "onStop")
         super.onStop()
-        val intent = Intent(this, NotificationService::class.java)
-        this.startService(intent)
+        if(Firebase.auth.currentUser?.uid != null){
+            val intent = Intent(this, NotificationService::class.java)
+            startService(intent)
+        }
     }
 
     fun joinGroup(item: MenuItem) {
@@ -188,6 +199,7 @@ import java.util.*
     }
 
     fun logout(item: MenuItem) {
+        Log.e(TAG, "Logout")
         Firebase.auth.signOut()
         FirebaseFirestore.getInstance().disableNetwork()
         startActivity(Intent(this@MainActivity, LoginActivity::class.java))
@@ -218,19 +230,8 @@ import java.util.*
         }
     }
 
-    private fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = "GoOutAppChannel"
-            val descriptionText = "channel_description"
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
-                description = descriptionText
-            }
-            val notificationManager: NotificationManager =
-                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
-            Log.e(TAG, "channel registered")
-        }
-    }
-
+     override fun onDestroy() {
+         Log.e(TAG, "onDestroy")
+         super.onDestroy()
+     }
 }

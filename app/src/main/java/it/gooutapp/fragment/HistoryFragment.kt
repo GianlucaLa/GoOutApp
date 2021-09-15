@@ -29,8 +29,11 @@ class HistoryFragment : Fragment(), HistoryAdapter.ClickListenerHistory {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_history, container, false)
+        val linearLayoutManager = LinearLayoutManager(root.context)
+        linearLayoutManager.reverseLayout = true
+        linearLayoutManager.stackFromEnd = true
         recyclerView = root.messagesRecyclerView
-        recyclerView.layoutManager = LinearLayoutManager(root.context)
+        recyclerView.layoutManager = linearLayoutManager
         swipeRefreshLayout = root.findViewById(R.id.swipeRefreshLayoutH)
         swipeRefreshLayout.setColorSchemeColors(resources.getColor(R.color.colorPrimary))
         loadRecyclerData(root)

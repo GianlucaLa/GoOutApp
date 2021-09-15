@@ -33,8 +33,11 @@ class GroupFragment : Fragment(), ProposalAdapter.ClickListenerProposal {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_group, container, false)
         groupId = arguments?.get("groupId").toString()
+        val linearLayoutManager = LinearLayoutManager(root.context)
+        linearLayoutManager.reverseLayout = true
+        linearLayoutManager.stackFromEnd = true
         recyclerView = root.proposalRecyclerView
-        recyclerView.layoutManager = LinearLayoutManager(root.context)
+        recyclerView.layoutManager = linearLayoutManager
         swipeRefreshLayout = root.findViewById(R.id.swipeRefreshLayout)
         swipeRefreshLayout.setColorSchemeColors(resources.getColor(R.color.colorPrimary))
         loadRecyclerData(root)
