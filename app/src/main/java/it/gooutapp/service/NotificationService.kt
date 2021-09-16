@@ -54,7 +54,7 @@ class NotificationService : Service() {
                     if(!messagesHistory.contains(message)){
                         var notificationObj = NotificationCompat.Builder(this, CHANNEL_ID)
                             .setSmallIcon(R.drawable.ic_notification)
-                            .setContentTitle(Html.fromHtml("<b>${message.groupName}</b>"))          //nome gruppo
+                            .setContentTitle(Html.fromHtml("<b>${message.groupName}</b>"))    //nome gruppo
                             .setContentText(message.message)                                        //messaggio notifica
                             .setContentIntent(contentIntent)
                             .setPriority(NotificationCompat.PRIORITY_DEFAULT)

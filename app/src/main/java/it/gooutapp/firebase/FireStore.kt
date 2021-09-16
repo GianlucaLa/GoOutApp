@@ -354,29 +354,46 @@ class FireStore {
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun getAllUserProposalsLive(callback: (ArrayList<Proposal>) -> Unit) {
-        var proposalArrayList = ArrayList<Proposal>()
-        db.collection(proposalCollection).addSnapshotListener { value, error ->
-            if (error != null) {
-                Log.e("Firestore Error", error.message.toString())
-                return@addSnapshotListener
+        var userGroupsList = ArrayList<String>()
+        db.collection(groupCollection).get().addOnSuccessListener { documents ->
+            for (dc in documents) {
+                val thisGroup = dc.toObject(Group::class.java)
+                //cerco e aggiungo i gruppi che contengono l'email dell'utente
+                if (thisGroup.admin == currentUserEmail()) {
+                    userGroupsList.add(thisGroup.groupId.toString())
+                } else if (thisGroup.users?.contains(currentUserEmail()) == true) {
+                    userGroupsList.add(thisGroup.groupId.toString())
+                }
             }
-            for (dc: DocumentChange in value?.documentChanges!!) {
-                val thisProposal = dc.document.toObject(Proposal::class.java)
-                val currentDateTime = LocalDateTime.now()
-                val currDocDate = LocalDateTime.parse(thisProposal.dateTime, DateTimeFormatter.ISO_DATE_TIME)
-                val canceled = thisProposal.canceled == "canceled"
-                if (currDocDate.isAfter(currentDateTime))
-                    when (dc.type) {
-                        DocumentChange.Type.ADDED -> proposalArrayList.add(thisProposal)
-                        DocumentChange.Type.MODIFIED -> proposalArrayList.add(thisProposal)
-                        DocumentChange.Type.REMOVED -> {
-                            proposalArrayList.removeIf { p ->
-                                p.proposalId == thisProposal.proposalId
-                            }
+            var proposalArrayList = ArrayList<Proposal>()
+            db.collection(proposalCollection).whereIn("groupId", userGroupsList)
+                .addSnapshotListener { value, error ->
+                    if (error != null) {
+                        Log.e("Firestore Error", error.message.toString())
+                        return@addSnapshotListener
+                    }
+                    for (dc: DocumentChange in value?.documentChanges!!) {
+                        val thisProposal = dc.document.toObject(Proposal::class.java)
+                        val currentDateTime = LocalDateTime.now()
+                        if(thisProposal.dateTime != null) {
+                            val currDocDate = LocalDateTime.parse(
+                                thisProposal.dateTime,
+                                DateTimeFormatter.ISO_DATE_TIME
+                            )
+                            if (currDocDate.isAfter(currentDateTime))
+                                when (dc.type) {
+                                    DocumentChange.Type.ADDED -> proposalArrayList.add(thisProposal)
+                                    DocumentChange.Type.MODIFIED -> proposalArrayList.add(thisProposal)
+                                    DocumentChange.Type.REMOVED -> {
+                                        proposalArrayList.removeIf { p ->
+                                            p.proposalId == thisProposal.proposalId
+                                        }
+                                    }
+                                }
                         }
                     }
-            }
-            callback(proposalArrayList)
+                    callback(proposalArrayList)
+                }
         }
     }
 
@@ -798,13 +815,34 @@ class FireStore {
     @RequiresApi(Build.VERSION_CODES.O)
     fun getNotification(context: Context, callback: (ArrayList<Notification>) -> Unit){
         getAllUserProposalsLive{ proposalsList ->
+            Log.e(TAG, proposalsList.toString())
             val messageList = ArrayList<Notification>()
             for(proposal in proposalsList){
-                if(proposal.read?.contains(currentUserEmail()) != true) {
+                if(proposal.read?.contains(currentUserEmail()) == false) {
                     if(proposal.sendedNotification?.contains(currentUserEmail()) != true) {
                         val n = Notification(
                             proposal.groupName,
                             "${proposal.organizator}: ${context.resources.getString(R.string.menu_new_proposal)} '${proposal.proposalName}'",
+                            proposal.creationDate
+                        )
+                        messageList.add(n)
+                    }
+                }
+                if(proposal.readModified?.contains(currentUserEmail()) == false && proposal.canceled == "modified") {
+                    if(proposal.sendedNotification?.contains(currentUserEmail()) != true) {
+                        val n = Notification(
+                            proposal.groupName,
+                            "${proposal.organizator}: ${context.resources.getString(R.string.modifed_proposal)} '${proposal.proposalName}'",
+                            proposal.creationDate
+                        )
+                        messageList.add(n)
+                    }
+                }
+                if(proposal.readCanceled?.contains(currentUserEmail()) == false && proposal.canceled == "canceled") {
+                    if(proposal.sendedNotification?.contains(currentUserEmail()) != true) {
+                        val n = Notification(
+                            proposal.groupName,
+                            "${proposal.organizator}: ${context.resources.getString(R.string.canceled_proposal)} '${proposal.proposalName}'",
                             proposal.creationDate
                         )
                         messageList.add(n)
