@@ -15,6 +15,8 @@ data class Proposal(
     var readCanceled: ArrayList<String> ?= null,
     var readModified: ArrayList<String> ?= null,
     var sendedNotification: ArrayList<String> ?= null,
+    var sendedNotificationModified: ArrayList<String> ?= null,
+    var sendedNotificationCanceled: ArrayList<String> ?= null,
     var read: ArrayList<String> ?= null,
     var canceled: String ?= null,
     var modified: String ?= null,

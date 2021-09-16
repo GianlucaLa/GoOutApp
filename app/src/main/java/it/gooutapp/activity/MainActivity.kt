@@ -160,6 +160,11 @@ import kotlin.collections.ArrayList
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
+     override fun onStart() {
+         super.onStart()
+         refreshHome()
+     }
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onRestart() {
         Log.e(TAG, "onRestart")

@@ -14,9 +14,7 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.getSystemService
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import it.gooutapp.R
 import it.gooutapp.activity.MainActivity
@@ -40,7 +38,7 @@ class NotificationService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.e(TAG, "onStartCommand")
         super.onStartCommand(intent, flags, startId)
-        val messagesHistory = ArrayList<Notification>()
+        val messagesHistory = ArrayList<String>()
         val notificationIntent = Intent(this, MainActivity::class.java)
         val contentIntent = PendingIntent.getActivity(
             this,
@@ -51,7 +49,7 @@ class NotificationService : Service() {
         fs.getNotification(this){ messageList ->
             for(message in messageList){
                 fs.setSendedNotification(message.proposalCreationDate.toString()) {
-                    if(!messagesHistory.contains(message)){
+                    if(!messagesHistory.contains(message.message.toString())){
                         var notificationObj = NotificationCompat.Builder(this, CHANNEL_ID)
                             .setSmallIcon(R.drawable.ic_notification)
                             .setContentTitle(Html.fromHtml("<b>${message.groupName}</b>"))    //nome gruppo
@@ -60,12 +58,11 @@ class NotificationService : Service() {
                             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 
                         with(NotificationManagerCompat.from(this)) {
-                            // notificationId is a unique int for each notification that you must define
                             notificationID++
                             notify(notificationID, notificationObj.build())
                         }
                         //fine if
-                        messagesHistory.add(message)
+                        messagesHistory.add(message.message.toString())
                     }
                 }
             }

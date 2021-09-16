@@ -188,6 +188,12 @@ class FireStore {
                     if(proposal.sendedNotification?.contains(currentUserEmail()) != true){
                         setSendedNotification(proposal.creationDate.toString()){}
                     }
+                    if(proposal.modified == "modified" && proposal.sendedNotificationModified?.contains(currentUserEmail()) != true){
+                        setSendedNotificationModified(proposal.creationDate.toString()){}
+                    }
+                    if(proposal.canceled == "canceled" && proposal.sendedNotificationCanceled?.contains(currentUserEmail()) != true){
+                        setSendedNotificationCanceled(proposal.creationDate.toString()){}
+                    }
                 }
                 callback(userGroupsList, adminFlagList, notificationHM, lastMessageHM)
             }
@@ -344,7 +350,7 @@ class FireStore {
             for (dc in documents) {
                 val thisProposal = dc.toObject(Proposal::class.java)
                 val currentDateTime = LocalDateTime.now()
-                val currDocDate = LocalDateTime.parse(thisProposal.dateTime, DateTimeFormatter.ISO_DATE_TIME)
+                val currDocDate = LocalDateTime.parse(thisProposal.dateTime)
                 if (currDocDate.isAfter(currentDateTime))
                     proposalArrayList.add(thisProposal)
             }
@@ -706,6 +712,7 @@ class FireStore {
             "dateTime" to FieldValue.delete(),
             "modified" to FieldValue.delete(),
             "modifiedCreationDate" to FieldValue.delete(),
+            "sendedNotificationModified" to FieldValue.delete(),
             "readModified" to FieldValue.delete()
         )
         db.collection(proposalCollection).document("proposal_${creationDate}")
@@ -812,40 +819,79 @@ class FireStore {
             }
     }
 
+    fun setSendedNotificationModified(proposalCreationDate: String, callback: (Boolean) -> Unit){
+        db.collection(proposalCollection).document("proposal_${proposalCreationDate}")
+            .update("sendedNotificationModified", FieldValue.arrayUnion(currentUserEmail()))
+            .addOnSuccessListener {
+                Log.d(TAG, "user ${currentUserId()} added to sendedNotification array")
+                callback(true)
+            }
+            .addOnFailureListener { e ->
+                Log.w(TAG, "Error setting proposal as archived", e)
+                callback(false)
+            }
+    }
+
+    fun setSendedNotificationCanceled(proposalCreationDate: String, callback: (Boolean) -> Unit){
+        db.collection(proposalCollection).document("proposal_${proposalCreationDate}")
+            .update("sendedNotificationCanceled", FieldValue.arrayUnion(currentUserEmail()))
+            .addOnSuccessListener {
+                Log.d(TAG, "user ${currentUserId()} added to sendedNotification array")
+                callback(true)
+            }
+            .addOnFailureListener { e ->
+                Log.w(TAG, "Error setting proposal as archived", e)
+                callback(false)
+            }
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     fun getNotification(context: Context, callback: (ArrayList<Notification>) -> Unit){
         getAllUserProposalsLive{ proposalsList ->
-            Log.e(TAG, proposalsList.toString())
             val messageList = ArrayList<Notification>()
+            val alreadySendedNewProposal = ArrayList<String>()
+            val alreadySendedModified = ArrayList<String>()
+            val alreadySendedCanceled = ArrayList<String>()
             for(proposal in proposalsList){
                 if(proposal.read?.contains(currentUserEmail()) == false) {
-                    if(proposal.sendedNotification?.contains(currentUserEmail()) != true) {
-                        val n = Notification(
-                            proposal.groupName,
-                            "${proposal.organizator}: ${context.resources.getString(R.string.menu_new_proposal)} '${proposal.proposalName}'",
-                            proposal.creationDate
-                        )
-                        messageList.add(n)
+                    if (!alreadySendedNewProposal.contains(proposal.proposalId.toString())) {
+                        Log.e(TAG, "MESSAGGIO AGGIUNTO IN proposal")
+                        if (proposal.sendedNotification?.contains(currentUserEmail()) != true) {
+                            val n = Notification(
+                                proposal.groupName,
+                                "${proposal.organizator}: ${context.resources.getString(R.string.menu_new_proposal)} '${proposal.proposalName}'",
+                                proposal.creationDate, proposal.proposalId
+                            )
+                            alreadySendedNewProposal.add(proposal.proposalId.toString())
+                            messageList.add(n)
+                        }
                     }
                 }
-                if(proposal.readModified?.contains(currentUserEmail()) == false && proposal.canceled == "modified") {
-                    if(proposal.sendedNotification?.contains(currentUserEmail()) != true) {
-                        val n = Notification(
-                            proposal.groupName,
-                            "${proposal.organizator}: ${context.resources.getString(R.string.modifed_proposal)} '${proposal.proposalName}'",
-                            proposal.creationDate
-                        )
-                        messageList.add(n)
+                if(proposal.readModified?.contains(currentUserEmail()) == false) {
+                    if (!alreadySendedModified.contains(proposal.proposalId.toString())) {
+                        if (proposal.sendedNotificationModified?.contains(currentUserEmail()) != true) {
+                            val n = Notification(
+                                proposal.groupName,
+                                "${proposal.organizator}: ${context.resources.getString(R.string.modifed_proposal)} '${proposal.proposalName}'",
+                                proposal.creationDate, proposal.proposalId
+                            )
+                            alreadySendedModified.add(proposal.proposalId.toString())
+                            messageList.add(n)
+                        }
                     }
                 }
                 if(proposal.readCanceled?.contains(currentUserEmail()) == false && proposal.canceled == "canceled") {
-                    if(proposal.sendedNotification?.contains(currentUserEmail()) != true) {
-                        val n = Notification(
-                            proposal.groupName,
-                            "${proposal.organizator}: ${context.resources.getString(R.string.canceled_proposal)} '${proposal.proposalName}'",
-                            proposal.creationDate
-                        )
-                        messageList.add(n)
+                    if (!alreadySendedCanceled.contains(proposal.proposalId.toString())) {
+                        if (proposal.sendedNotificationCanceled?.contains(currentUserEmail()) != true) {
+                            val n = Notification(
+                                proposal.groupName,
+                                "${proposal.organizator}: ${context.resources.getString(R.string.canceled_proposal)} '${proposal.proposalName}'",
+                                proposal.creationDate, proposal.proposalId
+                            )
+                            Log.e(TAG, "MESSAGGIO AGGIUNTO IN CANCELED")
+                            alreadySendedCanceled.add(proposal.proposalId.toString())
+                            messageList.add(n)
+                        }
                     }
                 }
             }
