@@ -24,7 +24,7 @@ class FireStore {
     private val source: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')   // per generazione randomica di character
 
     //CREATE METHODS
-    fun createUserData(name: String, surname: String, nickname: String, email: String) {
+    fun createUserData(name: String, surname: String, nickname: String, email: String, callback: (Boolean) -> Unit) {
         val user = hashMapOf(
             "name" to name,
             "surname" to surname,
@@ -34,8 +34,14 @@ class FireStore {
         )
         db.collection(userCollection).document(email)
             .set(user)
-            .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
-            .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
+            .addOnSuccessListener {
+                Log.d(TAG, "DocumentSnapshot successfully written!")
+                callback(true)
+            }
+            .addOnFailureListener { e ->
+                Log.w(TAG, "Error writing document", e)
+                callback(false)
+            }
     }
 
     fun createGroupData(groupName: String, email: String, callback: (Boolean) -> Unit) {

@@ -2,16 +2,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory app:title="@string/account">
-
-        <ListPreference
-            app:key="appLanguage"
-            app:title="@string/language"
-            app:useSimpleSummaryProvider="true"
-            android:icon="@drawable/ic_language"/>
-
-    </PreferenceCategory>
-
     <PreferenceCategory app:title="@string/profile">
 
         <EditTextPreference

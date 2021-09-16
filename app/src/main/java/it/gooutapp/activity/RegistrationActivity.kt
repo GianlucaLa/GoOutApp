@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import it.gooutapp.R
 import it.gooutapp.firebase.FireStore
@@ -25,6 +26,7 @@ class RegistrationActivity: AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        FirebaseFirestore.getInstance().enableNetwork()
         setContentView(R.layout.activity_registration)
         editTextName.addTextChangedListener {
             if (editTextName.text?.length == 15) { Toast.makeText(this, R.string.max15chars, Toast.LENGTH_SHORT).show() }
@@ -62,11 +64,16 @@ class RegistrationActivity: AppCompatActivity() {
                 Toast.makeText(applicationContext, getString(R.string.duplicate_nickname), Toast.LENGTH_SHORT).show()
                 Rpb?.visibility = View.INVISIBLE
             }else {
-                fs.createUserData(name, surname, nickname, email)
-                userFirestoreCreated = true
-                Log.d(TAG, "createUserWithEmail:success")
-                Toast.makeText(applicationContext, getString(R.string.successful_registration), Toast.LENGTH_SHORT).show()
-                closeActivity()
+                fs.createUserData(name, surname, nickname, email){ result ->
+                    if(result){
+                        userFirestoreCreated = true
+                        Log.d(TAG, "createUserWithEmail:success")
+                        Toast.makeText(applicationContext, getString(R.string.successful_registration), Toast.LENGTH_SHORT).show()
+                        closeActivity()
+                    }else{
+                        Toast.makeText(applicationContext, getString(R.string.error), Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
         }
     }
