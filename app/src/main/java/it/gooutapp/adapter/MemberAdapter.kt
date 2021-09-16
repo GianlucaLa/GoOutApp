@@ -1,6 +1,5 @@
 package it.gooutapp.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,7 +23,6 @@ class MemberAdapter(private val memberList : ArrayList<User>, private val admin:
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         var activityContext = holder.itemView.context
         var thisUser: User = memberList[position]
-        Log.e(TAG, thisUser.email.toString())
         holder.memberName.text = thisUser.nickname
 
         if(thisUser.email == currentUserEmail)

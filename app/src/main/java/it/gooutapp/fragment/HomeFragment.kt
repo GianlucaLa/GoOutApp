@@ -1,5 +1,7 @@
 package it.gooutapp.fragment
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.graphics.*
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
@@ -17,13 +19,16 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import it.gooutapp.R
+import it.gooutapp.activity.MainActivity
 import it.gooutapp.adapter.GroupAdapter
 import it.gooutapp.firebase.FireStore
 import it.gooutapp.model.Group
 import it.gooutapp.model.MyDialog
+import kotlinx.android.synthetic.main.fragment_group.*
 import kotlinx.android.synthetic.main.fragment_history.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
@@ -34,18 +39,54 @@ class HomeFragment : Fragment(), GroupAdapter.ClickListener {
     private var curr_user_email = Firebase.auth.currentUser?.email.toString()
     private lateinit var recyclerView: RecyclerView
     private lateinit var groupAdapter: GroupAdapter
+    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private var mLastClickTime: Long = 0
     private val fs = FireStore()
     private val OFFSET_PX = 30
     private lateinit var root: View
 
+    @SuppressLint("NotifyDataSetChanged")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         root = inflater.inflate(R.layout.fragment_home, container, false)
+        val linearLayoutManager = LinearLayoutManager(root.context)
         recyclerView = root.recyclerView
-        recyclerView.layoutManager = LinearLayoutManager(root.context)
-        recyclerView.setHasFixedSize(true)
+        recyclerView.layoutManager = linearLayoutManager
+        swipeRefreshLayout = root.findViewById(R.id.swipeRefreshLayoutHome)
+        swipeRefreshLayout.setColorSchemeColors(resources.getColor(R.color.colorPrimary))
+        loadRecyclerData(root)
 
+        swipeRefreshLayout.setOnRefreshListener {
+            swipeRefreshLayout.isRefreshing = false
+            loadRecyclerData(root)
+        }
+
+        //Create Group Listener
+        root.newGroupFab.setOnClickListener {
+            var title = resources.getString(R.string.create_group)
+            var message = resources.getString(R.string.enter_group_name)
+            MyDialog(title, message, root.context, layoutInflater, true) { groupName ->
+                fs.createGroupData(groupName, curr_user_email) { result ->
+                    if(result){
+                        val activity: Activity? = activity
+                        if (activity != null && activity is MainActivity) {
+                            val mainActivity: MainActivity = activity
+                            mainActivity.refreshHome()
+                            groupAdapter.notifyDataSetChanged()
+                        }
+                        Toast.makeText(root.context, R.string.group_creation_successful, Toast.LENGTH_SHORT).show()
+                    }else{
+                        Toast.makeText(root.context, R.string.group_creation_failed, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+        setHasOptionsMenu(true)
+        return root
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun loadRecyclerData(root: View){
         fs.getUserHomeData(root.context){ groupList, adminFlag, notificationHM, lastMessageHM ->
             val emptyHomeMessage = root.tvEmptyGroupMessage
             emptyHomeMessage.text = context?.resources?.getString(R.string.empty_home_message)
@@ -81,6 +122,7 @@ class HomeFragment : Fragment(), GroupAdapter.ClickListener {
                     icon?.draw(c)
                 }
 
+                @SuppressLint("NotifyDataSetChanged")
                 @RequiresApi(Build.VERSION_CODES.O)
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                     val position = viewHolder.adapterPosition
@@ -99,9 +141,9 @@ class HomeFragment : Fragment(), GroupAdapter.ClickListener {
                                 }
                             }
                             groupList.removeAt(position)
-                            groupAdapter.notifyItemRemoved(position)
-                        }else{
                             groupAdapter.notifyDataSetChanged()
+                            if(groupList.size == 0)
+                                tvEmptyGroupMessage.visibility = View.VISIBLE
                         }
                     }
                 }
@@ -109,23 +151,6 @@ class HomeFragment : Fragment(), GroupAdapter.ClickListener {
             val swap = ItemTouchHelper(itemSwipe)
             swap.attachToRecyclerView(recyclerView)
         }
-
-        //Create Group Listener
-        root.newGroupFab.setOnClickListener {
-            var title = resources.getString(R.string.create_group)
-            var message = resources.getString(R.string.enter_group_name)
-            MyDialog(title, message, root.context, layoutInflater, true) { groupName ->
-                fs.createGroupData(groupName, curr_user_email) { result ->
-                    if(result){
-                        Toast.makeText(root.context, R.string.group_creation_successful, Toast.LENGTH_SHORT).show()
-                    }else{
-                        Toast.makeText(root.context, R.string.group_creation_failed, Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
-        }
-        setHasOptionsMenu(true)
-        return root
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -133,15 +158,16 @@ class HomeFragment : Fragment(), GroupAdapter.ClickListener {
         super.onCreateOptionsMenu(menu, inflater)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onItemClick(group: Group) {
-        fs.getUserData(curr_user_email) { userData ->
+        fs.getUserData(curr_user_email) getGroupPopupNotification@{ userData ->
             val bundle = bundleOf(
                 "groupName" to group.groupName,
                 "groupId" to group.groupId,
                 "userData" to userData
             )
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000){
-                return@getUserData;
+                return@getGroupPopupNotification;
             }
             mLastClickTime = SystemClock.elapsedRealtime()
             activity?.findNavController(R.id.nav_host_fragment)?.navigate(R.id.action_nav_home_to_nav_group, bundle)

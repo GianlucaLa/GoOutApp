@@ -116,7 +116,11 @@
     <string name="archive_fail">La proposta deve essere rifiutata prima</string>
     <string name="chat_accepted_message">accettato ✅</string>
     <string name="chat_refused_message">rifiutato ❌</string>
-    <string name="message_join">si è unito ➕</string>
-    <string name="message_removed">è stato rimosso ➖</string>
-    <string name="message_leave">è uscito ➖</string>
+    <string name="message_join">si è unito al gruppo</string>
+    <string name="message_removed">è stato rimosso dal gruppo</string>
+    <string name="message_leave">è uscito dal gruppo</string>
+    <string name="notifications">Notifiche</string>
+    <string name="empty_notifications">Non sono presenti notifiche</string>
+    <string name="canceled_proposal">Annullata</string>
+    <string name="modifed_proposal">Modified</string>
 </resources>

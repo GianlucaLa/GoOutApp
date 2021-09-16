@@ -29,7 +29,7 @@ class ProposalAdapter(private val proposalList: ArrayList<Proposal>, private val
         return MyViewHolder(itemView)
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         tvEmptyProposalMessage?.visibility = View.INVISIBLE
@@ -84,11 +84,7 @@ class ProposalAdapter(private val proposalList: ArrayList<Proposal>, private val
                     }
                     R.id.partecipants->{
                         fs.getProposalPartecipants(proposal.proposalId.toString(), activityContext){ participants ->
-                            var items = if(participants.size != 0){
-                                participants.toTypedArray()
-                            }else{
-                                arrayOf(activityContext.resources.getString(R.string.no_partecipant))
-                            }
+                            var items = participants.toTypedArray()
                             MaterialAlertDialogBuilder(activityContext)
                                 .setTitle(activityContext.resources.getString(R.string.partecipants))
                                 .setPositiveButton(R.string.ok){ _, _ ->}
@@ -128,7 +124,9 @@ class ProposalAdapter(private val proposalList: ArrayList<Proposal>, private val
                     fs.cancelProposal(proposal.proposalId.toString()){ result->
                         if(result){
                             proposalList.removeAt(position)
-                            notifyItemRemoved(position)
+                            notifyDataSetChanged()
+                            if(proposalList.size == 0)
+                                tvEmptyProposalMessage.visibility = View.VISIBLE
                             Toast.makeText(activityContext, R.string.proposal_state_successful, Toast.LENGTH_SHORT).show()
                         }else {
                             Toast.makeText(activityContext, R.string.proposal_state_fail, Toast.LENGTH_SHORT).show()

@@ -3,7 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Luca/StudioProjects/GoOutApp/app/src/main/res/drawable/ic_baseline_notifications_active_24.xml" value="0.3828125" />
         <entry key="..\:/Users/Luca/StudioProjects/GoOutApp/app/src/main/res/drawable/ic_menu_settings.xml" value="0.22135416666666666" />
+        <entry key="..\:/Users/Luca/StudioProjects/GoOutApp/app/src/main/res/drawable/ic_new_notification.xml" value="0.22135416666666666" />
         <entry key="..\:/Users/Luca/StudioProjects/GoOutApp/app/src/main/res/drawable/ic_three_points.xml" value="0.3828125" />
         <entry key="..\:/Users/Luca/StudioProjects/GoOutApp/app/src/main/res/drawable/item_center_background.xml" value="0.22135416666666666" />
         <entry key="..\:/Users/Luca/StudioProjects/GoOutApp/app/src/main/res/layout/activity_main.xml" value="0.36666666666666664" />

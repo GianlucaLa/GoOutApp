@@ -1,5 +1,7 @@
 package it.gooutapp.fragment
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -19,6 +21,7 @@ import it.gooutapp.firebase.FireStore
 import it.gooutapp.model.Proposal
 import kotlinx.android.synthetic.main.fragment_group.*
 import kotlinx.android.synthetic.main.fragment_group.view.*
+import kotlin.properties.Delegates
 
 class GroupFragment : Fragment(), ProposalAdapter.ClickListenerProposal {
     private val TAG = "GROUP_FRAGMENT"
@@ -27,11 +30,13 @@ class GroupFragment : Fragment(), ProposalAdapter.ClickListenerProposal {
     private lateinit var recyclerView: RecyclerView
     private lateinit var proposalAdapter: ProposalAdapter
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
+    private lateinit var activityContext: Context
     private val fs = FireStore()
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_group, container, false)
+        activityContext = root.context
         groupId = arguments?.get("groupId").toString()
         val linearLayoutManager = LinearLayoutManager(root.context)
         linearLayoutManager.reverseLayout = true
@@ -52,14 +57,8 @@ class GroupFragment : Fragment(), ProposalAdapter.ClickListenerProposal {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun loadRecyclerData(root: View){
-        fs.getGroupProposalData(groupId) { proposalListData ->
-            var proposalToRead = ArrayList<Proposal>()
-            for(proposal in proposalListData){
-                if(proposal.read?.contains(curr_user_email) != true)
-                    proposalToRead.add(proposal)
-            }
-            if(proposalToRead != null && proposalToRead.size > 0)
-                fs.setReadProposal(proposalToRead)
+        fs.getGroupFragmentProposalData(groupId) { proposalListData ->
+            //Blocco abilita textview fragment vuoto
             val emptyProposalMessage = root.tvEmptyProposalMessage
             emptyProposalMessage.text = context?.resources?.getString(R.string.empty_proposal_message)
             proposalAdapter = ProposalAdapter(proposalListData, this, emptyProposalMessage)
@@ -71,15 +70,21 @@ class GroupFragment : Fragment(), ProposalAdapter.ClickListenerProposal {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.group_fragment_menu, menu)
-        fs.getGroupAdmin(groupId){  admin ->
-            if (admin == Firebase.auth.currentUser?.email.toString()) {
-                var groupCodeItem = menu?.findItem(R.id.group_code_item)
-                groupCodeItem?.isVisible = true
+        fs.getGroupPopupNotification(activityContext, groupId) { notificationList ->
+            if (notificationList.isNotEmpty())
+                menu.findItem(R.id.notification).icon = activityContext.getDrawable(R.drawable.ic_new_notification)
+            fs.getGroupAdmin(groupId) { admin ->
+                if (admin == Firebase.auth.currentUser?.email.toString()) {
+                    var groupCodeItem = menu.findItem(R.id.group_code_item)
+                    groupCodeItem?.isVisible = true
+                }
             }
+            super.onCreateOptionsMenu(menu, inflater)
         }
-        super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun enterChatListener(proposal: Proposal) {
@@ -92,6 +97,7 @@ class GroupFragment : Fragment(), ProposalAdapter.ClickListenerProposal {
 
     override fun modifyProposalListener(proposal: Proposal) {
         val bundle = bundleOf(
+            "creationDate" to proposal.creationDate,
             "proposalId" to proposal.proposalId,
             "proposalName" to proposal.proposalName,
             "place" to proposal.place,

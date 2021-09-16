@@ -13,11 +13,13 @@ import android.os.SystemClock
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -26,6 +28,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager.getDefaultSharedPreferences
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.*
@@ -33,6 +36,7 @@ import com.google.firebase.ktx.Firebase
 import it.gooutapp.R
 import it.gooutapp.firebase.FireStore
 import it.gooutapp.model.MyDialog
+import it.gooutapp.model.Proposal
 import it.gooutapp.model.User
 import it.gooutapp.service.NotificationService
 import kotlinx.android.synthetic.main.content_main.*
@@ -40,6 +44,7 @@ import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_new_proposal.*
 import kotlinx.android.synthetic.main.nav_header_main.*
 import java.util.*
+import kotlin.collections.ArrayList
 
  class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -181,6 +186,7 @@ import java.util.*
         var title = resources.getString(R.string.join_group)
         var message = resources.getString(R.string.enter_group_code)
         MyDialog(title, message, this, layoutInflater, false) { groupId ->
+            HomePB?.visibility = View.VISIBLE
             fs.addUserToGroup(groupId) { result ->
                 when (result) {
                     "NM" -> {
@@ -190,10 +196,16 @@ import java.util.*
                     "AM" -> {
                         Toast.makeText(applicationContext, R.string.user_is_already_member, Toast.LENGTH_SHORT).show()
                     }
+                    "ERROR" -> {
+                        Toast.makeText(applicationContext, R.string.error, Toast.LENGTH_SHORT).show()
+                    }
                     else -> {
                         Toast.makeText(applicationContext, R.string.invalid_group_code, Toast.LENGTH_SHORT).show()
                     }
                 }
+            }
+            fs.addReadGroupNotifications(groupId, curr_user_email, "join"){
+                //HomePB?.visibility = View.INVISIBLE
             }
         }
     }
@@ -217,6 +229,47 @@ import java.util.*
             )
         findNavController(R.id.nav_host_fragment)?.navigate(R.id.action_nav_group_to_nav_newProposal, bundle)
     }
+
+     @SuppressLint("UseCompatLoadingForDrawables")
+     @RequiresApi(Build.VERSION_CODES.O)
+     fun showNotificationPopup(item: MenuItem){
+         //blocco per settare a read tutte le proposal non lette nel gruppo
+         fs.getGroupProposalData(idCurrentGroup) { proposalListData ->
+             var proposalToRead = ArrayList<Proposal>()
+             var proposalToReadCanceled = ArrayList<Proposal>()
+             var proposalToReadModified = ArrayList<Proposal>()
+             for (proposal in proposalListData) {
+                 if (proposal.read?.contains(curr_user_email) != true)
+                     proposalToRead.add(proposal)
+                 if (proposal.canceled == "canceled" && proposal.readCanceled?.contains(curr_user_email) != true)
+                     proposalToReadCanceled.add(proposal)
+                 if (proposal.modified == "modified" && proposal.readModified?.contains(curr_user_email) != true)
+                     proposalToReadModified.add(proposal)
+             }
+             if (proposalToRead.size > 0)
+                fs.setReadProposal(proposalToRead)
+             if (proposalToReadCanceled.size > 0)
+                fs.setReadCanceledProposal(proposalToReadCanceled)
+             if (proposalToReadModified.size > 0)
+                fs.setReadModifiedProposal(proposalToReadModified)
+         }
+         fs.getGroupPopupNotification(this, idCurrentGroup){ notificationList ->
+             var items = notificationList.toTypedArray()
+             if(notificationList.isEmpty()) {
+                 notificationList.add(resources.getString(R.string.empty_notifications))
+                 items = notificationList.toTypedArray()
+             }
+             MaterialAlertDialogBuilder(this)
+                 .setTitle(resources.getString(R.string.notifications))
+                 .setPositiveButton(R.string.ok){ _, _ ->
+                     invalidateOptionsMenu()
+                 }
+                 .setItems(items){ _, _ ->
+                     invalidateOptionsMenu()
+                 }
+                 .show()
+         }
+     }
 
     fun popupInvitationCode(item: MenuItem){
         val invitationCode = idCurrentGroup

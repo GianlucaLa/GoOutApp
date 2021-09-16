@@ -24,6 +24,7 @@ import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.transition.MaterialFade
 import it.gooutapp.R
 import it.gooutapp.firebase.FireStore
+import it.gooutapp.model.Proposal
 import kotlinx.android.synthetic.main.fragment_new_proposal.*
 import kotlinx.android.synthetic.main.fragment_new_proposal.view.*
 import java.time.LocalDateTime
@@ -63,6 +64,8 @@ class NewProposalFragment : Fragment(), DatePickerDialog.OnDateSetListener, Time
             groupName = arguments?.get("groupName").toString()
         }
         proposalNameEditText = root.editTextNameProposal
+        if(arguments?.get("modify") == true)
+            proposalNameEditText.isEnabled = false
         proposalNameEditText.addTextChangedListener {
             if(proposalNameEditText.text.length == 15){ Toast.makeText(root.context, R.string.max15chars, Toast.LENGTH_SHORT).show() }
             editTextNameProposalView.isErrorEnabled = false
@@ -195,7 +198,7 @@ class NewProposalFragment : Fragment(), DatePickerDialog.OnDateSetListener, Time
         if(!(editTextNameProposalView.isErrorEnabled || editTextPlaceView.isErrorEnabled || editTextDateView.isErrorEnabled || editTextHourView.isErrorEnabled)) {
             val dateTime = "$date"+"T$time"
             if(arguments?.get("place") != null){
-                fs.modifyProposalData(proposalId, proposalName, dateTime, placeString, arguments?.get("groupId").toString(), arguments?.get("organizator").toString(), arguments?.get("organizatorId").toString(), arguments?.get("groupName").toString()) { result ->
+                fs.modifyProposalData(placeString, dateTime, arguments?.get("creationDate").toString()) { result ->
                     if (result) {
                         NewProposalPB.visibility = View.INVISIBLE
                         activity?.findNavController(R.id.nav_host_fragment)?.navigateUp()

@@ -1,5 +1,6 @@
 package it.gooutapp.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +20,7 @@ class HistoryAdapter(private val historyList : ArrayList<Proposal>, val clickLis
         return MyViewHolder(itemView)
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables", "SetTextI18n")
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val history: Proposal = historyList[position]
         val activityContext = holder.itemView.context
@@ -28,18 +30,17 @@ class HistoryAdapter(private val historyList : ArrayList<Proposal>, val clickLis
         holder.labelTime.text = "${activityContext.resources.getString(R.string.time)}: "
         holder.labelNomeGruppo.text ="${activityContext.resources.getString(R.string.groupName)}: "
         holder.labelOrganizator.text = "${activityContext.resources.getString(R.string.organizator)}: "
-        holder.luogoProposta.text = "${history.place.toString()}"
-        holder.dataProposta.text = "${history.dateTime.toString().substring(0,10)}"
-        holder.oraProposta.text = "${history.dateTime.toString().substring(11)}"
-        holder.organizzatoreProposta.text = "${history.organizator.toString()}"
-        holder.nomeGruppo.text = "${history.groupName.toString()}"
+        holder.luogoProposta.text = history.place.toString()
+        holder.dataProposta.text = history.dateTime.toString().substring(0,10)
+        holder.oraProposta.text = history.dateTime.toString().substring(11)
+        holder.organizzatoreProposta.text = history.organizator.toString()
+        holder.nomeGruppo.text = history.groupName.toString()
         holder.btnChat.setOnClickListener {
             clickListenerHistory.enterChatListener(historyList[position])
         }
         if (history.canceled == "canceled") {
             holder.statoProposta.text = activityContext.resources.getString(R.string.canceled)
             holder.statoProposta.background = activityContext.resources.getDrawable(R.drawable.background_canceled)
-            holder.btnChat.visibility = View.GONE
         } else if(history.accepters?.contains(curr_user_email) == true || history.decliners?.contains(curr_user_email) == true) {
             if (history.accepters?.contains(curr_user_email) == true) {
                 holder.statoProposta.background = activityContext.resources.getDrawable(R.drawable.background_accepted)

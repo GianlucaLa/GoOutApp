@@ -123,7 +123,11 @@
     <string name="chat_accepted_message">accepted ✅</string>
     <string name="chat_refused_message">refused ❌</string>
     <string name="account" translatable="false">Account</string>
-    <string name="message_join">has entered ➕</string>
-    <string name="message_removed">has been removed➖</string>
-    <string name="message_leave">has leaved ➖</string>
+    <string name="message_join">has entered the group</string>
+    <string name="message_removed">has been removed  from the group</string>
+    <string name="message_leave">has leaved  the group</string>
+    <string name="notifications">Notifications</string>
+    <string name="empty_notifications">There are no notifications</string>
+    <string name="canceled_proposal">Canceled</string>
+    <string name="modifed_proposal">Modified</string>
 </resources>

@@ -3,6 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/notification"
+        android:title=""
+        android:icon="@drawable/ic_notification"
+        app:showAsAction="always"
+        android:onClick="showNotificationPopup">
+    </item>
+
+    <item
         android:title=""
         android:icon="@drawable/ic_three_points"
         app:showAsAction="always">
@@ -20,4 +28,5 @@
                 android:onClick="popupInvitationCode"/>
         </menu>
     </item>
+
 </menu>
