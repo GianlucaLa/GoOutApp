@@ -547,7 +547,7 @@ class FireStore {
             db.collection(proposalCollection).document("proposal_${proposal.creationDate}")  //nome gruppo
                 .update("readModified", FieldValue.arrayUnion(currentUserEmail()))
                 .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
-                .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e)
+                .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
         }
     }
 
