@@ -249,7 +249,7 @@ class FireStore {
             for (dc in documents) {
                 val thisGroup = dc.toObject(Group::class.java)
                 //cerco e aggiungo i gruppi che contengono l'email dell'utente
-                if (thisGroup.users?.contains(currentUserEmail()) == true) {
+                if (thisGroup.users?.contains(currentUserEmail()) == true || thisGroup.admin == currentUserEmail()) {
                     userGroupsList.add(thisGroup)
                 }
             }
