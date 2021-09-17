@@ -131,4 +131,5 @@
     <string name="canceled_proposal">Canceled</string>
     <string name="modifed_proposal">Modified</string>
     <string name="address">Address</string>
+    <string name="password_help">The password must contain an uppercase, a number, a special character</string>
 </resources>

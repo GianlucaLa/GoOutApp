@@ -120,12 +120,15 @@ class RegistrationActivity: AppCompatActivity() {
 
         // Check for a valid password.
         when {
-            !password.isValidPassword() -> { editTextPasswordView.error = resources.getString(R.string.error_invalid_password) }
+            !password.isValidPassword() -> {
+                editTextPasswordView.error = resources.getString(R.string.error_invalid_password)
+                Toast.makeText(this, R.string.password_help, Toast.LENGTH_SHORT).show()
+            }
         }
 
         //check others
-        if(name.isEmpty()) editTextNameView.error = resources.getString(R.string.name_empty_error)
-        if(surname.isEmpty()) editTextSurnameView.error = resources.getString(R.string.surname_empty_error)
+        if(name.isEmpty())editTextNameView.error = resources.getString(R.string.name_empty_error)
+        if(surname.isEmpty())editTextSurnameView.error = resources.getString(R.string.surname_empty_error)
         if(nickname.isEmpty())editTextNicknameView.error = resources.getString(R.string.nickname_empty_error)
 
         //final check

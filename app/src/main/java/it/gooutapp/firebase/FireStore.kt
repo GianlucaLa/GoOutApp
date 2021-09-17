@@ -126,6 +126,7 @@ class FireStore {
     fun getUserHomeData(context: Context, callback: (ArrayList<Group>, ArrayList<Boolean>, HashMap<String, NotificationCounter>, HashMap<String, MessagePreview>) -> Unit) {
         val userGroupsList = ArrayList<Group>()
         val adminFlagList = ArrayList<Boolean>()
+        var groupIdList = ArrayList<String>()
         db.collection(groupCollection).get().addOnSuccessListener { documents ->
             for (dc in documents) {
                 val thisGroup = dc.toObject(Group::class.java)
@@ -133,12 +134,14 @@ class FireStore {
                 if (thisGroup.admin == currentUserEmail()) {
                     adminFlagList.add(true)
                     userGroupsList.add(thisGroup)
+                    groupIdList.add(thisGroup.groupId.toString())
                 } else if (thisGroup.users?.contains(currentUserEmail()) == true) {
                     adminFlagList.add(false)
                     userGroupsList.add(thisGroup)
+                    groupIdList.add(thisGroup.groupId.toString())
                 }
             }
-            getAllUserProposals{ proposalsList ->
+            getAllUserProposals(groupIdList){ proposalsList ->
                 var notificationHM = HashMap<String, NotificationCounter>()
                 var lastMessageHM = HashMap<String, MessagePreview>()
                 var n: NotificationCounter
@@ -351,9 +354,9 @@ class FireStore {
 
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun getAllUserProposals(callback: (ArrayList<Proposal>) -> Unit) {
+    fun getAllUserProposals(groupIdList: ArrayList<String> ,callback: (ArrayList<Proposal>) -> Unit) {
         var proposalArrayList = ArrayList<Proposal>()
-        db.collection(proposalCollection).get().addOnSuccessListener { documents ->
+        db.collection(proposalCollection).whereIn("groupId", groupIdList).get().addOnSuccessListener { documents ->
             for (dc in documents) {
                 val thisProposal = dc.toObject(Proposal::class.java)
                 val currentDateTime = LocalDateTime.now()
@@ -436,23 +439,20 @@ class FireStore {
         }
     }
 
-    fun getProposalPartecipants(proposalId: String, context: Context, callback: (ArrayList<String>) -> Unit){
+    fun getProposalPartecipants(proposalCreationDate: String, context: Context, callback: (ArrayList<String>) -> Unit){
         var partecipants = ArrayList<String>()
-        db.collection(proposalCollection).whereEqualTo("proposalId", "$proposalId").get()
-            .addOnSuccessListener{ proposalDocs ->
-                var proposalDoc = proposalDocs.last()
-                var accepters = if(proposalDoc?.get("accepters") != null)
-                                    proposalDoc?.get("accepters") as ArrayList<String>
-                                else null
-
-                val organizator = proposalDoc?.get("organizator") as String
-                var stringOrg = if (proposalDoc?.get("organizatorId") == currentUserId())
+        db.collection(proposalCollection).document("proposal_$proposalCreationDate").get()
+            .addOnSuccessListener{ document ->
+                var proposal = document.toObject(Proposal::class.java)
+                val organizator = proposal?.organizator
+                var stringOrg = if ((proposal?.organizatorId) == currentUserId())
                                     context.resources.getString(R.string.you)
                                 else
                                     context.resources.getString(R.string.organizator)
-
-                if (accepters != null && accepters.size > 0) {
-                    getUsersNickname(accepters) { nicksArray ->
+                if (proposal?.accepters != null && proposal.accepters!!.size > 0) {
+                    Log.e(TAG, proposal.accepters.toString())
+                    getUsersNickname(proposal.accepters!!) { nicksArray ->
+                        Log.e(TAG, nicksArray.toString())
                         partecipants = nicksArray
                         partecipants.add("$organizator ($stringOrg)")
                         callback(partecipants)
@@ -793,13 +793,13 @@ class FireStore {
 
     private fun getUsersNickname(emailArray: ArrayList<String>, callback: (ArrayList<String>) -> Unit){
         val nicksArray = ArrayList<String>()
-        for(email in emailArray) {
-            db.collection(userCollection).document(email).get().addOnSuccessListener { document ->
-                nicksArray.add(document.get("nickname").toString())
-                callback(nicksArray)
-            }.addOnFailureListener { exception ->
-                Log.d(TAG, "get failed with ", exception)
+        db.collection(userCollection).whereIn("email", emailArray).get().addOnSuccessListener { documents ->
+            for(dc in documents){
+                nicksArray.add(dc.get("nickname").toString())
             }
+            callback(nicksArray)
+        }.addOnFailureListener { exception ->
+            Log.d(TAG, "get failed with ", exception)
         }
     }
 

@@ -86,7 +86,7 @@ class ProposalAdapter(private val proposalList: ArrayList<Proposal>, private val
                         clickListenerProposal.modifyProposalListener(proposalList[position])
                     }
                     R.id.partecipants->{
-                        fs.getProposalPartecipants(proposal.proposalId.toString(), activityContext){ participants ->
+                        fs.getProposalPartecipants(proposal.creationDate.toString(), activityContext){ participants ->
                             var items = participants.toTypedArray()
                             MaterialAlertDialogBuilder(activityContext)
                                 .setTitle(activityContext.resources.getString(R.string.partecipants))

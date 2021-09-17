@@ -124,4 +124,5 @@
     <string name="canceled_proposal">Annullata</string>
     <string name="modifed_proposal">Modified</string>
     <string name="address">Indirizzo</string>
+    <string name="password_help">La password deve contenere una maiuscola, un numero, un carattere speciale</string>
 </resources>
