@@ -245,30 +245,16 @@ class FireStore {
 
     private fun getUserGroupData(callback: (ArrayList<Group>) -> Unit) {
         val userGroupsList = ArrayList<Group>()
-        db.collection(groupCollection).addSnapshotListener { value, error ->
-            if (error != null) {
-                Log.e("Firestore Error", error.message.toString())
-                return@addSnapshotListener
-            }
-            for (dc: DocumentChange in value?.documentChanges!!) {
-                val thisGroup = dc.document.toObject(Group::class.java)
+        db.collection(groupCollection).get().addOnSuccessListener { documents ->
+            for (dc in documents) {
+                val thisGroup = dc.toObject(Group::class.java)
                 //cerco e aggiungo i gruppi che contengono l'email dell'utente
-                if (dc.type == DocumentChange.Type.ADDED)
+                if (thisGroup.users?.contains(currentUserEmail()) == true) {
                     userGroupsList.add(thisGroup)
-                else if (dc.type == DocumentChange.Type.REMOVED)
-                    userGroupsList.remove(thisGroup)
-                else if (thisGroup.users?.contains(currentUserEmail()) == true) {
-                    if (dc.type == DocumentChange.Type.ADDED)
-                        userGroupsList.add(thisGroup)
-                    else if (dc.type == DocumentChange.Type.REMOVED)
-                        userGroupsList.remove(thisGroup)
-                }else{
-                    if (dc.type == DocumentChange.Type.MODIFIED)
-                        userGroupsList.remove(thisGroup)
                 }
             }
+            callback(userGroupsList)
         }
-        callback(userGroupsList)
     }
 
     fun getGroupMembers(groupId: String, callback: (ArrayList<User>) -> Unit){
