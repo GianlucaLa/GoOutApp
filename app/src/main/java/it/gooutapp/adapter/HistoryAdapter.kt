@@ -26,11 +26,13 @@ class HistoryAdapter(private val historyList : ArrayList<Proposal>, val clickLis
         val activityContext = holder.itemView.context
         holder.nomeProposta.text = history.proposalName
         holder.labelPlace.text = "${activityContext.resources.getString(R.string.place)}: "
+        holder.labelAddress.text = "${activityContext.resources.getString(R.string.address)}: "
         holder.labelDate.text = "${activityContext.resources.getString(R.string.date)}: "
         holder.labelTime.text = "${activityContext.resources.getString(R.string.time)}: "
         holder.labelNomeGruppo.text ="${activityContext.resources.getString(R.string.groupName)}: "
         holder.labelOrganizator.text = "${activityContext.resources.getString(R.string.organizator)}: "
         holder.luogoProposta.text = history.place.toString()
+        holder.indirizzoProposta.text = history.placeAddress.toString()
         holder.dataProposta.text = history.dateTime.toString().substring(0,10)
         holder.oraProposta.text = history.dateTime.toString().substring(11)
         holder.organizzatoreProposta.text = history.organizator.toString()
@@ -62,11 +64,13 @@ class HistoryAdapter(private val historyList : ArrayList<Proposal>, val clickLis
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val nomeProposta: TextView = itemView.findViewById(R.id.textViewHProposta)
         val luogoProposta: TextView = itemView.findViewById(R.id.textViewHLuogoValue)
+        val indirizzoProposta: TextView = itemView.findViewById(R.id.textViewHIndirizzoValue)
         val dataProposta: TextView = itemView.findViewById(R.id.textViewHDataValue)
         val oraProposta: TextView = itemView.findViewById(R.id.textViewHOraValue)
         val organizzatoreProposta: TextView = itemView.findViewById(R.id.textViewHOrganizatorValue)
         val statoProposta: TextView = itemView.findViewById(R.id.textViewHStatoValue)
         val labelPlace: TextView = itemView.findViewById(R.id.textViewHLuogo)
+        val labelAddress : TextView = itemView.findViewById(R.id.textViewHIndirizzo)
         val labelDate: TextView = itemView.findViewById(R.id.textViewHData)
         val labelTime: TextView = itemView.findViewById(R.id.textViewHOra)
         val labelOrganizator: TextView = itemView.findViewById(R.id.textViewHorganizator)

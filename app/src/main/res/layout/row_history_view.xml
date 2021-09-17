@@ -138,9 +138,30 @@
                 android:id="@+id/textViewHLuogoValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/textViewHLuogo"
-                android:layout_toEndOf="@id/textViewHLuogo"
                 android:layout_below="@id/textViewHorganizator"
+                android:layout_marginBottom="8dp"
+                android:layout_toEndOf="@id/textViewHLuogo"
+                android:layout_toRightOf="@id/textViewHLuogo"
+                android:text="TextView"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/textViewHIndirizzo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textViewHLuogoValue"
+                android:layout_marginBottom="8dp"
+                android:text="Indirizzo: "
+                android:textColor="@color/colorSecondary"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/textViewHIndirizzoValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/textViewHIndirizzo"
+                android:layout_toEndOf="@id/textViewHIndirizzo"
+                android:layout_below="@id/textViewHLuogoValue"
                 android:layout_marginBottom="8dp"
                 android:textSize="17sp"
                 android:text="TextView" />
@@ -163,14 +184,14 @@
                 android:id="@+id/entryChatHistory"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
+                android:layout_below="@id/textViewHIndirizzoValue"
                 android:layout_alignParentLeft="true"
-                android:layout_below="@id/textViewHLuogoValue"
-                android:text="@string/enter_chat"
-                android:textAlignment="center"
-                android:gravity="center"
+                android:layout_alignParentRight="true"
                 android:drawableRight="@drawable/ic_row_message"
-                android:drawableTint="@color/white" />
+                android:drawableTint="@color/white"
+                android:gravity="center"
+                android:text="@string/enter_chat"
+                android:textAlignment="center" />
 
         </RelativeLayout>
 

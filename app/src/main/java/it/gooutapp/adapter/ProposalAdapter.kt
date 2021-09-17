@@ -17,6 +17,7 @@ import it.gooutapp.R
 import it.gooutapp.firebase.FireStore
 import it.gooutapp.model.MyDialog
 import it.gooutapp.model.Proposal
+import org.w3c.dom.Text
 
 class ProposalAdapter(private val proposalList: ArrayList<Proposal>, private val clickListenerProposal: ClickListenerProposal, private val tvEmptyProposalMessage: View) : RecyclerView.Adapter<ProposalAdapter.MyViewHolder>() {
     private val TAG = "PROPOSAL_ADAPTER"
@@ -37,10 +38,12 @@ class ProposalAdapter(private val proposalList: ArrayList<Proposal>, private val
         val proposal: Proposal = proposalList[position]
         holder.nomeProposta.text = proposal.proposalName
         holder.labelPlace.text = "${activityContext.resources.getString(R.string.place)}: "
+        holder.labelAddress.text = "${activityContext.resources.getString(R.string.address)}: "
         holder.labelDate.text = "${activityContext.resources.getString(R.string.date)}: "
         holder.labelTime.text = "${activityContext.resources.getString(R.string.time)}: "
         holder.labelOrganizator.text = "${activityContext.resources.getString(R.string.organizator)}: "
         holder.luogoProposta.text = proposal.place.toString()
+        holder.indirizzoProposta.text = proposal.placeAddress.toString()
         holder.dataProposta.text = proposal.dateTime.toString().substring(0,10)
         holder.oraProposta.text = proposal.dateTime.toString().substring(11)
         holder.organizzatoreProposta.text = proposal.organizator.toString()
@@ -185,10 +188,12 @@ class ProposalAdapter(private val proposalList: ArrayList<Proposal>, private val
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val nomeProposta: TextView = itemView.findViewById(R.id.textViewRProposta)
         val luogoProposta: TextView = itemView.findViewById(R.id.textViewRLuogoValue)
+        val indirizzoProposta: TextView = itemView.findViewById(R.id.textViewRIndirizzoValue)
         val dataProposta: TextView = itemView.findViewById(R.id.textViewRDataValue)
         val oraProposta: TextView = itemView.findViewById(R.id.textViewROraValue)
         val organizzatoreProposta: TextView = itemView.findViewById(R.id.textViewROrganizatorValue)
         val labelPlace: TextView = itemView.findViewById(R.id.textViewRLuogo)
+        val labelAddress : TextView = itemView.findViewById(R.id.textViewRIndirizzo)
         val labelDate: TextView = itemView.findViewById(R.id.textViewRData)
         val labelTime: TextView = itemView.findViewById(R.id.textViewROra)
         val labelOrganizator: TextView = itemView.findViewById(R.id.textViewOrganizator)

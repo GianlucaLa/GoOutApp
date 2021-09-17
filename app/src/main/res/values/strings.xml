@@ -130,4 +130,5 @@
     <string name="empty_notifications">There are no notifications</string>
     <string name="canceled_proposal">Canceled</string>
     <string name="modifed_proposal">Modified</string>
+    <string name="address">Address</string>
 </resources>

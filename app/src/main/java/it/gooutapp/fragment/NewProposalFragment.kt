@@ -35,6 +35,7 @@ class NewProposalFragment : Fragment(), DatePickerDialog.OnDateSetListener, Time
     private lateinit var groupName: String
     private lateinit var proposalId: String
     private var placeString = ""
+    private var placeAddress = ""
     private val fs = FireStore()
     private lateinit var c: Calendar
     private lateinit var proposalNameEditText: EditText
@@ -167,7 +168,7 @@ class NewProposalFragment : Fragment(), DatePickerDialog.OnDateSetListener, Time
         Places.initialize(root.context, resources.getString(R.string.places_api_key))
         val intent = Autocomplete.IntentBuilder(
             AutocompleteActivityMode.OVERLAY,
-            listOf(Place.Field.ID, Place.Field.NAME)
+            listOf(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS)
         ).setTypeFilter(TypeFilter.ESTABLISHMENT).build(root.context)
         startActivityForResult(intent, 0)
     }
@@ -176,6 +177,8 @@ class NewProposalFragment : Fragment(), DatePickerDialog.OnDateSetListener, Time
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == AppCompatActivity.RESULT_OK) {
             var place = data?.let { Autocomplete.getPlaceFromIntent(it) }
+            placeAddress = place?.address.toString()
+            Log.e("placeAddress", place?.address.toString())
             placePickerEditText.setText(place?.name)
             placeString = place?.name.toString()
             Log.i("MAPS", "Place: ${place?.name}, ${place?.id}")
@@ -198,7 +201,7 @@ class NewProposalFragment : Fragment(), DatePickerDialog.OnDateSetListener, Time
         if(!(editTextNameProposalView.isErrorEnabled || editTextPlaceView.isErrorEnabled || editTextDateView.isErrorEnabled || editTextHourView.isErrorEnabled)) {
             val dateTime = "$date"+"T$time"
             if(arguments?.get("place") != null){
-                fs.modifyProposalData(placeString, dateTime, arguments?.get("creationDate").toString()) { result ->
+                fs.modifyProposalData(placeString, placeAddress, dateTime, arguments?.get("creationDate").toString()) { result ->
                     if (result) {
                         NewProposalPB.visibility = View.INVISIBLE
                         activity?.findNavController(R.id.nav_host_fragment)?.navigateUp()
@@ -209,7 +212,7 @@ class NewProposalFragment : Fragment(), DatePickerDialog.OnDateSetListener, Time
                     }
                 }
             }else{
-                fs.createProposalData(groupId, proposalName, dateTime, placeString, groupName) { result ->
+                fs.createProposalData(groupId, proposalName, dateTime, placeString, placeAddress, groupName) { result ->
                     if (result) {
                         NewProposalPB.visibility = View.INVISIBLE
                         activity?.findNavController(R.id.nav_host_fragment)?.navigateUp()

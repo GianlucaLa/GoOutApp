@@ -62,7 +62,7 @@ class FireStore {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun createProposalData(groupId: String, proposalName: String, dateTime: String, place: String, groupName: String, callback: (Boolean) -> Unit){
+    fun createProposalData(groupId: String, proposalName: String, dateTime: String, place: String, placeAddress: String,groupName: String, callback: (Boolean) -> Unit){
         val proposalId: String = List(15) { source.random() }.joinToString("")
         val creationDate = LocalDateTime.now().toString()
         currentUserNickname { currNickname ->
@@ -72,6 +72,7 @@ class FireStore {
                 "organizator" to currNickname,
                 "organizatorId" to currentUserId(),
                 "place" to place,
+                "placeAddress" to placeAddress,
                 "groupName" to groupName,
                 "proposalId" to proposalId,
                 "proposalName" to proposalName,
@@ -712,9 +713,10 @@ class FireStore {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun modifyProposalData(place: String, dateTime: String, creationDate: String,callback: (Boolean) -> Unit){
+    fun modifyProposalData(place: String, placeAddress: String, dateTime: String, creationDate: String,callback: (Boolean) -> Unit){
         val deletes = hashMapOf<String, Any>(
             "place" to FieldValue.delete(),
+            "placeAddress" to FieldValue.delete(),
             "dateTime" to FieldValue.delete(),
             "modified" to FieldValue.delete(),
             "modifiedCreationDate" to FieldValue.delete(),
@@ -725,6 +727,7 @@ class FireStore {
             .update(deletes).addOnSuccessListener {
                 val updates = hashMapOf(
                     "place" to place,
+                    "placeAddress" to placeAddress,
                     "dateTime" to dateTime,
                     "modified" to "modified",
                     "modifiedCreationDate" to LocalDateTime.now().toString(),

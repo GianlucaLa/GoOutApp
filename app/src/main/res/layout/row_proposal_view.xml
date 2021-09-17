@@ -136,11 +136,32 @@
                 android:textSize="17sp"
                 android:text="TextView" />
 
+            <TextView
+                android:id="@+id/textViewRIndirizzo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textViewRLuogoValue"
+                android:layout_marginBottom="8dp"
+                android:text="Indirizzo: "
+                android:textColor="@color/colorSecondary"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/textViewRIndirizzoValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textViewRLuogoValue"
+                android:layout_marginBottom="8dp"
+                android:layout_toEndOf="@id/textViewRIndirizzo"
+                android:layout_toRightOf="@id/textViewRIndirizzo"
+                android:text="TextView"
+                android:textSize="17sp" />
+
             <Button
                 android:id="@+id/entryChat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/textViewRLuogoValue"
+                android:layout_below="@id/textViewRIndirizzoValue"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentRight="true"
                 android:drawableRight="@drawable/ic_row_message"

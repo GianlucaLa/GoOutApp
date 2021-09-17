@@ -123,4 +123,5 @@
     <string name="empty_notifications">Non sono presenti notifiche</string>
     <string name="canceled_proposal">Annullata</string>
     <string name="modifed_proposal">Modified</string>
+    <string name="address">Indirizzo</string>
 </resources>

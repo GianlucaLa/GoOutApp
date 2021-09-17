@@ -62,6 +62,17 @@ class HomeFragment : Fragment(), GroupAdapter.ClickListener {
             loadRecyclerData(root)
         }
 
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy > 0 || dy < 0 && newGroupFab.isShown) newGroupFab.hide()
+            }
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) newGroupFab.show()
+                super.onScrollStateChanged(recyclerView, newState)
+            }
+        })
+
         //Create Group Listener
         root.newGroupFab.setOnClickListener {
             var title = resources.getString(R.string.create_group)
