@@ -141,7 +141,7 @@ class FireStore {
                     groupIdList.add(thisGroup.groupId.toString())
                 }
             }
-            getAllUserProposals(groupIdList){ proposalsList ->
+            getAllUserProposals { proposalsList ->
                 var notificationHM = HashMap<String, NotificationCounter>()
                 var lastMessageHM = HashMap<String, MessagePreview>()
                 var n: NotificationCounter
@@ -354,9 +354,9 @@ class FireStore {
 
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun getAllUserProposals(groupIdList: ArrayList<String> ,callback: (ArrayList<Proposal>) -> Unit) {
+    fun getAllUserProposals(callback: (ArrayList<Proposal>) -> Unit) {
         var proposalArrayList = ArrayList<Proposal>()
-        db.collection(proposalCollection).whereIn("groupId", groupIdList).get().addOnSuccessListener { documents ->
+        db.collection(proposalCollection).get().addOnSuccessListener { documents ->
             for (dc in documents) {
                 val thisProposal = dc.toObject(Proposal::class.java)
                 val currentDateTime = LocalDateTime.now()
