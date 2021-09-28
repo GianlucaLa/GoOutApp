@@ -22,6 +22,7 @@ class LoginActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         // controllo se utente non è loggato (nullo) e aggiorno l'interfaccia di conseguenza
         val currentUser = Firebase.auth.currentUser
+        //setta di default la nightmodel del dispositivo
         setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         if(currentUser != null) {
             startActivity(Intent(this@LoginActivity, MainActivity::class.java))

@@ -156,6 +156,8 @@ class HomeFragment : Fragment(), GroupAdapter.ClickListener {
                             groupAdapter.notifyDataSetChanged()
                             if(groupList.size == 0)
                                 tvEmptyGroupMessage.visibility = View.VISIBLE
+                        }else{
+                            groupAdapter.notifyDataSetChanged()
                         }
                     }
                 }
